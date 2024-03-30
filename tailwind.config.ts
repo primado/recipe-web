@@ -25,6 +25,7 @@ const config = {
         "brand": "#548362",
         "hover-1": "#ade8ad",
         "davy-gray": "#555555",
+        "hero": "#e5e6e4",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {

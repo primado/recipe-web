@@ -21,19 +21,19 @@ export default function Navbar() {
         <>
             <nav className="bg-white flex flex-row justify-between items-center gap-x-12 shadow-md py-5 w-full px-28">
                 <div className="">
-                    <Link href="/" className="text-brand text-2xl font-semibold">
+                    <Link href="/" className="text-brand text-2xl font-semibold hover:text-emerald-600 hover:transition-all hover:duration-300">
                         <p>Recipe</p>
                     </Link>
                 </div>
                 <div className="flex flex-row my-auto justify-around items-center gap-x-20  ">
                     <div className="flex flex-row gap-x-10 text-davy-gray text-lg font-semibold">
-                        <Link href="/feed" className="">
+                        <Link href="/feed" className="hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md p-2 hover:text-emerald-600 hover:transition-all hover:duration-300">
                             <p>Feed</p>
                         </Link>
-                        <Link href="/about" className="">
+                        <Link href="/about" className="hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md p-2 hover:text-emerald-600 hover:transition-all hover:duration-300">
                             <p>About</p>
                         </Link>
-                        <Link href="/about" className="">
+                        <Link href="/about" className="hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md p-2 hover:text-emerald-600 hover:transition-all hover:duration-300">
                             <p>Contact</p>
                         </Link>
                         
