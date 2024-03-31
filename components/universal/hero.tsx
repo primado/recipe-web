@@ -1,4 +1,5 @@
-import { ArrowBigRight } from "lucide-react";
+"use client"
+import { ArrowBigRight, ArrowRight } from "lucide-react";
 import { Button } from "../ui/button";
 import hero_img from "../../public/assets/hero-img.png"
 import Image from "next/image";
@@ -9,6 +10,7 @@ import {
     CarouselNext,
     CarouselPrevious,
   } from "@/components/ui/carousel"
+import Autoplay from "embla-carousel-autoplay"
 import { heroImg } from "./hero-img"; 
 import hero_img1 from "../../public/assets/hero-img/hero-img1.png" 
 import hero_img2 from "../../public/assets/hero-img/hero-img2.png" 
@@ -21,26 +23,35 @@ export default function Hero() {
     return (
         <>
             <div className="bg-hero px-10 py-10">
-                <div className="flex flex-row gap-x-[10rem]">
-                    <div className="flex flex-col gap-y-5 border-2 border-red-500">
-                        <h1 className="text-4xl break-words w-[28rem]">A recipe hub built to find your favorite recipes.</h1>
-                        <p>Browse through various recipes and save to collections that delight you.</p>
-
-                        <div className="flex flex-row gap-x-4">
-                            <Button variant="secondary">
-                                <span>Get Started</span>
-                                <ArrowBigRight className="ml-2 w-4 h-4"/> 
+                <div className="flex flex-row justify-center items-center gap-x-32">
+                    <div className="flex flex-col gap-y-20">
+                        <div className="flex flex-col gap-y-5">
+                            <h1 className="text-5xl font-medium break-words max-w-xl leading-[1.2]">A recipe hub built to find your favorite recipes.</h1>
+                            <p className=" max-w-md">Browse through various recipes and save to collections that delight you.</p>
+                        </div>
+                        <div className="flex flex-row gap-x-4 items-center">
+                            <Button className="bg-dark-green w-[10rem] h-14 text-white hover:bg-primary-none hover:bg-opacity-90">
+                                <span className="text-lg">Get Started</span>
+                                <ArrowRight className="ml-2 text-2xl font-medium"/> 
                             </Button>
-                            <p className="">Sign up to get started</p>
-                            <image />
-                            
-                        
+                            <p className="text-dark-green font-medium text-base">Sign up to get started</p>
                         </div>
 
                     </div>
                     <div className="">
-                        <Carousel className="w-full max-w-xs">
-                          <CarouselContent>
+                        <Carousel 
+                            className="w-full max-w-md"
+                            opts={{
+                                align: "start",
+                                loop: true,
+                            }}
+                            plugins={[
+                                Autoplay({
+                                  delay: 3000,
+                                }),
+                              ]}
+                        >
+                          <CarouselContent >
                               <CarouselItem  >
                                 <div className="p-1">
                                     <Image 

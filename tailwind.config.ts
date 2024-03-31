@@ -26,6 +26,7 @@ const config = {
         "hover-1": "#ade8ad",
         "davy-gray": "#555555",
         "hero": "#e5e6e4",
+        "dark-green": "#4a7c59",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
