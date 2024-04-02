@@ -1,5 +1,6 @@
 import Hero from "@/components/universal/hero";
 import Navbar from "@/components/universal/navbar";
+import RecipeHome from "@/components/universal/recipeHome";
 import Image from "next/image";
 
 export default function Home() {
@@ -7,6 +8,7 @@ export default function Home() {
     
     <main>
       <Hero />
+      <RecipeHome />
     </main>
     
   );

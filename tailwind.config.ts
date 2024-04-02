@@ -27,6 +27,8 @@ const config = {
         "davy-gray": "#555555",
         "hero": "#e5e6e4",
         "dark-green": "#4a7c59",
+        "white-fb": "#fbfbfb",
+        "light-gray": "#f0f0f0",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
