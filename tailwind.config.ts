@@ -28,6 +28,8 @@ const config = {
         "hero": "#e5e6e4",
         "dark-green": "#4a7c59",
         "white-fb": "#fbfbfb",
+        "white-f8": "#f8f9f5",
+        "white-f3": "#f3f2ed",
         "light-gray": "#f0f0f0",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",

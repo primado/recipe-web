@@ -65,19 +65,21 @@ export default function RecipeHome() {
 
 
                     <Link href={`home-detail/${recipe.id}`} >
-                        <Card  className="flex flex-col bg-[#F5F5F5] max-w-[350px] shadow-md">
-                            <div className="h-[230px] overflow-clip">
+                        <Card  className="flex flex-col bg-[#F5F5F5]  h-full max-w-[350px] overflow-hidden shadow-md duration-300 hover:text-brand">
+                            <div className="h-60 overflow-y-clip overflow-x-hidden" >
                                 <Image
                                     src={recipe?.recipe_image || default_img}
                                     alt="Recipe image"
                                     width={300}
-                                    height={0}
-                                    className="object-fill w-full "
-                                    layout="responsive"
+                                    height={300}
+                                    quality={100}
+                                    
+                                    className="object-cover w-full  object-top overflow-clip transition ease-in-out hover:translate-y-1 duration-300 hover:scale-110"
+                              
                                 />
                             </div>
                             <CardContent className=" px-8 flex flex-col  py-6  gap-y-2 rounded-b-md">
-                                <CardTitle className="text-lg break-words text-left ">{recipe?.title}</CardTitle>
+                                <CardTitle className="text-lg break-words text-left">{recipe?.title}</CardTitle>
                             </CardContent>
                         </Card>
                     </Link>
