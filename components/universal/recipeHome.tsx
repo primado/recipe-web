@@ -60,31 +60,29 @@ export default function RecipeHome() {
                 <h2 className="text-davy-gray text-3xl font-medium">Pupolar Recipes</h2>
             </div>
             <div className="flex flex-row gap-5">
-
                 {recipeData && recipeData.slice(0, 4).map((recipe: Recipe) => (
-                <Card key={recipe?.id} className="flex flex-col bg-[#F5F5F5] max-w-[350px] shadow-md">
-           
-                        <Image
-                            src={recipe?.recipe_image || default_img}
-                            alt="Recipe image"
-                            width={350}
-                            height={350}
-                            className="object-fill w-full "
-                            layout="responsive"
-                        />
-             
-                    <CardContent className=" px-8 flex flex-col  py-6  gap-y-2 rounded-b-md">
-                        <CardTitle className="text-lg break-words text-left ">{recipe?.title}</CardTitle>
-                        {/* <CardDescription className="text-left text-lg !text-black font-medium break-words">
-                           {recipe?.description &&  recipe?.description.slice(0, 30) + '' + '...'  }
-                        </CardDescription> */}
-                        {/* <CardFooter className="flex flex-row p-0 justify-end items-baseline">
-                            <b className="bg-[#a2ffc3] text-slate-700 p-2 capitalize hover:text-white cursor-default hover:transition-colors hover:duration-300 rounded-sm">
-                                {recipe?.visibility}
-                            </b>
-                        </CardFooter> */}
-                    </CardContent>
-                </Card>
+                <div className="" key={recipe?.id}>
+
+
+                    <Link href={`home-detail/${recipe.id}`} >
+                        <Card  className="flex flex-col bg-[#F5F5F5] max-w-[350px] shadow-md">
+                            <div className="h-[230px] overflow-clip">
+                                <Image
+                                    src={recipe?.recipe_image || default_img}
+                                    alt="Recipe image"
+                                    width={300}
+                                    height={0}
+                                    className="object-fill w-full "
+                                    layout="responsive"
+                                />
+                            </div>
+                            <CardContent className=" px-8 flex flex-col  py-6  gap-y-2 rounded-b-md">
+                                <CardTitle className="text-lg break-words text-left ">{recipe?.title}</CardTitle>
+                            </CardContent>
+                        </Card>
+                    </Link>
+                
+                </div>
                 ))}
             </div>
             <div className="flex flex-col gap-y-3 items-center">
