@@ -64,15 +64,22 @@ export default function Login() {
                 <div className="flex flex-col justify-center items-center">
                     <div className="bg-white shadow-md rounded-md sm-425:!w-screen sm-425:min-h-screen sm-425:pt-12">
                         <div className="">
-                            <form onSubmit={handleSubmit(onSubmit)}  action="" className="p-5 min-w-[20rem] sm-425:p-10">
+                            <form onSubmit={handleSubmit(onSubmit)}  action="" className="p-5 w-[23rem] max-w-[23rem] sm-425:p-10 flex flex-col gap-y-2">
+                                <div className="">
+                                    <h1 className="font-semibold text-2xl">Login in to your account</h1>
+                                </div>
                                 <div className="flex flex-col gap-y-2 mb-2">
                                     <label htmlFor="username" className="text-base">Username</label>
                                     <input type="text" {...register('username', {
                                         required: {
                                             value: true,
                                             message: "Username is required"
-                                        },})}
-                                        className="focus:outline-none border-2 border-gray-400 p-1 rounded-md"
+                                        }, pattern: {
+                                            value: /^[\w.@+-]+$/,
+                                            message: "Username must contain only letters, digits, or the following special characters: . @ + -"
+                                        },
+                                    })}
+                                        className="focus:outline-none border-2 border-gray-400 p-1 rounded-md focus:border-black focus-within:transition-all focus-within:ease-in-out focus-within:duration-700 "
                                         />
                                     <ErrorMessage 
                                         errors={errors}
@@ -93,11 +100,11 @@ export default function Login() {
                                             message: "Password Required"
                                         }
                                     })}
-                                    className="focus:outline-none border-2 border-gray-400 p-1 rounded-md"
+                                    className="focus:outline-none border-2 border-gray-400 p-1 rounded-md focus-within:border-black focus-within:transition-all focus-within:ease-in-out focus-within:duration-700"
                                     />
                                     <ErrorMessage 
                                       errors={errors}
-                                      name="username"
+                                      name="password"
                                       render={({ messages }) => 
                                           messages && 
                                           Object.entries(messages).map(([type, message]) => (
@@ -118,7 +125,7 @@ export default function Login() {
                                 <div className="text-base">
                                     <p>Don&apos;t have an account? {' '} 
                                         <span  className="text-blue-500">
-                                            <Link href="">Register</Link>
+                                            <Link href="/register">Register</Link>
                                         </span>    
                                     </p>
                                 </div>
