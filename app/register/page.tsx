@@ -5,6 +5,8 @@ import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import { toast } from "sonner"
 import Link from "next/link"
+import { Variable } from "lucide-react"
+import { useState } from "react"
 
 
 interface RegisterType {
@@ -16,14 +18,17 @@ interface RegisterType {
 
 export default function Login() {
 
-    const { register, handleSubmit, formState: { errors } } = useForm<RegisterType>({
+    const { register, setError, handleSubmit, formState: { errors } } = useForm<RegisterType>({
         criteriaMode: "all"
     })
 
-    const login = useMutation({
-        mutationKey: ['login'],
+    const [usernameAvailability, setUsernameAvaliablity] = useState('')
+
+
+    const createAccount = useMutation({
+        mutationKey: ['register'],
         mutationFn: async (registerData: RegisterType) => {
-            const response = await axios.post('http://localhost:8000/api/auth/login/', registerData, {
+            const response = await axios.post('http://localhost:8000/api/auth/register/', registerData, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -34,7 +39,7 @@ export default function Login() {
         },
 
         onSuccess: (data) => {
-            toast.success("Logged in successfully", {
+            toast.success("Account created successfully", {
                 position: "top-right",
                 duration: 4000,
                 closeButton: true,
@@ -43,18 +48,20 @@ export default function Login() {
             localStorage.setItem('refreshToken', data?.refresh)
         },
 
-        onError: () => {
-            toast.error("Invalid username or password", {
+        onError: (error) => {
+            toast.error('Username already taken', {
                 position: "top-right",
                 duration: 4000,
                 closeButton: true,
             })
+            console.log(error);
         }
 
     })
 
     const onSubmit = async (data: RegisterType) => {
-        login.mutateAsync(data)
+       
+        createAccount.mutateAsync(data)
     }
 
 
@@ -79,7 +86,11 @@ export default function Login() {
                                         }, pattern: {
                                             value: /^[\w.@+-]+$/,
                                             message: "Username must contain only letters, digits, or the following special characters: . @ + -"
-                                        }
+                                        },
+                                        
+                                        
+                                    
+                                       
                                     })}
                                         className="focus:outline-none border-2 border-gray-400 p-1 rounded-md focus:border-black focus-within:transition-all focus-within:ease-in-out focus-within:duration-700 "
                                         />
@@ -99,7 +110,7 @@ export default function Login() {
                                     <input type="text" {...register('email', {
                                         required: {
                                             value: true,
-                                            message: "Username is required"
+                                            message: "Email address is required"
                                         },})}
                                         className="focus:outline-none border-2 border-gray-400 p-1 rounded-md focus:border-black focus-within:transition-all focus-within:ease-in-out focus-within:duration-700 "
                                         />
@@ -158,7 +169,7 @@ export default function Login() {
                                 </div>
                            
                                 <button type="submit" className=" bg-black flex flex-row w-full my-3 py-2 text-white justify-center rounded-md font-medium hover:bg-opacity-90 cursor-pointer ">
-                                    {login.isPending ? (
+                                    {createAccount.isPending ? (
                                         <span>Logging in...</span>
                                     ): (
                                         <span>Login</span>
@@ -182,3 +193,7 @@ export default function Login() {
     )
     
 };
+function usetState(): [any, any] {
+    throw new Error("Function not implemented.")
+}
+
