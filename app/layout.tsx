@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/universal/navbar";
 import TanstackQueryProvider from "@/providers/tanstackQueryProvider";
 import { Toaster } from "sonner"
+import AllowedPages from "@/providers/accessPages";
 
 
 
@@ -24,10 +25,13 @@ export default function RootLayout({
       <body className={inter.className}>
 
           <TanstackQueryProvider>
+          
+              {children}
             
-            {children}
             <Toaster />
           </TanstackQueryProvider>
+
+         
       </body>
     </html>
   );

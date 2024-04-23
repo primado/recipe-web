@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import { toast } from "sonner"
 import Link from "next/link"
+import { redirect, useRouter } from "next/navigation"
 
 
 interface LoginTYpe {
@@ -17,6 +18,8 @@ export default function Login() {
     const { register, handleSubmit, formState: { errors } } = useForm<LoginTYpe>({
         criteriaMode: "all"
     })
+
+    const router = useRouter()
 
     const login = useMutation({
         mutationKey: ['login'],
@@ -33,17 +36,19 @@ export default function Login() {
 
         onSuccess: (data) => {
             toast.success("Logged in successfully", {
-                position: "top-right",
+                position: "top-center",
                 duration: 4000,
                 closeButton: true,
             })
             localStorage.setItem('accessToken', data?.access)
             localStorage.setItem('refreshToken', data?.refresh)
+            router.push('/feed')
+
         },
 
         onError: () => {
             toast.error("Invalid username or password", {
-                position: "top-right",
+                position: "top-center",
                 duration: 4000,
                 closeButton: true,
             })
