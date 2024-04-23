@@ -18,7 +18,7 @@ import Icon from "./Icon"
 
 export default function Navbar() {
 
-    const token = localStorage.getItem('accessToken')
+    const token = localStorage.getItem('accessToken') as string
 
     return (
         <>

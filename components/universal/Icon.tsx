@@ -14,22 +14,29 @@ import { LogOut, Settings, User } from "lucide-react"
 import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import { toast } from "sonner"
+import { useRouter } from "next/navigation"
+
+
+type RefreshTokenType = {
+    refresh: string
+}
 
 
 
 
 export default function Icon() {
 
-    const token = localStorage.getItem('accessToken') as string
-    const refresh = localStorage.getItem('refreshToken') as string
+    const token = localStorage.getItem('accessToken') as any
+    const refresh = localStorage.getItem('refreshToken') as any
+    const router = useRouter()
 
     const logout = useMutation({
         mutationKey: ['logout'],
-        mutationFn: async () => {
-            const response = await axios.post('http://localhost:8000/api/auth/logout/', {
+        mutationFn: async (newData: RefreshTokenType) => {
+            const response = await axios.post('http://localhost:8000/api/auth/logout/', newData, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `bearer ${token}`
+                    'Authorization': `Bearer ${token}`
                 }
             
             })
@@ -41,9 +48,9 @@ export default function Icon() {
         onSuccess: (data) => {
             localStorage.removeItem('accessToken')
             localStorage.removeItem('refreshToken')
-            toast.success('Logged out sucessfully', {
+            toast.success(data.detail, {
                 position: 'top-center',
-                duration: 5000,
+                duration: 11000,
                 closeButton: true
             })
             window.location.reload()
@@ -59,8 +66,9 @@ export default function Icon() {
     })
 
     const logoutHandler = async () => {
-        if (token) 
-            logout.mutateAsync()
+        logout.mutateAsync({
+            refresh: refresh
+        })
     }
 
 
