@@ -28,19 +28,21 @@ export default function Login() {
     const createAccount = useMutation({
         mutationKey: ['register'],
         mutationFn: async (registerData: RegisterType) => {
+        
             const response = await axios.post('http://localhost:8000/api/auth/register/', registerData, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             })
 
+      
             console.log("User data:", response?.data);
             return response.data
         },
 
         onSuccess: (data) => {
             toast.success("Account created successfully", {
-                position: "top-right",
+                position: "top-center",
                 duration: 4000,
                 closeButton: true,
             })
@@ -49,15 +51,23 @@ export default function Login() {
         },
 
         onError: (error) => {
-            toast.error('Username already taken', {
-                position: "top-right",
-                duration: 4000,
-                closeButton: true,
-            })
-            console.log(error);
+            if (error.message.includes('400')) {
+                toast.error('A user with that username already exists.', {
+                    position: 'top-center',
+                    duration: 4000,
+                    closeButton: true
+                })
+            } else {
+                toast.error('An error occurred, please try again', {
+                    position: 'top-center',
+                    duration: 4000,
+                    closeButton: true
+                })
+            }
         }
+    })    
 
-    })
+
 
     const onSubmit = async (data: RegisterType) => {
        
@@ -78,6 +88,9 @@ export default function Login() {
                                     <h1 className="font-semibold text-2xl">Create an account</h1>
                                 </div>
                                 <div className="flex flex-col gap-y-2 mb-2">
+                                    {/* {createAccount.status === 'error' ? (
+                                        <p className="text-sm text-red-500">A user with that username already exists.</p>
+                                    ): ''} */}
                                     <label htmlFor="username" className="text-base">Username</label>
                                     <input type="text" {...register('username', {
                                         required: {
