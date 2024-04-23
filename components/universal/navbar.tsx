@@ -14,76 +14,42 @@ import {
 import {Button} from "../ui/button"
 import { DropdownMenuGroup, DropdownMenuItem } from "@radix-ui/react-dropdown-menu"
 import { LogOut, Settings, User } from "lucide-react"
+import Icon from "./Icon"
 
 export default function Navbar() {
 
+    const token = localStorage.getItem('accessToken')
+
     return (
         <>
-            <nav className="bg-white flex flex-row justify-between items-center gap-x-12 shadow-md py-5 w-full px-28">
+            <nav className="bg-white flex flex-row justify-between items-center gap-x-12 shadow-md py-5 w-full px-20">
                 <div className="">
                     <Link href="/" className="text-brand text-2xl font-semibold hover:text-emerald-600 hover:transition-all hover:duration-300">
                         <p>Recipe</p>
                     </Link>
                 </div>
-                <div className="flex flex-row my-auto justify-around items-center gap-x-20  ">
+                <div className="flex flex-row my-auto justify-around items-center gap-x-16 ">
                     <div className="flex flex-row gap-x-10 text-davy-gray text-lg font-semibold">
                         <Link href="/feed" className="hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md p-2 hover:text-emerald-600 hover:transition-all hover:duration-300">
                             <p>Feed</p>
                         </Link>
-                        <Link href="/about" className="hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md p-2 hover:text-emerald-600 hover:transition-all hover:duration-300">
+                        <Link href="#" className="hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md p-2 hover:text-emerald-600 hover:transition-all hover:duration-300">
                             <p>About</p>
                         </Link>
-                        <Link href="/about" className="hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md p-2 hover:text-emerald-600 hover:transition-all hover:duration-300">
+                        <Link href="#" className="hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md p-2 hover:text-emerald-600 hover:transition-all hover:duration-300">
                             <p>Contact</p>
                         </Link>
                         
                     </div>
                     <div className="">
-                        <div className=" rounded-full w-10 h-10 ">
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    {/* <Button variant="outline"  className="focus:border-none focus-visible:ring-1 ring-offset-0 focus-visible:ring-gray-200"> */}
-                                    <button className="focus:outline-none">
-                                        <Avatar className="cursor-pointer">
-                                            <AvatarImage 
-                                                 src="https://github.com/shadcn.png" 
-                                                 className="rounded-full "
-                                            />
-                                            <AvatarFallback>
-                                                <Image
-                                                    src={fallbackAvatar}
-                                                    alt="fallback avatar"
-                                                    className="rounded-full"
-                                               />
-                                            </AvatarFallback>
-                                        </Avatar>
-                                    </button>
-                                    {/* </Button> */}
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent className="w-[11rem]">
-                                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                                    <DropdownMenuSeparator className="bg-hover-1" />
-                                    <DropdownMenuGroup className="flex flex-col gap-y-2 ">
-                                        <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-2 ml-2 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md ">
-                                            <User className="h-4 w-4 ml-2" />
-                                            <span>Profile</span>
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-2 ml-2 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md">
-                                            <Settings className=" h-4 w-4 ml-2" />
-                                            <span>Settings</span>
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-2 ml-2 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md">
-                                            <LogOut className=" h-4 w-4 ml-2" />
-                                            <span>Logout</span>
-                                        </DropdownMenuItem>
-                                    </DropdownMenuGroup>
-                                    
-
-                                </DropdownMenuContent>
-                                       
-                                    
-                                
-                            </DropdownMenu>
+                        <div className=" rounded-full   text-lg font-semibold">
+                            {token ? (
+                                <Icon />
+                            ): (
+                                <Link href="/login" className="hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md p-2 hover:text-emerald-600 hover:transition-all hover:duration-300">
+                                    <span className="">Sign in</span>
+                                </Link>
+                            )}
                             
                         </div>
                     </div>

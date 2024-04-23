@@ -10,6 +10,7 @@ import {
     CarouselNext,
     CarouselPrevious,
   } from "@/components/ui/carousel"
+import { useRouter } from "next/navigation";
 import Autoplay from "embla-carousel-autoplay"
 import { heroImg } from "./hero-img"; 
 import hero_img1 from "../../public/assets/hero-img/hero-img1.png" 
@@ -19,6 +20,8 @@ import hero_img4 from "../../public/assets/hero-img/hero-img4.png"
 import hero_img5 from "../../public/assets/hero-img/hero-img5.png" 
 
 export default function Hero() {
+
+    const router = useRouter()
 
     return (
         <>
@@ -30,7 +33,7 @@ export default function Hero() {
                             <p className=" max-w-md">Browse through various recipes and save to collections that delight you.</p>
                         </div>
                         <div className="flex flex-row gap-x-4 items-center">
-                            <Button className="bg-dark-green w-[10rem] h-14 text-white hover:bg-primary-none hover:bg-opacity-90">
+                            <Button onClick={() => router.push('/register')} className="bg-dark-green w-[10rem] h-14 text-white hover:bg-primary-none hover:bg-opacity-90">
                                 <span className="text-lg">Get Started</span>
                                 <ArrowRight className="ml-2 text-2xl font-medium"/> 
                             </Button>

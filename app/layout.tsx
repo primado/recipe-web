@@ -3,6 +3,10 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/universal/navbar";
 import TanstackQueryProvider from "@/providers/tanstackQueryProvider";
+import { Toaster } from "sonner"
+import AllowedPages from "@/providers/accessPages";
+
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,11 +23,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <TanstackQueryProvider>
+
+          <TanstackQueryProvider>
           
-          {children}
-        
-        </TanstackQueryProvider>
+              {children}
+            
+            <Toaster />
+          </TanstackQueryProvider>
+
+         
       </body>
     </html>
   );
