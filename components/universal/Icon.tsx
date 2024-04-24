@@ -100,7 +100,7 @@ export default function Icon() {
                 <DropdownMenuGroup className="flex flex-col gap-y-2 ">
                     <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-2 ml-2 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md ">
                         <User className="h-4 w-4 ml-2" />
-                        <span>Profile</span>
+                        <button onClick={() => router.push(`/profile-update`)}><span>Profile</span></button>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-2 ml-2 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md">
                         <Settings className=" h-4 w-4 ml-2" />
