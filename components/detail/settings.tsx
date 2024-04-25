@@ -153,24 +153,8 @@ export default function Profile() {
             })
         }
     });
-  
-  
-  
-    // const handleFileSubmit = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    //     event.preventDefault();
-    //     if (file) {
-    //       try {
-    //         if (uploadRef.current) {
-    //             uploadRef.current.click();
-    //           }
-    //         await mutateAsync();
-    //       } catch (error) {
-    //         console.error('Error uploading file:', error);
-    //       }
-    //     }
-    //   };
     
-    const handleFileSubmit = async () => {
+    const handleFileSubmit = async  () => {
         if (file) {
             try {
                 await mutateAsync();
@@ -180,19 +164,15 @@ export default function Profile() {
         }
     };
 
-    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange =  (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = event.target.files?.[0];
         if (selectedFile) setFile(selectedFile);
-        if (file) {
-            try {
-                await mutateAsync();
-            } catch (error) {
-                console.error('Error uploading file:', error);
+            handleFileSubmit()
+
+            if(fileUploadSuccess) {
+                window.location.reload()
             }
-        }
-          if (fileUploadSuccess) {
-              window.location.reload()
-          }
+        
       };
 
     const handleButtonClick = async () => {
@@ -276,12 +256,8 @@ export default function Profile() {
                                                 />
                                             </div>
                                            
-                                            <button onClick={handleButtonClick}  type="button" className="bg-black hover:bg-opacity-90 text-white text-base p-2 rounded-md">
-                                               {isPending ? (
-                                                    <span>Uploading...</span>
-                                               ): (
-                                                    <span>Change Picture</span>
-                                               )}
+                                            <button onClick={handleButtonClick}  type="button" className="bg-black hover:bg-opacity-90 text-white text-base p-3 rounded-md">
+                                                {isPending ? "Uploading..." : "Change Picture"}
                                                
                                             </button> 
                                           
