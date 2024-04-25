@@ -42,9 +42,10 @@ export default function Navbar() {
                         
                     </div>
                     <div className="">
-                        <div className=" rounded-full   text-lg font-semibold">
+                        <div className=" rounded-full   text-lg font-semibold ">
                             {token ? (
-                                <Icon />
+                                <div className=""><Icon /></div>
+                                
                             ): (
                                 <Link href="/login" className="hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md p-2 hover:text-emerald-600 hover:transition-all hover:duration-300">
                                     <span className="">Sign in</span>

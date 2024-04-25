@@ -11,7 +11,7 @@ import { DropdownMenuGroup, DropdownMenuItem } from "@radix-ui/react-dropdown-me
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import fallbackAvatar from "../../public/assets/fallback-avatar.png"
 import { LogOut, Settings, User } from "lucide-react"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
@@ -26,8 +26,8 @@ type RefreshTokenType = {
 
 export default function Icon() {
 
-    const token = localStorage.getItem('accessToken') as any
-    const refresh = localStorage.getItem('refreshToken') as any
+    const token = localStorage.getItem('accessToken') as string 
+    const refresh = localStorage.getItem('refreshToken') as string 
     const router = useRouter()
 
     const logout = useMutation({
@@ -71,16 +71,38 @@ export default function Icon() {
         })
     }
 
+    // Get Profile Picture
+    const getProfilePic = useQuery({
+        queryKey: ['profile-pic'],
+        queryFn: async () => {
+            const response = await axios.get('http://localhost:8000/api/auth/user-profile', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+
+            console.log('Data', response.data);
+            return response.data
+        }
+    })
+
+
+
+    const pictures = getProfilePic.data
 
 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 {/* <Button variant="outline"  className="focus:border-none focus-visible:ring-1 ring-offset-0 focus-visible:ring-gray-200"> */}
-                <button className="focus:outline-none">
-                    <Avatar className="cursor-pointer">
+                <button className="focus:outline-none ">
+                    {pictures?.map((picture: any) => (
+
+                    
+                    <Avatar key={picture.id} className="cursor-pointer ">
                         <AvatarImage 
-                             src="https://github.com/shadcn.png" 
+                             src={picture?.profile_picture} 
                              className="rounded-full "
                         />
                         <AvatarFallback>
@@ -91,6 +113,7 @@ export default function Icon() {
                            />
                         </AvatarFallback>
                     </Avatar>
+                    ))}
                 </button>
                 {/* </Button> */}
             </DropdownMenuTrigger>
@@ -100,7 +123,7 @@ export default function Icon() {
                 <DropdownMenuGroup className="flex flex-col gap-y-2 ">
                     <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-2 ml-2 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md ">
                         <User className="h-4 w-4 ml-2" />
-                        <button onClick={() => router.push(`/profile-update`)}><span>Profile</span></button>
+                        <button onClick={() => router.push('/profile')}><span>Profile</span></button>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-2 ml-2 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md">
                         <Settings className=" h-4 w-4 ml-2" />
