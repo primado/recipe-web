@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, MouseEventHandler, useEffect, useLayoutEffect } from "react"
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import Link from "next/link"
@@ -9,7 +9,23 @@ import fallbackAvatar from "../../public/assets/fallback-avatar.png"
 import Image from "next/image"
 import { Button } from "../ui/button"
 import { Controller, useForm } from "react-hook-form"
+import { Router, SignalZero } from "lucide-react"
+import { ErrorMessage } from "@hookform/error-message"
+import { useRouter } from "next/navigation"
 
+
+type UserProfile = {
+    key: number,
+    first_name: string | undefined,
+    last_name: string | undefined,
+    username: string | undefined,
+    email?: string,
+    headline?: string,
+    bio?: string,
+    website?: string,
+    instagram?: string,
+    facebook?: string
+}
 
 type Username = {
     username : string
@@ -29,22 +45,22 @@ export default function Profile() {
 
     const token: string | null = localStorage.getItem('accessToken')
 
-    const { register, handleSubmit, setValue, control, formState: {errors} } = useForm<ChangePicture>({
-        criteriaMode: 'all'
+    const { register, handleSubmit, setValue, control, formState: {errors} } = useForm<UserProfile>({
+        criteriaMode: 'all',
     })
 
     // const [ file, setFile ] = useState<File | null>(null)
     const [ fileError, setFileError ] = useState<String>('')
     const [ fError, setFError ] = useState<Boolean>(false)
-    
+    const [isFileSelect, setIsFileSelect] = useState<Boolean>(false)
 
-    
+    const router = useRouter();
 
 
     const queryClient = useQueryClient()
 
 
-    const {data: profile, isError, error, isSuccess} = useQuery({
+    const {data: profile, isError, error, isSuccess: isUserProfileSuccess, isPending: isUserProfilPending} = useQuery({
         queryKey: ['profile'],
         queryFn: async () => {
             const response = await axios.get('http://localhost:8000/api/auth/user-profile', {
@@ -53,13 +69,47 @@ export default function Profile() {
                     'Authorization': `Bearer ${token}`
                 }
             })
-
             console.log(response.data);
-            return response.data.data
+            return response.data
         },
         
-    
     })
+
+    const updateUserProfile = useMutation({
+        mutationKey: ['updateProfile'],
+        mutationFn: async (newProfileData: UserProfile) => {
+            const response = await axios.patch('http://localhost:8000/api/auth/profile-update', newProfileData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            return response.data.data
+        },
+        onSuccess: (data) => {
+            toast.success('Successfully updated user profile', {
+                position: 'top-center',
+                duration: 4000,
+                closeButton: true 
+            })
+            window.location.reload()
+            queryClient.invalidateQueries({queryKey: ['profile']})
+
+        },
+        onError: (error) => {
+            toast.error('An occured while updating profile', {
+                position: 'top-center',
+                duration: 4000,
+                closeButton: true 
+            })
+            console.log(error.cause, error.message)
+        }
+    })
+
+    const onSubmit = async (data: UserProfile) => {
+        updateUserProfile.mutateAsync(data)
+    }
+
 
     // CRUD Operations for Profile Picture
     const {data: getPicture} = useQuery({
@@ -75,21 +125,22 @@ export default function Profile() {
         }
     })
 
-    const {data: updatePicture, mutateAsync: updatePictureMutate} = useMutation({
-        mutationKey: ['updatePicture'],
-        mutationFn: async (newPicture: ChangePicture) => {
-            const response = await axios.put('http://localhost:8000/api/auth/profile-picture', newPicture.profile_picture, {
+    // --------- Delete Picture -------------- //
+
+    const deleteProfilePciture = useMutation({
+        mutationKey: ['deleteMyPic'],
+        mutationFn: async () => {
+            const response = await axios.delete('http://localhost:8000/api/auth/profile-picture', {
                 headers: {
-                    'Content-Type': 'multipart/form-data;',
+                    'Content-Type': 'application/json;',
                     'Authorization': `Bearer ${token}`
                 },
             })
-            
             console.log(response.data);
             return response.data
         },
         onSuccess: () => {
-            toast.success('Profile Picture Updated Successfully', {
+            toast.success('Deleted profile picture pucessfully', {
                 position: 'top-center',
                 duration: 4000,
                 closeButton: true 
@@ -140,9 +191,11 @@ export default function Profile() {
                 duration: 4000,
                 closeButton: true 
             })
+            setIsFileSelect(false)
+            setTimeout(() => {
+                window.location.reload()
+            }, 1000)
             queryClient.invalidateQueries({queryKey: ['myPicture', 'profile-pic']})
-            
-            
         },
         onError: (error) => {
             console.log(error.cause, error.message)
@@ -155,6 +208,7 @@ export default function Profile() {
     });
     
     const handleFileSubmit = async  () => {
+     
         if (file) {
             try {
                 await mutateAsync();
@@ -165,60 +219,49 @@ export default function Profile() {
     };
 
     const handleFileChange =  (event: React.ChangeEvent<HTMLInputElement>) => {
+        
         const selectedFile = event.target.files?.[0];
-        if (selectedFile) setFile(selectedFile);
-            handleFileSubmit()
-
-            if(fileUploadSuccess) {
-                window.location.reload()
-            }
+        if (selectedFile) { 
+            setFile(selectedFile); 
+            setIsFileSelect(true);
+        }
         
       };
 
-    const handleButtonClick = async () => {
+    const handleButtonClick = async (e: any) => {
+        e.preventDefault()
         // Trigger the click event of the file input
         if (fileInputRef.current) {
             fileInputRef.current.click();
             
         }
-        
-        
     };
 
+    const handleCancelUpload = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        setFile(null); 
+        setIsFileSelect(false)
+        router.push("/profile");
+    };
+    
+    // setting form values
 
-  
-
-
-    // // Delete Picture
-    // const deletePicture = useMutation({
-    //     mutationKey: ['deletePicture']
-    // })
-
-
+    useLayoutEffect(() => {
+        if(!token) {
+            window.location.href = '/login'
+        }
+    }, [token])
+    
+    
 
     return (
         <>
-            {/* <h1 className="font-semibold text-2xl">Welcome to the Update User Profile Page</h1>
-            <p className="text-xl font-medium">Profile details</p>
-            {profile?.map((data: any) => (
-            <div key={data.id} className="">
-                <p className="flex flex-row">Username: <span>{data?.username}</span> </p>
-                <p className="flex flex-row">Bio: <span>{data?.bio}</span> </p>
-                <p className="">Headline: <span>{data?.headline}</span> </p>
-                <p className="">First Name: <span>{data?.first_name}</span> </p>
-                <p className="">Last Name: <span>{data?.last_name}</span></p> 
-                <p className="">Email: <span>{data?.email}</span> </p>
-                <p className="">Webiste: <span>{data?.website}</span> </p>
-                <p className="">Instagram: <span>{data?.instagram}</span> </p>
-                <p className="">Facebook: <span>{data?.facebook}</span> </p>
-                div
-            </div>
-            ))} */}
+     
 
             <div className="flex flex-col justify-center items-center gap-10 ">
                 <div className="flex flex-col justify-start items-start gap-10 max-w-[50%]  ">
                     <div className="">
-                        <h1 className="text-2xl font-bold">Profile</h1>
+                        <h1 className="text-2xl font-bold">Profile Settings</h1>
                     </div>
                     <div className="flex flex-col gap-8 ">
                         <div className="">
@@ -255,100 +298,314 @@ export default function Profile() {
                                                     ref={fileInputRef}
                                                 />
                                             </div>
-                                           
-                                            <button onClick={handleButtonClick}  type="button" className="bg-black hover:bg-opacity-90 text-white text-base p-3 rounded-md">
-                                                {isPending ? "Uploading..." : "Change Picture"}
-                                               
-                                            </button> 
-                                          
-                                            
+                                           <div className="flex flex-col gapx-x-0 gap-y-2 ">
+                                           {file ? (<p className="max-w-[7.5rem]">{file.name}</p>) : ''}
+                                           {isFileSelect ? 
+                                                (<div className="flex flex-row  gap-0"> 
+                                                    
+                                                    <Button onClick={handleFileSubmit} type="button" variant={'outline'} size={'sm'}>
+                                                    {isPending ? "Submitting..." : "Submit"}
+                                                    </Button>
+                                                    <Button onClick={handleCancelUpload} variant={'link'} size={'sm'}>Cancel</Button>
+                                                    </div>
+                                                ): (
+                                                    null
+                                            )}
+                                            <Button onClick={handleButtonClick}  type="button" size={'sm'}  className="">
+                                                Change Picture 
+                                            </Button> 
+                                                <Button onClick={ async () => deleteProfilePciture.mutateAsync()} variant={'destructive'} size={'sm'} type="button">
+                                                    {deleteProfilePciture.isPending ? 'Deleting...' : 'Delete Picture'}
+                                                </Button>
+                                            </div>
                                         </form>
                                     </div>
                                
                             </div>
                         </div>
                         <div className="">
-                            <form action="" className="flex flex-col w-full gap-6">
-                                <div className="flex flex-row gap-10">
-                                    <div className="flex flex-col gap-2 ">
-                                        <label htmlFor="fname" className="text-sm font-medium">First Name</label>
-                                        <input 
-                                            type="text"
-                                            className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"
-                                        />
-                                    </div>
-                                    <div className="flex flex-col gap-2">
-                                        <label htmlFor="lname" className="text-sm font-medium">Last Name</label>
-                                        <input 
-                                            type="text"
-                                            className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="flex flex-row gap-10">
-                                    <div className="flex flex-col gap-2">
-                                        <label htmlFor="uname" className="text-sm font-medium">Username</label>
-                                        <input 
-                                            type="text" 
-                                            className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"
+                            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-full gap-6">
+                                {profile?.map((data: UserProfile) => (
+                                <div key={data.key} className="flex flex-col gap-y-3">
+                                    <div  className="flex flex-row gap-10 ">
 
-                                        />
-                                    </div>
-                                    <div className="flex flex-col gap-2">
-                                        <label htmlFor="uname" className="text-sm font-medium">Email Address</label>
-                                        <input 
-                                            type="text" 
-                                            className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"
-
-                                        />
-                                    </div>
-                                </div>
-                                <hr className="border border-gray-400"/>
-                                <div className="flex flex-col w-full gap-5">
-                                    <h2 className="text-xl font-bold">About You</h2>
-                                    <hr className="border border-gray-400"/>
-                                    <div className="flex flex-col gap-5">
-                                        <div className="flex flex-col gap-2">
-                                            <label htmlFor="bio" className="text-sm font-medium">Bio</label>
-                                            <textarea name="" id="" cols={30} rows={4}  className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"></textarea>
+                                        <div  className="flex flex-col gap-3 ">
+                                            <label htmlFor="fname" className="text-sm font-medium">First Name</label>
+                                            <input 
+                                                type="text"
+                                                defaultValue={data?.first_name || ''}
+                                                className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"
+                                                {...register('first_name', {
+                                                    required: {
+                                                        value: true,
+                                                        message: 'First name is required'
+                                                    },
+                                                    maxLength: {
+                                                        value: 150,
+                                                        message: 'Accepts 150 maximum characters or fewer'
+                                                    },
+                                                })}
+                                            />
+                                            <ErrorMessage
+                                                errors={errors}
+                                                name="first_name"
+                                                render={({ messages }) =>
+                                                  messages &&
+                                                  Object.entries(messages).map(([type, message]) => (
+                                                    <p key={type} className="text-red-500 text-sm font-normal">{message}</p>
+                                                  ))
+                                                }
+                                            />
                                         </div>
+                                            
                                         <div className="flex flex-col gap-2">
-                                            <label htmlFor="headline" className="text-sm font-medium">Headline</label>
+                                            <label htmlFor="lname" className="text-sm font-medium">Last Name</label>
+                                            <input 
+                                                type="text"
+                                                defaultValue={data?.last_name || ''}
+                                                className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"
+                                                {...register('last_name', {
+                                                    required: {
+                                                        value: true,
+                                                        message: 'Last name is required'
+                                                    },
+                                                    maxLength: {
+                                                        value: 150,
+                                                        message: 'Accepts 150 maximum characters or fewer'
+                                                    }
+                                                })}
+                                            />
+                                            <ErrorMessage
+                                                errors={errors}
+                                                name="last_name"
+                                                render={({ messages }) =>
+                                                  messages &&
+                                                  Object.entries(messages).map(([type, message]) => (
+                                                    <p key={type} className="text-red-500 text-sm font-normal">{message}</p>
+                                                  ))
+                                                }
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-row gap-10">
+                                        <div className="flex flex-col gap-2">
+                                            <label htmlFor="uname" className="text-sm font-medium">Username</label>
                                             <input 
                                                 type="text" 
+                                                defaultValue={data?.username || ''}
                                                 className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"
+                                                {...register('username', {
+                                                    required: {
+                                                        value: true,
+                                                        message: 'username is required'
+                                                    },
+                                                    maxLength: {
+                                                        value: 150,
+                                                        message: 'Accepts 150 maximum characters or fewer'
+                                                    },
+                                                    pattern: {
+                                                        value: /^[\w.@+-]+$/,
+                                                        message: "150 characters or fewer. Letters, digits and @/./+/-/_ only."
+                                                    }
+                                                })}
+
+                                            />
+                                            <ErrorMessage
+                                                errors={errors}
+                                                name="username"
+                                                render={({ messages }) =>
+                                                  messages &&
+                                                  Object.entries(messages).map(([type, message]) => (
+                                                    <p key={type} className="text-red-500 text-sm font-normal">{message}</p>
+                                                  ))
+                                                }
+                                            />
+                                        </div>
+                                        <div className="flex flex-col gap-2 mb-2">
+                                            <label htmlFor="email_address" className="text-sm font-medium">Email Address</label>
+                                            <input 
+                                                type="text" 
+                                                defaultValue={data?.email || ''}
+                                                className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"
+                                                {...register('email', {
+                                                    required: {
+                                                        value: true,
+                                                        message: 'Email address  is required'
+                                                    },
+                                                    maxLength: {
+                                                        value: 150,
+                                                        message: 'Accepts 150 maximum characters or fewer'
+                                                    },
+                                                   
+                                                })}
+                                            />
+                                            <ErrorMessage
+                                                errors={errors}
+                                                name="email"
+                                                render={({ messages }) =>
+                                                  messages &&
+                                                  Object.entries(messages).map(([type, message]) => (
+                                                    <p key={type} className="text-red-500 text-sm font-normal">{message}</p>
+                                                  ))
+                                                }
                                             />
                                         </div>
                                     </div>
-                                </div>
-                                <div className="flex flex-col w-full gap-5 ">
-                                    <h2 className="text-xl font-bold">Social Media Handles</h2>
-                                    <hr className="border border-gray-400"/>
-                                    <div className="flex flex-row gap-10">
-                                        <div className="flex flex-col gap-2 ">
-                                            <label htmlFor="ig" className="text-sm font-medium">Instagram</label>
-                                            <input 
-                                                type="text"
-                                                className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"
+                                    <hr className="border border-gray-400 "/>
+                                    <div className="flex flex-col w-full gap-5">
+                                        <h2 className="text-xl font-bold">About You</h2>
+                                        <hr className="border border-gray-400"/>
+                                        <div className="flex flex-col gap-5">
+                                            <div className="flex flex-col gap-2">
+                                                <label htmlFor="bio" className="text-sm font-medium">Bio</label>
+                                                <textarea 
+                                                    id="" cols={30} rows={4} maxLength={150} 
+                                                    defaultValue={data?.bio || ''} 
+                                                    {...register('bio', {
+                                                        required: {
+                                                            value: false,
+                                                            message: ""
+                                                        },
+                                                        maxLength: {
+                                                            value: 150,
+                                                            message: "Accepts a maximum 150 characters or fewer."
+                                                        }
+
+                                                    })}
+                                                    className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand">
+                                                    
+                                                </textarea>
+                                            </div>
+                                            <div className="flex flex-col gap-2">
+                                                <label htmlFor="headline" className="text-sm font-medium">Headline</label>
+                                                <input 
+                                                    type="text"
+                                                    defaultValue={data?.headline || ''}  
+                                                    className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"
+                                                    {...register('headline', {
+                                                        required: {
+                                                            value: false,
+                                                            message: ""
+                                                        },
+                                                        maxLength: {
+                                                            value: 150,
+                                                            message: 'Accepts 150 maximum characters or fewer'
+                                                        }
+                                                    })}
+                                                />
+                                                <ErrorMessage
+                                                errors={errors}
+                                                name="last_name"
+                                                render={({ messages }) =>
+                                                  messages &&
+                                                  Object.entries(messages).map(([type, message]) => (
+                                                    <p key={type} className="text-red-500 text-sm font-normal">{message}</p>
+                                                  ))
+                                                }
                                             />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col w-full gap-5 ">
+                                        <h2 className="text-xl font-bold">Social Media Handles</h2>
+                                        <hr className="border border-gray-400"/>
+                                        <div className="flex flex-row gap-10">
+                                            <div className="flex flex-col gap-2 ">
+                                                <label htmlFor="ig" className="text-sm font-medium">Instagram</label>
+                                                <input 
+                                                    type="text"
+                                                    defaultValue={data?.instagram || ''} 
+                                                    className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"
+                                                    {...register('instagram', {
+                                                        required: {
+                                                            value: false,
+                                                            message: ''
+                                                        },
+                                                        maxLength: {
+                                                            value: 200,
+                                                            message: 'Accepts 150 maximum characters or fewer'
+                                                        }
+                                                    })}
+                                                />
+                                                <ErrorMessage
+                                                    errors={errors}
+                                                    name="instagram"
+                                                    render={({ messages }) =>
+                                                      messages &&
+                                                      Object.entries(messages).map(([type, message]) => (
+                                                        <p key={type} className="text-red-500 text-sm font-normal">{message}</p>
+                                                      ))
+                                                    }
+                                                />
+                                            </div>
+                                            <div className="flex flex-col gap-2">
+                                                <label htmlFor="fb" className="text-sm font-medium">Facebook</label>
+                                                <input 
+                                                    type="text"
+                                                    defaultValue={data?.facebook || ''} 
+                                                    className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"
+                                                    {...register('facebook', {
+                                                        required: {
+                                                            value: false,
+                                                            message: ''
+                                                        },
+                                                        maxLength: {
+                                                            value: 150,
+                                                            message: 'Accepts 150 maximum characters or fewer'
+                                                        }
+                                                    })}
+                                                />
+                                                <ErrorMessage
+                                                    errors={errors}
+                                                    name="facebook"
+                                                    render={({ messages }) =>
+                                                      messages &&
+                                                      Object.entries(messages).map(([type, message]) => (
+                                                        <p key={type} className="text-red-500 text-sm font-normal">{message}</p>
+                                                      ))
+                                                }
+                                                />
+                                            </div>
                                         </div>
                                         <div className="flex flex-col gap-2">
-                                            <label htmlFor="fb" className="text-sm font-medium">Facebook</label>
-                                            <input 
-                                                type="text"
-                                                className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"
-                                            />
+                                                <label htmlFor="website" className="text-sm font-medium">Website</label>
+                                                <input 
+                                                    type="text"
+                                                    defaultValue={data?.website || ''} 
+                                                    className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"
+                                                    {...register('website', {
+                                                        required: {
+                                                            value: false,
+                                                            message: ''
+                                                        },
+                                                        maxLength: {
+                                                            value: 200,
+                                                            message: 'Accepts 150 maximum characters or fewer'
+                                                        }
+                                                    })}
+                                                />
+                                                <ErrorMessage
+                                                    errors={errors}
+                                                    name="website"
+                                                    render={({ messages }) =>
+                                                      messages &&
+                                                      Object.entries(messages).map(([type, message]) => (
+                                                        <p key={type} className="text-red-500 text-sm font-normal">{message}</p>
+                                                      ))
+                                                    }
+                                                />
                                         </div>
+                                        <div className="">
+                                            <Button variant={'default'} size={'lg'} type="submit">
+                                                {isUserProfilPending ? 'Submitting' : 'Submit'}
+                                            </Button>
+                                        </div>
+                                                
                                     </div>
-                                    <div className="flex flex-col gap-2">
-                                            <label htmlFor="website" className="text-sm font-medium">Website</label>
-                                            <input 
-                                                type="text"
-                                                className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"
-                                            />
+                                                
+                                                
                                     </div>
-                                </div>
-                                
+                                ))}
                             </form>
                         </div>
                     </div>
