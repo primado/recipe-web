@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useRef, MouseEventHandler } from "react"
+import React, { useState, useRef, MouseEventHandler, useEffect } from "react"
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import Link from "next/link"
@@ -10,7 +10,20 @@ import Image from "next/image"
 import { Button } from "../ui/button"
 import { Controller, useForm } from "react-hook-form"
 import { SignalZero } from "lucide-react"
+import { ErrorMessage } from "@hookform/error-message"
 
+
+type UserProfile = {
+    first_name: string | undefined,
+    last_name: string | undefined,
+    username: string | undefined,
+    email_address?: string,
+    headline?: string,
+    bio?: string,
+    website?: string,
+    instagram?: string,
+    facebook?: string
+}
 
 type Username = {
     username : string
@@ -30,9 +43,10 @@ export default function Profile() {
 
     const token: string | null = localStorage.getItem('accessToken')
 
-    const { register, handleSubmit, setValue, control, formState: {errors} } = useForm<ChangePicture>({
-        criteriaMode: 'all'
+    const { register, handleSubmit, setValue, control, formState: {errors} } = useForm<UserProfile>({
+        criteriaMode: 'all',
     })
+
 
     // const [ file, setFile ] = useState<File | null>(null)
     const [ fileError, setFileError ] = useState<String>('')
@@ -45,7 +59,7 @@ export default function Profile() {
     const queryClient = useQueryClient()
 
 
-    const {data: profile, isError, error, isSuccess} = useQuery({
+    const {data: profile, isError, error, isSuccess: isUserProfileSuccess, isPending: isUserProfilPending} = useQuery({
         queryKey: ['profile'],
         queryFn: async () => {
             const response = await axios.get('http://localhost:8000/api/auth/user-profile', {
@@ -55,9 +69,10 @@ export default function Profile() {
                 }
             })
             console.log(response.data);
-            return response.data.data
+            return response.data
         },
     })
+
 
     // CRUD Operations for Profile Picture
     const {data: getPicture} = useQuery({
@@ -171,7 +186,8 @@ export default function Profile() {
         
       };
 
-    const handleButtonClick = async () => {
+    const handleButtonClick = async (e: any) => {
+        e.preventDefault()
         // Trigger the click event of the file input
         if (fileInputRef.current) {
             fileInputRef.current.click();
@@ -179,24 +195,27 @@ export default function Profile() {
         }
     };
 
+    // setting form values
+    useEffect(() => {
+
+        if (isUserProfileSuccess) {
+            setValue('first_name', profile?.first_name)
+            setValue('last_name', profile?.last_name)
+            setValue('username', profile?.data?.username)
+            setValue('email_address', profile?.data?.email_address)
+            setValue('headline', profile?.headline)
+            setValue('bio', profile?.bio)
+            setValue('instagram', profile?.instagram)
+            setValue('facebook', profile?.facebook)
+            setValue('website', profile?.website)
+        }
+        
+    }, [isUserProfileSuccess, setValue, profile])
+
+
     return (
         <>
-            {/* <h1 className="font-semibold text-2xl">Welcome to the Update User Profile Page</h1>
-            <p className="text-xl font-medium">Profile details</p>
-            {profile?.map((data: any) => (
-            <div key={data.id} className="">
-                <p className="flex flex-row">Username: <span>{data?.username}</span> </p>
-                <p className="flex flex-row">Bio: <span>{data?.bio}</span> </p>
-                <p className="">Headline: <span>{data?.headline}</span> </p>
-                <p className="">First Name: <span>{data?.first_name}</span> </p>
-                <p className="">Last Name: <span>{data?.last_name}</span></p> 
-                <p className="">Email: <span>{data?.email}</span> </p>
-                <p className="">Webiste: <span>{data?.website}</span> </p>
-                <p className="">Instagram: <span>{data?.instagram}</span> </p>
-                <p className="">Facebook: <span>{data?.facebook}</span> </p>
-                div
-            </div>
-            ))} */}
+     
 
             <div className="flex flex-col justify-center items-center gap-10 ">
                 <div className="flex flex-col justify-start items-start gap-10 max-w-[50%]  ">
@@ -269,6 +288,26 @@ export default function Profile() {
                                         <input 
                                             type="text"
                                             className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"
+                                            {...register('first_name', {
+                                                required: {
+                                                    value: true,
+                                                    message: 'First name is required'
+                                                },
+                                                maxLength: {
+                                                    value: 150,
+                                                    message: 'Accepts 150 maximum characters or fewer'
+                                                },
+                                            })}
+                                        />
+                                        <ErrorMessage
+                                            errors={errors}
+                                            name="first_name"
+                                            render={({ messages }) =>
+                                              messages &&
+                                              Object.entries(messages).map(([type, message]) => (
+                                                <p key={type} className="text-red-500 text-sm font-normal">{message}</p>
+                                              ))
+                                            }
                                         />
                                     </div>
                                     <div className="flex flex-col gap-2">
@@ -276,6 +315,26 @@ export default function Profile() {
                                         <input 
                                             type="text"
                                             className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"
+                                            {...register('last_name', {
+                                                required: {
+                                                    value: true,
+                                                    message: 'Last name is required'
+                                                },
+                                                maxLength: {
+                                                    value: 150,
+                                                    message: 'Accepts 150 maximum characters or fewer'
+                                                }
+                                            })}
+                                        />
+                                        <ErrorMessage
+                                            errors={errors}
+                                            name="last_name"
+                                            render={({ messages }) =>
+                                              messages &&
+                                              Object.entries(messages).map(([type, message]) => (
+                                                <p key={type} className="text-red-500 text-sm font-normal">{message}</p>
+                                              ))
+                                            }
                                         />
                                     </div>
                                 </div>
@@ -285,7 +344,31 @@ export default function Profile() {
                                         <input 
                                             type="text" 
                                             className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"
+                                            {...register('username', {
+                                                required: {
+                                                    value: true,
+                                                    message: 'username is required'
+                                                },
+                                                maxLength: {
+                                                    value: 150,
+                                                    message: 'Accepts 150 maximum characters or fewer'
+                                                },
+                                                pattern: {
+                                                    value: /^[\w.@+-]+$/,
+                                                    message: "150 characters or fewer. Letters, digits and @/./+/-/_ only."
+                                                }
+                                            })}
 
+                                        />
+                                        <ErrorMessage
+                                            errors={errors}
+                                            name="username"
+                                            render={({ messages }) =>
+                                              messages &&
+                                              Object.entries(messages).map(([type, message]) => (
+                                                <p key={type} className="text-red-500 text-sm font-normal">{message}</p>
+                                              ))
+                                            }
                                         />
                                     </div>
                                     <div className="flex flex-col gap-2">
@@ -293,7 +376,30 @@ export default function Profile() {
                                         <input 
                                             type="text" 
                                             className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"
-
+                                            {...register('email_address', {
+                                                required: {
+                                                    value: true,
+                                                    message: 'Email address  is required'
+                                                },
+                                                maxLength: {
+                                                    value: 150,
+                                                    message: 'Accepts 150 maximum characters or fewer'
+                                                },
+                                                pattern: {
+                                                    value: /^[\\w\\-\\.]+@([\\w-]+\\.)+[\\w-]{2,}$/,
+                                                    message: "Invalid email address. Please enter a valid email address."
+                                                }
+                                            })}
+                                        />
+                                        <ErrorMessage
+                                            errors={errors}
+                                            name="email_address"
+                                            render={({ messages }) =>
+                                              messages &&
+                                              Object.entries(messages).map(([type, message]) => (
+                                                <p key={type} className="text-red-500 text-sm font-normal">{message}</p>
+                                              ))
+                                            }
                                         />
                                     </div>
                                 </div>
@@ -304,14 +410,49 @@ export default function Profile() {
                                     <div className="flex flex-col gap-5">
                                         <div className="flex flex-col gap-2">
                                             <label htmlFor="bio" className="text-sm font-medium">Bio</label>
-                                            <textarea name="" id="" cols={30} rows={4}  className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"></textarea>
+                                            <textarea 
+                                                id="" cols={30} rows={4} maxLength={150}  
+                                                {...register('bio', {
+                                                    required: {
+                                                        value: false,
+                                                        message: ""
+                                                    },
+                                                    maxLength: {
+                                                        value: 150,
+                                                        message: "Accepts a maximum 150 characters or fewer."
+                                                    }
+
+                                                })}
+                                                className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand">
+                                               
+                                            </textarea>
                                         </div>
                                         <div className="flex flex-col gap-2">
                                             <label htmlFor="headline" className="text-sm font-medium">Headline</label>
                                             <input 
                                                 type="text" 
                                                 className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"
+                                                {...register('headline', {
+                                                    required: {
+                                                        value: false,
+                                                        message: ""
+                                                    },
+                                                    maxLength: {
+                                                        value: 150,
+                                                        message: 'Accepts 150 maximum characters or fewer'
+                                                    }
+                                                })}
                                             />
+                                            <ErrorMessage
+                                            errors={errors}
+                                            name="last_name"
+                                            render={({ messages }) =>
+                                              messages &&
+                                              Object.entries(messages).map(([type, message]) => (
+                                                <p key={type} className="text-red-500 text-sm font-normal">{message}</p>
+                                              ))
+                                            }
+                                        />
                                         </div>
                                     </div>
                                 </div>
@@ -324,6 +465,26 @@ export default function Profile() {
                                             <input 
                                                 type="text"
                                                 className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"
+                                                {...register('instagram', {
+                                                    required: {
+                                                        value: false,
+                                                        message: ''
+                                                    },
+                                                    maxLength: {
+                                                        value: 200,
+                                                        message: 'Accepts 150 maximum characters or fewer'
+                                                    }
+                                                })}
+                                            />
+                                            <ErrorMessage
+                                                errors={errors}
+                                                name="instagram"
+                                                render={({ messages }) =>
+                                                  messages &&
+                                                  Object.entries(messages).map(([type, message]) => (
+                                                    <p key={type} className="text-red-500 text-sm font-normal">{message}</p>
+                                                  ))
+                                                }
                                             />
                                         </div>
                                         <div className="flex flex-col gap-2">
@@ -331,6 +492,26 @@ export default function Profile() {
                                             <input 
                                                 type="text"
                                                 className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"
+                                                {...register('facebook', {
+                                                    required: {
+                                                        value: false,
+                                                        message: ''
+                                                    },
+                                                    maxLength: {
+                                                        value: 150,
+                                                        message: 'Accepts 150 maximum characters or fewer'
+                                                    }
+                                                })}
+                                            />
+                                            <ErrorMessage
+                                                errors={errors}
+                                                name="facebook"
+                                                render={({ messages }) =>
+                                                  messages &&
+                                                  Object.entries(messages).map(([type, message]) => (
+                                                    <p key={type} className="text-red-500 text-sm font-normal">{message}</p>
+                                                  ))
+                                            }
                                             />
                                         </div>
                                     </div>
@@ -339,7 +520,32 @@ export default function Profile() {
                                             <input 
                                                 type="text"
                                                 className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"
+                                                {...register('website', {
+                                                    required: {
+                                                        value: false,
+                                                        message: ''
+                                                    },
+                                                    maxLength: {
+                                                        value: 200,
+                                                        message: 'Accepts 150 maximum characters or fewer'
+                                                    }
+                                                })}
                                             />
+                                            <ErrorMessage
+                                                errors={errors}
+                                                name="website"
+                                                render={({ messages }) =>
+                                                  messages &&
+                                                  Object.entries(messages).map(([type, message]) => (
+                                                    <p key={type} className="text-red-500 text-sm font-normal">{message}</p>
+                                                  ))
+                                                }
+                                            />
+                                    </div>
+                                    <div className="">
+                                        <Button variant={'default'} size={'lg'} type="submit">
+                                            {isUserProfilPending ? 'Submitting' : 'Submit'}
+                                        </Button>
                                     </div>
                                 </div>
                             </form>
