@@ -54,12 +54,9 @@ export default function Profile() {
                     'Authorization': `Bearer ${token}`
                 }
             })
-
             console.log(response.data);
             return response.data.data
         },
-        
-    
     })
 
     // CRUD Operations for Profile Picture
@@ -87,7 +84,6 @@ export default function Profile() {
                     'Authorization': `Bearer ${token}`
                 },
             })
-            
             console.log(response.data);
             return response.data
         },
@@ -148,9 +144,6 @@ export default function Profile() {
                 window.location.reload()
             }, 1000)
             queryClient.invalidateQueries({queryKey: ['myPicture', 'profile-pic']})
-            
-            
-            
         },
         onError: (error) => {
             console.log(error.cause, error.message)
@@ -163,7 +156,6 @@ export default function Profile() {
     });
     
     const handleFileSubmit = async  () => {
-        
         if (file) {
             try {
                 await mutateAsync();
@@ -171,10 +163,7 @@ export default function Profile() {
                 console.error('Error uploading file:', error);
             }
         }
-
     };
-
-
 
     const handleFileChange =  (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = event.target.files?.[0];
@@ -188,11 +177,7 @@ export default function Profile() {
             fileInputRef.current.click();
             
         }
-        
-        
     };
-
-
 
     return (
         <>
@@ -252,7 +237,6 @@ export default function Profile() {
                                                     style={{ display: "none" }}
                                                     ref={fileInputRef}
                                                 />
-                                              
                                             </div>
                                            <div className="flex flex-col gapx-x-0 gap-y-2 ">
                                            {isFileSelect ? 
@@ -272,8 +256,6 @@ export default function Profile() {
                                                     {deleteProfilePciture.isPending ? 'Deleting...' : 'Delete Picture'}
                                                 </Button>
                                             </div>
-                                          
-                                            
                                         </form>
                                     </div>
                                
@@ -360,7 +342,6 @@ export default function Profile() {
                                             />
                                     </div>
                                 </div>
-                                
                             </form>
                         </div>
                     </div>
