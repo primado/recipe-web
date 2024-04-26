@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useRef, MouseEventHandler, useEffect } from "react"
+import React, { useState, useRef, MouseEventHandler, useEffect, useLayoutEffect } from "react"
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import Link from "next/link"
@@ -48,7 +48,6 @@ export default function Profile() {
     const { register, handleSubmit, setValue, control, formState: {errors} } = useForm<UserProfile>({
         criteriaMode: 'all',
     })
-
 
     // const [ file, setFile ] = useState<File | null>(null)
     const [ fileError, setFileError ] = useState<String>('')
@@ -246,6 +245,12 @@ export default function Profile() {
     };
     
     // setting form values
+
+    useLayoutEffect(() => {
+        if(!token) {
+            window.location.href = '/login'
+        }
+    }, [token])
     
     
 
@@ -322,7 +327,7 @@ export default function Profile() {
                             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-full gap-6">
                                 {profile?.map((data: UserProfile) => (
                                 <div key={data.key} className="flex flex-col gap-y-3">
-                                    <div  className="flex flex-row gap-10">
+                                    <div  className="flex flex-row gap-10 ">
 
                                         <div  className="flex flex-col gap-3 ">
                                             <label htmlFor="fname" className="text-sm font-medium">First Name</label>
@@ -416,7 +421,7 @@ export default function Profile() {
                                                 }
                                             />
                                         </div>
-                                        <div className="flex flex-col gap-2">
+                                        <div className="flex flex-col gap-2 mb-2">
                                             <label htmlFor="email_address" className="text-sm font-medium">Email Address</label>
                                             <input 
                                                 type="text" 
@@ -446,7 +451,7 @@ export default function Profile() {
                                             />
                                         </div>
                                     </div>
-                                    <hr className="border border-gray-400"/>
+                                    <hr className="border border-gray-400 "/>
                                     <div className="flex flex-col w-full gap-5">
                                         <h2 className="text-xl font-bold">About You</h2>
                                         <hr className="border border-gray-400"/>
