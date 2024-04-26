@@ -192,7 +192,7 @@ export default function Profile() {
                 duration: 4000,
                 closeButton: true 
             })
-            
+            setIsFileSelect(false)
             setTimeout(() => {
                 window.location.reload()
             }, 1000)
@@ -208,8 +208,8 @@ export default function Profile() {
         }
     });
     
-    const handleFileSubmit = async  (e: any) => {
-        e.preventDefault()
+    const handleFileSubmit = async  () => {
+     
         if (file) {
             try {
                 await mutateAsync();
@@ -222,7 +222,10 @@ export default function Profile() {
     const handleFileChange =  (event: React.ChangeEvent<HTMLInputElement>) => {
         
         const selectedFile = event.target.files?.[0];
-        if (selectedFile) setFile(selectedFile); setIsFileSelect(true);
+        if (selectedFile) { 
+            setFile(selectedFile); 
+            setIsFileSelect(true);
+        }
         
       };
 
@@ -235,6 +238,13 @@ export default function Profile() {
         }
     };
 
+    const handleCancelUpload = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        setFile(null); 
+        setIsFileSelect(false)
+        router.push("/profile");
+    };
+    
     // setting form values
     
     
@@ -284,12 +294,14 @@ export default function Profile() {
                                                 />
                                             </div>
                                            <div className="flex flex-col gapx-x-0 gap-y-2 ">
+                                           {file ? (<p className="max-w-[7.5rem]">{file.name}</p>) : ''}
                                            {isFileSelect ? 
                                                 (<div className="flex flex-row  gap-0"> 
+                                                    
                                                     <Button onClick={handleFileSubmit} type="button" variant={'outline'} size={'sm'}>
                                                     {isPending ? "Submitting..." : "Submit"}
                                                     </Button>
-                                                    <Button onClick={() => router.push("/profile")} variant={'link'} size={'sm'}>Cancel</Button>
+                                                    <Button onClick={handleCancelUpload} variant={'link'} size={'sm'}>Cancel</Button>
                                                     </div>
                                                 ): (
                                                     null
