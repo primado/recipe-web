@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, MouseEventHandler } from "react"
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import Link from "next/link"
@@ -9,6 +9,7 @@ import fallbackAvatar from "../../public/assets/fallback-avatar.png"
 import Image from "next/image"
 import { Button } from "../ui/button"
 import { Controller, useForm } from "react-hook-form"
+import { SignalZero } from "lucide-react"
 
 
 type Username = {
@@ -36,7 +37,7 @@ export default function Profile() {
     // const [ file, setFile ] = useState<File | null>(null)
     const [ fileError, setFileError ] = useState<String>('')
     const [ fError, setFError ] = useState<Boolean>(false)
-    
+    const [isFileSelect, setIsFileSelect] = useState<Boolean>(false)
 
     
 
@@ -75,12 +76,14 @@ export default function Profile() {
         }
     })
 
-    const {data: updatePicture, mutateAsync: updatePictureMutate} = useMutation({
-        mutationKey: ['updatePicture'],
-        mutationFn: async (newPicture: ChangePicture) => {
-            const response = await axios.put('http://localhost:8000/api/auth/profile-picture', newPicture.profile_picture, {
+    // --------- Delete Picture -------------- //
+
+    const deleteProfilePciture = useMutation({
+        mutationKey: ['deleteMyPic'],
+        mutationFn: async () => {
+            const response = await axios.delete('http://localhost:8000/api/auth/profile-picture', {
                 headers: {
-                    'Content-Type': 'multipart/form-data;',
+                    'Content-Type': 'application/json;',
                     'Authorization': `Bearer ${token}`
                 },
             })
@@ -89,7 +92,7 @@ export default function Profile() {
             return response.data
         },
         onSuccess: () => {
-            toast.success('Profile Picture Updated Successfully', {
+            toast.success('Deleted profile picture pucessfully', {
                 position: 'top-center',
                 duration: 4000,
                 closeButton: true 
@@ -140,7 +143,12 @@ export default function Profile() {
                 duration: 4000,
                 closeButton: true 
             })
+            setIsFileSelect(false)
+            setTimeout(() => {
+                window.location.reload()
+            }, 1000)
             queryClient.invalidateQueries({queryKey: ['myPicture', 'profile-pic']})
+            
             
             
         },
@@ -155,6 +163,7 @@ export default function Profile() {
     });
     
     const handleFileSubmit = async  () => {
+        
         if (file) {
             try {
                 await mutateAsync();
@@ -162,16 +171,14 @@ export default function Profile() {
                 console.error('Error uploading file:', error);
             }
         }
+
     };
+
+
 
     const handleFileChange =  (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = event.target.files?.[0];
-        if (selectedFile) setFile(selectedFile);
-            handleFileSubmit()
-
-            if(fileUploadSuccess) {
-                window.location.reload()
-            }
+        if (selectedFile) setFile(selectedFile); setIsFileSelect(true);
         
       };
 
@@ -184,15 +191,6 @@ export default function Profile() {
         
         
     };
-
-
-  
-
-
-    // // Delete Picture
-    // const deletePicture = useMutation({
-    //     mutationKey: ['deletePicture']
-    // })
 
 
 
@@ -254,12 +252,26 @@ export default function Profile() {
                                                     style={{ display: "none" }}
                                                     ref={fileInputRef}
                                                 />
+                                              
                                             </div>
-                                           
-                                            <button onClick={handleButtonClick}  type="button" className="bg-black hover:bg-opacity-90 text-white text-base p-3 rounded-md">
-                                                {isPending ? "Uploading..." : "Change Picture"}
-                                               
-                                            </button> 
+                                           <div className="flex flex-col gapx-x-0 gap-y-2 ">
+                                           {isFileSelect ? 
+                                                (<div className="flex flex-row  gap-0"> 
+                                                    <Button onClick={handleFileSubmit} type="button" variant={'outline'} size={'sm'}>
+                                                    {isPending ? "Submitting..." : "Submit"}
+                                                    </Button>
+                                                    <Button onClick={() => setFile(null)} variant={'link'} size={'sm'}>Cancel</Button>
+                                                    </div>
+                                                ): (
+                                                    null
+                                            )}
+                                            <Button onClick={handleButtonClick}  type="button" size={'sm'}  className="">
+                                                Change Picture 
+                                            </Button> 
+                                                <Button onClick={ async () => deleteProfilePciture.mutateAsync()} variant={'destructive'} size={'sm'} type="button">
+                                                    {deleteProfilePciture.isPending ? 'Deleting...' : 'Delete Picture'}
+                                                </Button>
+                                            </div>
                                           
                                             
                                         </form>
