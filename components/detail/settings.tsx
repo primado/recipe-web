@@ -261,7 +261,7 @@ export default function Profile() {
             <div className="flex flex-col justify-center items-center gap-10 ">
                 <div className="flex flex-col justify-start items-start gap-10 max-w-[50%]  ">
                     <div className="">
-                        <h1 className="text-2xl font-bold">Profile</h1>
+                        <h1 className="text-2xl font-bold">Profile Settings</h1>
                     </div>
                     <div className="flex flex-col gap-8 ">
                         <div className="">
