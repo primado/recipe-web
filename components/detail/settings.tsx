@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useRef, MouseEventHandler, useEffect } from "react"
+import React, { useState, useRef, MouseEventHandler, useEffect, useLayoutEffect } from "react"
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import Link from "next/link"
@@ -48,7 +48,6 @@ export default function Profile() {
     const { register, handleSubmit, setValue, control, formState: {errors} } = useForm<UserProfile>({
         criteriaMode: 'all',
     })
-
 
     // const [ file, setFile ] = useState<File | null>(null)
     const [ fileError, setFileError ] = useState<String>('')
@@ -192,7 +191,7 @@ export default function Profile() {
                 duration: 4000,
                 closeButton: true 
             })
-            
+            setIsFileSelect(false)
             setTimeout(() => {
                 window.location.reload()
             }, 1000)
@@ -208,8 +207,8 @@ export default function Profile() {
         }
     });
     
-    const handleFileSubmit = async  (e: any) => {
-        e.preventDefault()
+    const handleFileSubmit = async  () => {
+     
         if (file) {
             try {
                 await mutateAsync();
@@ -222,7 +221,10 @@ export default function Profile() {
     const handleFileChange =  (event: React.ChangeEvent<HTMLInputElement>) => {
         
         const selectedFile = event.target.files?.[0];
-        if (selectedFile) setFile(selectedFile); setIsFileSelect(true);
+        if (selectedFile) { 
+            setFile(selectedFile); 
+            setIsFileSelect(true);
+        }
         
       };
 
@@ -235,7 +237,20 @@ export default function Profile() {
         }
     };
 
+    const handleCancelUpload = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        setFile(null); 
+        setIsFileSelect(false)
+        router.push("/profile");
+    };
+    
     // setting form values
+
+    useLayoutEffect(() => {
+        if(!token) {
+            window.location.href = '/login'
+        }
+    }, [token])
     
     
 
@@ -246,7 +261,7 @@ export default function Profile() {
             <div className="flex flex-col justify-center items-center gap-10 ">
                 <div className="flex flex-col justify-start items-start gap-10 max-w-[50%]  ">
                     <div className="">
-                        <h1 className="text-2xl font-bold">Profile</h1>
+                        <h1 className="text-2xl font-bold">Profile Settings</h1>
                     </div>
                     <div className="flex flex-col gap-8 ">
                         <div className="">
@@ -284,12 +299,14 @@ export default function Profile() {
                                                 />
                                             </div>
                                            <div className="flex flex-col gapx-x-0 gap-y-2 ">
+                                           {file ? (<p className="max-w-[7.5rem]">{file.name}</p>) : ''}
                                            {isFileSelect ? 
                                                 (<div className="flex flex-row  gap-0"> 
+                                                    
                                                     <Button onClick={handleFileSubmit} type="button" variant={'outline'} size={'sm'}>
                                                     {isPending ? "Submitting..." : "Submit"}
                                                     </Button>
-                                                    <Button onClick={() => router.push("/profile")} variant={'link'} size={'sm'}>Cancel</Button>
+                                                    <Button onClick={handleCancelUpload} variant={'link'} size={'sm'}>Cancel</Button>
                                                     </div>
                                                 ): (
                                                     null
@@ -310,7 +327,7 @@ export default function Profile() {
                             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-full gap-6">
                                 {profile?.map((data: UserProfile) => (
                                 <div key={data.key} className="flex flex-col gap-y-3">
-                                    <div  className="flex flex-row gap-10">
+                                    <div  className="flex flex-row gap-10 ">
 
                                         <div  className="flex flex-col gap-3 ">
                                             <label htmlFor="fname" className="text-sm font-medium">First Name</label>
@@ -404,7 +421,7 @@ export default function Profile() {
                                                 }
                                             />
                                         </div>
-                                        <div className="flex flex-col gap-2">
+                                        <div className="flex flex-col gap-2 mb-2">
                                             <label htmlFor="email_address" className="text-sm font-medium">Email Address</label>
                                             <input 
                                                 type="text" 
@@ -434,7 +451,7 @@ export default function Profile() {
                                             />
                                         </div>
                                     </div>
-                                    <hr className="border border-gray-400"/>
+                                    <hr className="border border-gray-400 "/>
                                     <div className="flex flex-col w-full gap-5">
                                         <h2 className="text-xl font-bold">About You</h2>
                                         <hr className="border border-gray-400"/>

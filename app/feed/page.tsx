@@ -1,4 +1,5 @@
 'use client'
+import Navbar from "@/components/universal/navbar"
 import { redirect } from "next/navigation"
 import { useEffect, useLayoutEffect } from "react"
 
@@ -19,9 +20,13 @@ export default function Dashboard() {
 
 
     return (
-        <section className="bg-white-fb min-h-screen">
-            <h1 className="text-2xl text-black font-serif">Hello, this is the Feed page</h1>
-        </section>
+        <>
+            <Navbar />
+            <section className="bg-white-fb min-h-screen">
+                <h1 className="text-2xl text-black font-serif">Hello, this is the Feed page</h1>
+            </section>
+
+        </>
     )
     
 };
