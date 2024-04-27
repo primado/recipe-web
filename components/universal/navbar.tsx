@@ -41,7 +41,7 @@ export default function Navbar() {
                         </Link>
                         
                     </div>
-                    <div className="">
+                    <div className="flex justify-center items-center">
                         <div className=" rounded-full   text-lg font-semibold ">
                             {token ? (
                                 <div className=""><Icon /></div>
