@@ -32,8 +32,6 @@ interface Recipe {
 
 export default function RecipeHome() {
 
-
-
     const {data: recipeData, isSuccess, isError} = useQuery({
         queryKey: ['home-recipes'],
         queryFn: async () => {
@@ -47,9 +45,6 @@ export default function RecipeHome() {
             return response.data.data
         }
     })
-
-
-    
 
 
     return (

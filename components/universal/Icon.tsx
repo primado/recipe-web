@@ -50,9 +50,10 @@ export default function Icon() {
             localStorage.removeItem('refreshToken')
             toast.success(data.detail, {
                 position: 'top-center',
-                duration: 11000,
+                duration: 2000,
                 closeButton: true
             })
+            router.push("/")
             window.location.reload()
         },
 

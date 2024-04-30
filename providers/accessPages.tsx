@@ -14,12 +14,12 @@ export default function AllowedPages({children}: {children: React.ReactNode}) {
         
         const checkAuthentication = async () => {
             const token = localStorage.getItem('accessToken')
-            if (!token && window.location.pathname !== '/login') {
+            if (!token && window.location.pathname !== '/') {
                 router.push("/")
             } else if (token && window.location.pathname === '/login') {
               router.push('/feed')
             } else if (!token && window.location.pathname === '/feed') {
-                router.push("/login")
+                router.push("/")
             }
         };
 
