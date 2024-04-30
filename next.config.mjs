@@ -5,7 +5,7 @@ const nextConfig = {
             {
                 protocol: "https",
                 hostname: "**.cloudinary.com",
-                pathname: "**/v1/media/recipe-images/*"
+                pathname: "**/v1/media/**"
 
             }
         ]

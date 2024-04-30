@@ -1,4 +1,5 @@
 'use client'
+import PublicRecipeFeed from "@/components/detail/publicRecipefeed"
 import Navbar from "@/components/universal/navbar"
 import { redirect } from "next/navigation"
 import { useEffect, useLayoutEffect } from "react"
@@ -14,7 +15,7 @@ export default function Dashboard() {
     useLayoutEffect(() => {
         const token = localStorage.getItem('accessToken')
          if (!token) {
-             redirect("/login")
+             redirect("/")
          }
     }, [])
 
@@ -22,8 +23,8 @@ export default function Dashboard() {
     return (
         <>
             <Navbar />
-            <section className="bg-tan w-full ">
-                <h1 className="text-2xl text-black font-serif">Hello, this is the Feed page</h1>
+            <section className="bg-tan w-full px-36 py-12">
+                <PublicRecipeFeed />
             </section>
 
         </>
