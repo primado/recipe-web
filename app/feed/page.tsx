@@ -22,7 +22,7 @@ export default function Dashboard() {
     return (
         <>
             <Navbar />
-            <section className="bg-white-fb min-h-screen">
+            <section className="bg-tan w-full ">
                 <h1 className="text-2xl text-black font-serif">Hello, this is the Feed page</h1>
             </section>
 

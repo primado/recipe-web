@@ -37,7 +37,7 @@ export default function Login() {
         onSuccess: (data) => {
             toast.success("Logged in successfully", {
                 position: "top-center",
-                duration: 4000,
+                duration: 3000,
                 closeButton: true,
             })
             localStorage.setItem('accessToken', data?.access)
