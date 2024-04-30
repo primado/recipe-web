@@ -40,7 +40,6 @@ export default function Icon() {
                 }
             
             })
-            console.log(response.data);
             return response.data
 
         },
@@ -83,7 +82,7 @@ export default function Icon() {
                 }
             })
 
-            console.log('Data', response.data);
+            console.log('User Profile data', response.data);
             return response.data
         }
     })
