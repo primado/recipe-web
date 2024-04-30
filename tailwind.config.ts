@@ -31,6 +31,7 @@ const config = {
         "white-f8": "#f8f9f5",
         "white-f3": "#f3f2ed",
         "light-gray": "#f0f0f0",
+        'tan': "#f5efe3",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {

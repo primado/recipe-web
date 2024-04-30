@@ -30,9 +30,17 @@ export default function Navbar() {
                 </div>
                 <div className="flex flex-row my-auto justify-around items-center gap-x-16 ">
                     <div className="flex flex-row gap-x-10 text-davy-gray text-lg font-semibold">
-                        <Link href="/feed" className="hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md p-2 hover:text-emerald-600 hover:transition-all hover:duration-300">
-                            <p>Feed</p>
-                        </Link>
+                        {token && (
+                            <>
+                                <Link href="/feed" className="hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md p-2 hover:text-emerald-600 hover:transition-all hover:duration-300">
+                                    <p>Feed</p>
+                                </Link>
+                                <Link href="#" className="hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md p-2 hover:text-emerald-600 hover:transition-all hover:duration-300">
+                                    <p>Collections</p>
+                                </Link>
+                            </>
+                        )}
+                       
                         <Link href="#" className="hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md p-2 hover:text-emerald-600 hover:transition-all hover:duration-300">
                             <p>About</p>
                         </Link>
