@@ -97,7 +97,7 @@ export default function Icon() {
             <DropdownMenuTrigger asChild>
                 {/* <Button variant="outline"  className="focus:border-none focus-visible:ring-1 ring-offset-0 focus-visible:ring-gray-200"> */}
                 <button className="focus:outline-none ">
-                    {pictures?.map((picture: any) => (
+                    {pictures && pictures.map((picture: any) => (
 
                     
                     <Avatar key={picture.id} className="cursor-pointer ">
