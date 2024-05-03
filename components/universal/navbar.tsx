@@ -31,7 +31,7 @@ export default function Navbar() {
 
     return (
         <>
-            <nav className="bg-white flex flex-row justify-between items-center gap-x-12 shadow-md py-5 w-full px-36">
+            <nav className="bg-white flex flex-row justify-between items-center gap-x-12 shadow-md py-5 w-full px-60">
                 <div className="">
                     <Link href="/" className="text-brand text-2xl font-semibold hover:text-emerald-600 hover:transition-all hover:duration-300">
                         <p>Recipe</p>
