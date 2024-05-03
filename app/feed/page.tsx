@@ -12,7 +12,7 @@ export default function Dashboard() {
 
     
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         const token = localStorage.getItem('accessToken')
          if (!token) {
              redirect("/")
