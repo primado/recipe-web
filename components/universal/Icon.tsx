@@ -123,11 +123,11 @@ export default function Icon() {
                 <DropdownMenuGroup className="flex flex-col gap-y-2 ">
                     <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-2 ml-2 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md ">
                         <User className="h-4 w-4 ml-2" />
-                        <button onClick={() => router.push('/profile')}><span>Profile</span></button>
+                        <button onClick={() => router.push('/#')}><span>Profile</span></button>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-2 ml-2 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md">
                         <Settings className=" h-4 w-4 ml-2" />
-                        <span>Settings</span>
+                        <button onClick={() => router.push("/profile-settings")}><span>Settings</span></button>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-2 ml-2 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md">
                         <LogOut className=" h-4 w-4 ml-2" />
