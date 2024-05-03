@@ -19,15 +19,15 @@ export default function CreateRecipe() {
                         Go back
                     </p>
                 </Button>
-                <div className="flex flex-col justify-center items-center">
+                <div className="flex flex-col w-full justify-center items-center">
                   
-                    <form action="" className="flex flex-col gap-y-3 justify-center items-start max-w-[38%] w-[37%] border border-red-500">
+                    <form action="" className="flex flex-col gap-y-3 justify-center items-start max-w-[51%] border border-red-500">
                         <div className="flex flex-row w-full gap-3">
                             <div className="flex flex-col w-full gap-y-2 ">
                                 <label htmlFor="title" className="text-base font-medium">Title</label>
                                 <input 
                                     type="text" 
-                                    className="bg-white focus:outline-none px-3 py-1 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md" 
+                                    className="bg-white focus:outline-none px-3 py-2 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md" 
 
                                 />
                             </div>
@@ -35,7 +35,7 @@ export default function CreateRecipe() {
                                 <label htmlFor="title" className="text-base font-medium">Description</label>
                                 <input 
                                     type="text" 
-                                    className="bg-white focus:outline-none px-3 py-1 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md"
+                                    className="bg-white focus:outline-none px-3 py-2 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md"
                                 />
                             </div>
                         </div>
@@ -46,7 +46,7 @@ export default function CreateRecipe() {
                                 <textarea 
                                     cols={30}
                                     rows={4}
-                                    className="bg-white focus:outline-none px-3 py-1 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md"
+                                    className="bg-white focus:outline-none px-3 py-2 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md"
                                 />
                             </div>
                             <div className="flex flex-col w-full gap-y-2">
@@ -54,7 +54,7 @@ export default function CreateRecipe() {
                                 <textarea 
                                     cols={30}
                                     rows={4}
-                                    className="bg-white focus:outline-none px-3 py-1 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md"
+                                    className="bg-white focus:outline-none px-3 py-2 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md"
                                 />
                             </div>
                         </div>
@@ -64,21 +64,21 @@ export default function CreateRecipe() {
                                 <input 
                                     type="text" 
                                     
-                                    className="bg-white focus:outline-none px-3 py-1 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md"
+                                    className="bg-white focus:outline-none px-3 py-2 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md"
                                 />
                             </div>
                             <div className="flex flex-col w-full gap-y-2">
                                 <label htmlFor="intruction" className="text-base font-medium">Difficulty Level</label>
                                 <input 
                                     type="text" 
-                                    className="bg-white focus:outline-none px-3 py-1 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md"
+                                    className="bg-white focus:outline-none px-3 py-2 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md"
                                 />
                             </div>
                         </div>
-                        <div className="mt-3 w-full">
+                        <div className="mt-4 w-full">
                             <button
 
-                            className="bg-black hover:opacity-90 w-full text-white text-xl py-1 hover:font-medium rounded-md transition-colors duration-300 ease-in-out"
+                            className="bg-black hover:opacity-90 w-full text-white text-xl py-2 hover:font-medium rounded-md transition-colors duration-300 ease-in-out"
                         >
                             <span>Create recipe</span>
                         </button>
