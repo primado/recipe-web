@@ -54,32 +54,32 @@ export default function RecipeHome() {
                 <p className="text-[#6ca97e] text-base uppercase font-semibold">Recipes</p>
                 <h2 className="text-davy-gray text-3xl font-medium">Pupolar Recipes</h2>
             </div>
-            <div className="flex flex-row gap-14">
-                {recipeData && recipeData.slice(0, 4).map((recipe: Recipe) => (
-                <div className="" key={recipe?.id}>
-
-
-                    <Link href={`home-detail/${recipe.id}`} >
-                        <Card  className="flex flex-col bg-[#F5F5F5]  h-full max-w-[350px] overflow-hidden shadow-md duration-300 hover:text-brand">
-                            <div className="h-60 overflow-y-clip overflow-x-hidden" >
-                                <Image
-                                    src={recipe?.recipe_image || default_img}
-                                    alt="Recipe image"
-                                    width={300}
-                                    height={300}
-                                    quality={100}
-                                    
-                                    className="object-cover w-full  object-top overflow-clip transition ease-in-out hover:translate-y-1 duration-300 hover:scale-110"
-                              
-                                />
-                            </div>
-                            <CardContent className=" px-8 flex flex-col  py-6  gap-y-2 rounded-b-md">
-                                <CardTitle className="text-lg break-words text-left">{recipe?.title}</CardTitle>
-                            </CardContent>
-                        </Card>
-                    </Link>
-                
-                </div>
+            <div className="grid grid-cols-4 justify-between place-content-center gap-6">
+                {recipeData && recipeData.map((data:Recipe) => (
+                <Link key={data.id} href={`home-detail/${data.id}`} >
+                <Card   className="flex w-full flex-col bg-[#F5F5F5] h-full max-w-[350px] overflow-hidden shadow-xl duration-300 hover:text-brand">
+                    <div className="w-full relative h-[280px]" >
+                        <Image 
+                            alt={data?.title}
+                            fill
+                            priority={true}
+                            quality={10}
+                            src={data?.recipe_image || default_img}
+                            className="overflow-clip transition ease-in-out hover:translate-y-1 duration-300 hover:scale-105"  
+                        />
+                    </div>
+                    <CardHeader className="p-5">
+                         <div className="flex flex-col gap-y-2">
+                            <CardTitle className="font-semibold text-lg">
+                                {data?.title}
+                            </CardTitle>
+                            <CardDescription className="text-left font-medium text-base">
+                                {''}
+                            </CardDescription>
+                        </div>
+                    </CardHeader>
+                </Card>
+                </Link>
                 ))}
             </div>
             <div className="flex flex-col gap-y-3 items-center">

@@ -15,6 +15,7 @@ import Link from "next/link"
 import { useState } from "react"
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
+import { useRouter } from "next/navigation"
 
 
 
@@ -43,30 +44,32 @@ export default function PublicRecipeFeed() {
     })
 
     const recipeData = publicRecipe.data
+
+    // router
+    const router = useRouter()
     
     return (
         <>
             <div className="flex flex-col gap-10 ">
                 <div className="flex flex-row justify-between item-center">
                     <div className="">
-                        <h1 className="text-black font-bold text-xl">Recipes</h1>
-                        <p className="text-gray-500 font-semibold text-lg">Browse through various recipes</p>
+                        <h1 className="text-black font-bold text-3xl">Recipes</h1>
+                        <p className="text-gray-500 font-semibold text-xl">Browse through various recipes</p>
                     </div>
                     <div className="">
-                        <Button  variant={'default'}>
+                        <Button  variant={'default'} className="text-xl" onClick={() => router.push("/create-recipe")}>
                           Create Recipe
                         </Button>
                        
                     </div>
                 </div>
 
-                <div className="grid grid-cols-4 justify-between place-content-center gap-14">
+                <div className="grid grid-cols-4 justify-between place-content-center gap-6">
                     {recipeData && recipeData.map((data:RecipeType) => (
                     <Card key={data.id}  className="flex w-full flex-col bg-[#F5F5F5] h-full max-w-[350px] overflow-hidden shadow-xl duration-300 hover:text-brand">
-                        <div className="w-full relative h-[310px]" >
+                        <div className="w-full relative h-[250px]" >
                             <Image 
-                                
-                                alt=""
+                                alt={data?.title}
                                 fill
                                 priority={true}
                                 src={data?.recipe_image || default_img}
@@ -78,9 +81,6 @@ export default function PublicRecipeFeed() {
                                 <CardTitle className="font-semibold text-lg">
                                     {data?.title}
                                 </CardTitle>
-                                <CardDescription className="text-left font-medium text-base">
-                                    {''}
-                                </CardDescription>
                             </div>
                         </CardHeader>
                     </Card>
