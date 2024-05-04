@@ -11,7 +11,7 @@ export default function Dashboard() {
     return (
         <>
             <Navbar />
-            <section className="bg-tan w-full px-60 py-20">
+            <section className="bg-tan w-full px-52 py-20">
                 <CreateRecipe />
             </section>
 
