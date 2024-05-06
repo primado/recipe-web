@@ -25,8 +25,8 @@ export default function Hero() {
 
     return (
         <>
-            <div className="bg-hero flex flex-row justify-between items-center  py-10">
-                <div className="flex flex-row w-full justify-between items-center px-60 ">
+            <div className="bg-hero flex flex-row justify-between items-center  py-10  px-60 ">
+                <div className="flex flex-row w-full justify-between gap-24 items-center">
                     <div className="flex flex-col gap-y-20">
                         <div className="flex flex-col gap-y-5">
                             <h1 className="text-5xl font-medium break-words max-w-xl leading-[1.2]">A recipe hub built to find your favorite recipes.</h1>
