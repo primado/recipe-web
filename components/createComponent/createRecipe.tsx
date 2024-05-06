@@ -3,7 +3,7 @@
 import { ArrowLeftIcon,  } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Button } from "../ui/button"
-import { useForm } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import { ErrorMessage } from "@hookform/error-message"
 import axios from "axios"
 import {
@@ -14,25 +14,24 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { Accesstoken } from "@/lib/globalVar"
+
 import { toast } from "sonner"
 
 
 
 type RecipeDTO = {
-    id: number,
     title: string,
     instruction: string,
     description: string,
     ingredient: string,
-    cook_time_duration: string,
+    cooking_time_duration: string,
     visibility: string,
     difficulty_level: string,
-    recipe__image: string,
+    recipe_image: string,
 }
 
 
-const token = Accesstoken
+const token = localStorage.getItem("accessToken")
 
 export default function CreateRecipe() {
 
@@ -41,18 +40,17 @@ export default function CreateRecipe() {
 
     //  React Hook Form for form handling
 
-    const { register, handleSubmit, reset, formState: { errors } } = useForm<RecipeDTO>({
+    const { register, control, handleSubmit, reset, formState: { errors } } = useForm<RecipeDTO>({
         criteriaMode: 'all',
         defaultValues: {
-            id: 0,
             title: '',
             instruction: '',
             description: '',
             ingredient: '',
-            cook_time_duration: '',
-            visibility: 'public',
+            cooking_time_duration: '',
+            visibility: '',
             difficulty_level: '',
-            recipe__image: '',
+            recipe_image: ''
         }
     })
 
@@ -64,7 +62,7 @@ export default function CreateRecipe() {
             const response = await axios.post('http://localhost:8000/api/recipe', newCreateRecipeData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer  ${token}`
+                    'Authorization': `Bearer ${token}`
                 }
             })
 
@@ -77,8 +75,9 @@ export default function CreateRecipe() {
                 duration: 3000,
                 closeButton: true
             })
+            reset()
             queryClient.invalidateQueries({queryKey: ['publicRecipes']})
-            router.refresh()
+            window.location.reload()
             
         }
     })
@@ -104,7 +103,7 @@ export default function CreateRecipe() {
                 </Button>
                 <div className="flex flex-col w-full justify-center items-center">
                   
-                    <form onSubmit={handleSubmit(onSubmit)}  className="flex flex-col gap-y-3 justify-center items-start max-w-[55%] w-[55%] border border-red-500">
+                    <form onSubmit={handleSubmit(onSubmit)}  className="flex flex-col gap-y-3 justify-center items-start max-w-[47%] w-[47%] border border-red-500">
                         <div className="flex flex-row w-full gap-4">
                             <div className="flex flex-col w-full gap-y-2 ">
                                 <label htmlFor="title" className="text-base font-medium">Title</label>
@@ -113,7 +112,7 @@ export default function CreateRecipe() {
                                     {...register('title', {
                                         required: {
                                             value: true,
-                                            message: 'The Title is a field required field.'
+                                            message: 'The Title field required is a field.'
                                         },
                                         maxLength: {
                                             value: 150,
@@ -124,8 +123,21 @@ export default function CreateRecipe() {
                                     className="bg-white focus:outline-none px-3 py-2 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md" 
 
                                 />
+                                <ErrorMessage
+                                    errors={errors}
+                                    name="title"
+                                    render={({ messages }) =>
+                                      messages &&
+                                      Object.entries(messages).map(([type, message]) => (
+                                        <p key={type} className="text-red-500 font-medium">{message}</p>
+                                      ))
+                                    }
+                                />
+
                             </div>
-                            <div className="flex flex-col w-full gap-y-2 ">
+                          
+                        </div>
+                        <div className="flex flex-col w-full gap-y-2 ">
                                 <label htmlFor="description" className="text-base font-medium">Description</label>
                                 <input 
                                     type="text"
@@ -135,15 +147,24 @@ export default function CreateRecipe() {
                                             message: "The Description is a field required."
                                         },
                                         maxLength: {
-                                            value: 150,
+                                            value: 300,
                                             message: "Accepts a maximum of 150 characters."
                                         }
                                     })} 
                                     placeholder="Description"
                                     className="bg-white focus:outline-none px-3 py-2 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md"
                                 />
+                                 <ErrorMessage
+                                    errors={errors}
+                                    name="description"
+                                    render={({ messages }) =>
+                                      messages &&
+                                      Object.entries(messages).map(([type, message]) => (
+                                        <p key={type} className="text-red-500 font-medium">{message}</p>
+                                      ))
+                                    }
+                                />
                             </div>
-                        </div>
                         <div className="flex flex-col gap-y-3 w-full ">
                             
                             <div className="flex flex-col w-full gap-y-2 ">
@@ -160,6 +181,16 @@ export default function CreateRecipe() {
                                     placeholder="Intructions"
                                     className="bg-white focus:outline-none px-3 py-2 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md"
                                 />
+                                 <ErrorMessage
+                                    errors={errors}
+                                    name="instruction"
+                                    render={({ messages }) =>
+                                      messages &&
+                                      Object.entries(messages).map(([type, message]) => (
+                                        <p key={type} className="text-red-500 font-medium">{message}</p>
+                                      ))
+                                    }
+                                />
                             </div>
                             <div className="flex flex-col w-full gap-y-2">
                                 <label htmlFor="intruction" className="text-base font-medium">Ingredients</label>
@@ -175,13 +206,23 @@ export default function CreateRecipe() {
                                     placeholder="Ingredients"
                                     className="bg-white focus:outline-none px-3 py-2 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md"
                                 />
+                                 <ErrorMessage
+                                    errors={errors}
+                                    name="ingredient"
+                                    render={({ messages }) =>
+                                      messages &&
+                                      Object.entries(messages).map(([type, message]) => (
+                                        <p key={type} className="text-red-500 font-medium">{message}</p>
+                                      ))
+                                    }
+                                />
                             </div>
                         </div>
                         <div className="flex flex-col w-full gap-y-2">
-                            <label htmlFor="cooking_duration_time">Cooking Duration Time</label>
+                            <label htmlFor="cooking_duration_time" className="text-base font-medium">Cooking Duration Time</label>
                             <input 
                                 type="text"  
-                                {...register("cook_time_duration", {
+                                {...register("cooking_time_duration", {
                                     required: {
                                         value: true,
                                         message: "Cooking Duration Time is a required field"
@@ -190,42 +231,118 @@ export default function CreateRecipe() {
                                 placeholder="eg. 1 hr 20 min"
                                 className="bg-white focus:outline-none px-3 py-2 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md"
                             />
+                             <ErrorMessage
+                                    errors={errors}
+                                    name="cooking_time_duration"
+                                    render={({ messages }) =>
+                                      messages &&
+                                      Object.entries(messages).map(([type, message]) => (
+                                        <p key={type} className="text-red-500 font-medium">{message}</p>
+                                      ))
+                                    }
+                                />
                         </div>
                         <div className="flex flex-row w-full gap-4">
                             <div className="flex flex-col w-full gap-y-2">
                                 <label htmlFor="visibility" className="text-base font-medium">Visibility</label>
-                                <Select>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Public"/>
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                       <SelectItem value="public">Public</SelectItem>
-                                       <SelectItem value="public">Private</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                <Controller
+                                    control={control}
+                                    rules={{
+                                        required: {
+                                            value: true,
+                                            message: "Visibility field is required",
+                                        }
+                                    }}
+                                    name="visibility"
+                                    render={({ field: { onChange, onBlur, value } }) => (
+                            
+                                  
+                                    <Select onValueChange={onChange} defaultValue={value}>
+                                        <SelectTrigger className="bg-white focus:outline-none px-3 py-2 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md">
+                                            <SelectValue placeholder="Public" className="!text-black"/>
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                           <SelectItem value="public">Public</SelectItem>
+                                           <SelectItem value="private">Private</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                )}
+                                />
+                                 <ErrorMessage
+                                    errors={errors}
+                                    name="visibility"
+                                    render={({ messages }) =>
+                                      messages &&
+                                      Object.entries(messages).map(([type, message]) => (
+                                        <p key={type} className="text-red-500 font-medium">{message}</p>
+                                      ))
+                                    }
+                                />
                             </div>
                             <div className="flex flex-col w-full gap-y-2">
                                 <label htmlFor="difficulty_level" className="text-base font-medium">Difficulty Level</label>
-                                <Select>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Easy"/>
-                                    </SelectTrigger>
-                                    <SelectContent 
-                                        className="bg-whit focus:border-none focus:outline-none px-3 py-2 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md"
+                                <Controller 
+                                control={control}
+                                rules={{
+                                    required: {
+                                        value: true,
+                                        message: "Difficulty Level field is required",
+                                    }
+                                    
+                                }}
+                                name="difficulty_level"
+                                render={({ field: {onChange, onBlur, value} }) => (
+                                    <Select
+                                        onValueChange={onChange}
+                                        defaultValue={value}
                                     >
-                                       <SelectItem value="public">Easy</SelectItem>
-                                       <SelectItem value="public">Medium</SelectItem>
-                                       <SelectItem value="public">Hard</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                        <SelectTrigger className=" bg-white focus:outline-none px-3 py-2 font-medium text-base border border-slate-700 focus:!ring-2 focus:ring-yellow-600 focus:border-0 rounded-md ">
+                                            <SelectValue placeholder="Easy" className="!text-black"/>
+                                        </SelectTrigger>
+                                        <SelectContent 
+                                            className="bg-white focus:border-none focus:outline-none px-3 py-2 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md"
+                                        >
+                                           <SelectItem value="easy">Easy</SelectItem>
+                                           <SelectItem value="medium">Medium</SelectItem>
+                                           <SelectItem value="hard">Hard</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                )}
+                                />
+                                 <ErrorMessage
+                                    errors={errors}
+                                    name="difficulty_level"
+                                    render={({ messages }) =>
+                                      messages &&
+                                      Object.entries(messages).map(([type, message]) => (
+                                        <p key={type} className="text-red-500 font-medium">{message}</p>
+                                      ))
+                                    }
+                                />
                             </div>
+                           
+                        </div>
+                        <div className="flex flex-col w-full gap-y-2">
+                                <label htmlFor="recipe-image" className="text-base font-medium">Recipe Image</label>
+                                <input 
+                                    type="file" 
+                                    {...register('recipe_image', {
+                                        required: {
+                                            value: false,
+                                            message: "Recipe image is not a required file"
+                                        }
+                                    })}
+                                    name="recipe_image" 
+                                    className="text-base font-semibold" 
+                                />
                         </div>
                         <div className="mt-4 w-full">
                             <button
                             type="submit"
-                            className="bg-black hover:opacity-90 w-full text-white text-xl py-2 hover:font-medium rounded-md transition-colors duration-300 ease-in-out"
+                            disabled={createRecipeMutation.isPending}
+                            className={`${createRecipeMutation.isPending ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'} bg-black hover:opacity-90 w-full text-white text-xl py-2 hover:font-semibold rounded-md transition-colors duration-300 ease-in-out`}
                         >
-                            <span>Create recipe</span>
+                            <span>{createRecipeMutation.isPending ? 'Creating recipe...' : 'Create recipe'}</span>
                         </button>
                         </div>
                     </form>
