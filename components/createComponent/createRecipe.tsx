@@ -16,6 +16,7 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 import { toast } from "sonner"
+import { Input } from "postcss"
 
 
 
@@ -27,7 +28,7 @@ type RecipeDTO = {
     cooking_time_duration: string,
     visibility: string,
     difficulty_level: string,
-    recipe_image: string,
+    recipe_image: File | null,
 }
 
 
@@ -40,7 +41,7 @@ export default function CreateRecipe() {
 
     //  React Hook Form for form handling
 
-    const { register, control, handleSubmit, reset, formState: { errors } } = useForm<RecipeDTO>({
+    const { register, control, setValue, handleSubmit, reset, formState: { errors } } = useForm<RecipeDTO>({
         criteriaMode: 'all',
         defaultValues: {
             title: '',
@@ -50,7 +51,7 @@ export default function CreateRecipe() {
             cooking_time_duration: '',
             visibility: '',
             difficulty_level: '',
-            recipe_image: ''
+            recipe_image: null,
         }
     })
 
@@ -65,7 +66,6 @@ export default function CreateRecipe() {
                     'Authorization': `Bearer ${token}`
                 }
             })
-
             console.log(response.data);
             return response.data
         },
@@ -78,7 +78,6 @@ export default function CreateRecipe() {
             reset()
             queryClient.invalidateQueries({queryKey: ['publicRecipes']})
             window.location.reload()
-            
         }
     })
 
@@ -324,16 +323,27 @@ export default function CreateRecipe() {
                         </div>
                         <div className="flex flex-col w-full gap-y-2">
                                 <label htmlFor="recipe-image" className="text-base font-medium">Recipe Image</label>
-                                <input 
-                                    type="file" 
-                                    {...register('recipe_image', {
-                                        required: {
-                                            value: false,
-                                            message: "Recipe image is not a required file"
-                                        }
-                                    })}
-                                    name="recipe_image" 
-                                    className="text-base font-semibold" 
+                                <Controller
+                                    control={control}
+                                    name={"recipe_image"}
+                                    rules={{ required: {
+                                            value: true,
+                                            message: "Recipe Picture is required"
+                                    } }}    
+                                    render={({ field: { value, onChange, ...field } }) => {
+                                        return (
+                                            <input
+                                                {...field}
+                                                onChange={(event) => {
+                                                   const file = event.target.files?.[0]
+                                                   onChange(file)
+                                                }}
+                                                type="file"
+                                               
+                                                className=""
+                                            />
+                                        )
+                                    }}
                                 />
                         </div>
                         <div className="mt-4 w-full">
