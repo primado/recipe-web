@@ -246,7 +246,7 @@ export default function Profile() {
     
     // setting form values
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         if(!token) {
             window.location.href = '/login'
         }
@@ -315,7 +315,7 @@ export default function Profile() {
                                                 Change Picture 
                                             </Button> 
                                                 <Button onClick={ async () => deleteProfilePciture.mutateAsync()} variant={'destructive'} size={'sm'} type="button">
-                                                    {deleteProfilePciture.isPending ? 'Deleting...' : 'Delete Picture'}
+                                                    {deleteProfilePciture.isPending ? 'Removing...' : 'Remove Picture'}
                                                 </Button>
                                             </div>
                                         </form>

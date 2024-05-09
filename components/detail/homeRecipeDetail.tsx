@@ -17,8 +17,8 @@ export default function RecipeDetail({id}: {id: number}) {
                     "Content-Type": "application/json"
                 }
             })
-
-            return response.data
+           
+            return response.data.data
         }
     })
 
@@ -37,7 +37,7 @@ export default function RecipeDetail({id}: {id: number}) {
             <section className="px-28 py-16 bg-white-f8 w-full min-h-screen">
                 <div className="flex flex-col gap-y-5">
                     <div className="flex flex-col gap-y-4 w-[70%]">
-                        <h1 className="text-black break-words text-5xl font-bold">{recipeData?.title}</h1>
+                        <h1 className="text-black break-words text-5xl font-bold">{recipeData   ?.title}</h1>
                         <p className="text-black text-xl font-medium">{recipeData?.description}</p>
                     </div>
                     <div className="flex flex-row justify-between">

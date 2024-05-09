@@ -1,5 +1,6 @@
-import Profile from "@/components/detail/settings";
+
 import Navbar from "@/components/universal/navbar";
+import Profile from "@/components/detail/profile-settings";
 
 
 export default function UpdateProfile() {
