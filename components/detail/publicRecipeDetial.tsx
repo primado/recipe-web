@@ -1,11 +1,12 @@
 'use client'
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
-import { ArrowLeftIcon, ImageIcon, TimerIcon } from "lucide-react"
+import { ArrowLeftIcon, Edit2Icon, ImageIcon, TimerIcon } from "lucide-react"
 import Image from "next/image"
 import { formatDistanceToNow , formatISO } from "date-fns"
 import { Button } from "../ui/button"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 
 const token = localStorage.getItem('accessToken')
@@ -36,30 +37,33 @@ export default function PublicRecipeDetial({id}: {id: number}) {
 
     const recipeLastUpdated = formatLastUpdated(recipeData?.last_updated)
 
-
     const router = useRouter()
 
 
     return (
 
         <>
-            <section className="px-28 py-16 bg-tan w-full min-h-screen">
+            <section className="px-52 py-16 bg-tan w-full min-h-screen ">
                 <div className="flex flex-col gap-12">
                     <div className="flex flex-row justify-between items-center">
                         <Button 
                               size={'sm'} variant={'default'} 
                               onClick={() => router.back()}
-                              className="bg-black rounded-md w-[5rem] px-14 py-2 opacity-90 flex flex-row justify-center items-center">
+                              className="bg-black rounded-md w-[5rem] px-16 py-6 opacity-90 flex flex-row justify-center items-center">
                              <p className="text-white flex flex-row gap-x-2 items-center justify-center">
                                  <ArrowLeftIcon  className="font-semibold text-base text-white"/>
                                  Go back
                              </p>
                         </Button>
-                        <Button size={'sm'} variant={'default'}
-                            
+                        <Link 
+                            href={`/edit-recipe/${recipeData?.id}`}
+                            className="bg-black rounded-md  px-5 py-3 opacity-90 flex flex-row justify-center items-center"
                         >
-
-                        </Button>
+                            <p className="text-white flex flex-row gap-2">
+                                <Edit2Icon />
+                                <span>Edit Recipe</span>
+                            </p>
+                        </Link>
                     </div>
                     <div className="flex flex-col gap-y-5">
                         <div className="flex flex-col gap-y-4 w-[70%]">
