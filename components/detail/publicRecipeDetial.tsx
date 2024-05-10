@@ -9,6 +9,18 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 
 
+type RecipeDTO = {
+    id: number,
+    title: string,
+    instruction: string,
+    description: string,
+    ingredient: string,
+    cooking_time_duration: string,
+    visibility: string,
+    difficulty_level: string,
+    // recipe_image: string | null,
+}
+
 const token = localStorage.getItem('accessToken')
 
 export default function PublicRecipeDetial({id}: {id: number}) {
@@ -22,8 +34,8 @@ export default function PublicRecipeDetial({id}: {id: number}) {
                     'Authorization': `Bearer ${token}`
                 }
             })
-            console.log(response.data.data);
-            return response.data.data
+            console.log("Detail retrieve data =>", response.data);
+            return response.data
         }
     })
 
@@ -47,33 +59,38 @@ export default function PublicRecipeDetial({id}: {id: number}) {
                 <div className="flex flex-col gap-12">
                     <div className="flex flex-row justify-between items-center">
                         <Button 
-                              size={'sm'} variant={'default'} 
+                              size={'lg'} variant={'default'} 
                               onClick={() => router.back()}
-                              className="bg-black rounded-md w-[5rem] px-16 py-6 opacity-90 flex flex-row justify-center items-center">
+                              className="bg-black rounded-md w-[5rem] px-14 py-2 opacity-90 flex flex-row justify-center items-center">
                              <p className="text-white flex flex-row gap-x-2 items-center justify-center">
                                  <ArrowLeftIcon  className="font-semibold text-base text-white"/>
                                  Go back
                              </p>
                         </Button>
-                        <Link 
-                            href={`/edit-recipe/${recipeData?.id}`}
-                            className="bg-black rounded-md  px-5 py-3 opacity-90 flex flex-row justify-center items-center"
+                        {recipeData && recipeData?.map((data: RecipeDTO) => (
+                        <Button
+                            key={data.id}
+                            size={'lg'} variant={'default'} 
+                            onClick={() => router.push(`/edit-recipe/${data?.id}`)}
+                            className="bg-black rounded-md  px-5 opacity-90 flex flex-row justify-center items-center"
                         >
-                            <p className="text-white flex flex-row gap-2">
-                                <Edit2Icon />
+                            <p className="text-white flex flex-row justify-center items-center gap-2">
+                                <Edit2Icon size={18} strokeWidth={3} />
                                 <span>Edit Recipe</span>
                             </p>
-                        </Link>
+                        </Button>
+                        ))}
                     </div>
-                    <div className="flex flex-col gap-y-5">
+                    {recipeData && recipeData?.map((data: any) => (
+                    <div key={data.id} className="flex flex-col gap-y-5">
                         <div className="flex flex-col gap-y-4 w-[70%]">
-                            <h1 className="text-black break-words text-5xl font-bold">{recipeData?.title}</h1>
-                            <p className="text-black text-xl font-medium">{recipeData?.description}</p>
+                            <h1 className="text-black break-words text-5xl font-bold">{data?.title}</h1>
+                            <p className="text-black text-xl font-medium">{data?.description}</p>
                         </div>
                         <div className="flex flex-row justify-between items-stretch">
                            <div className="flex flex-col gap-y-5">
                                 <div className="">
-                                    <h2 className="text-black font-semibold text-2xl">{recipeData?.user.first_name} {recipeData?.user?.last_name}</h2>
+                                    <h2 className="text-black font-semibold text-2xl">{data?.user?.first_name} {data?.user?.last_name}</h2>
                                     <p className="italic text-gray-500 text-lg font-normal">Updated - {recipeLastUpdated}</p>
                                 </div>
                                 <div className="">
@@ -82,15 +99,15 @@ export default function PublicRecipeDetial({id}: {id: number}) {
                                         <span>Total Time</span>
                                     </h4>
                                     <p className="text-base font-medium">
-                                        {recipeData?.cooking_duration_time}
+                                        {data?.cooking_time_duration}
                                     </p>
                                 </div>
                             </div>
                             <div className="">
 
                                 <Image 
-                                    src={recipeData?.recipe_image || ImageIcon}
-                                    alt={`Photo of ${recipeData?.title} `}
+                                    src={data?.recipe_image || ImageIcon}
+                                    alt={`Photo of ${data?.title} `}
                                     width={300}
                                     height={500}
                                     className="overflow-clip transition ease-in-out hover:translate-x-1 duration-300 hover:scale-105"  
@@ -99,6 +116,7 @@ export default function PublicRecipeDetial({id}: {id: number}) {
                             </div>
                         </div>
                     </div>
+                    ))}
                 </div>
             </section>
         </>

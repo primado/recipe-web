@@ -17,6 +17,7 @@ import {
 
 
 type RecipeDTO = {
+    id: number,
     title: string,
     instruction: string,
     description: string,
@@ -24,7 +25,7 @@ type RecipeDTO = {
     cooking_time_duration: string,
     visibility: string,
     difficulty_level: string,
-    recipe_image: File | null,
+    recipe_image: string,
 }
 
 const token = localStorage.getItem('accessToken')
@@ -34,27 +35,13 @@ export default function EditRecipeComponent({id}: {id: number}) {
     const router = useRouter()
     const queryClient = useQueryClient()
 
-    //  React Hook Form for form handling
 
-    const { register, control, setValue, handleSubmit, reset, formState: { errors } } = useForm<RecipeDTO>({
-        criteriaMode: 'all',
-        defaultValues: {
-            title: '',
-            instruction: '',
-            description: '',
-            ingredient: '',
-            cooking_time_duration: '',
-            visibility: '',
-            difficulty_level: '',
-            recipe_image: null,
-        }
-    })
 
     // Tanstack React Query
 
     // Get Query
-    const getRecipe = useQuery({
-        queryKey: ['getEditRecipe', id],
+    const {data: recipeData} = useQuery({
+        queryKey: ['getUpdateRecipeData', id],
         queryFn: async () => {
             const response = await axios.get(`http://localhost:8000/api/recipe/${id}`, {
                 headers: {
@@ -62,20 +49,31 @@ export default function EditRecipeComponent({id}: {id: number}) {
                     'Authorization': `Bearer ${token}`
                 }
             })
+            console.log("Edit Recipe data =>", response.data);
             return response.data
         }
     })
 
-    const editRecipeMutation = useMutation({
-        mutationKey: ['editRecipe', id],
+
+    // const recipeData = getRecipe.data  
+
+        //  React Hook Form for form handling
+
+    const { register, control, setValue, handleSubmit, reset, formState: { errors } } = useForm<RecipeDTO>({
+         criteriaMode: 'all',
+
+    })
+
+    const updateRecipeMutate = useMutation({
+        mutationKey: ['updateRecipe', id],
         mutationFn: async (newEditRecipeData: RecipeDTO) => {
             const response = await axios.put(`http://localhost:8000/api/recipe/${id}`, newEditRecipeData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data',
+                    'Content-Type': 'multipart/form-data', 
                     'Authorization': `Bearer ${token}`
                 }
             })
-            console.log(response.data);
+            console.log('Edit Recipe Get Data:', response.data);
             return response.data
         },
         onSuccess: () => {
@@ -84,27 +82,26 @@ export default function EditRecipeComponent({id}: {id: number}) {
                 duration: 3000,
                 closeButton: true
             })
-            queryClient.invalidateQueries({queryKey: ['publicRecipes']})
+            queryClient.invalidateQueries({queryKey: ['getUpdateRecipeData']})
             window.location.reload()
         }
     })
 
     const onSubmit = async (data: RecipeDTO) => {
         console.log('Recipe update form data =>', data);
-        editRecipeMutation.mutateAsync(data)
+        updateRecipeMutate.mutateAsync(data)
     }
-
-
-    const getRecipeData = getRecipe.data
+ 
+   
     
     return (
         <>
 
-            <section className="bg-tan flex flex-col  gap-x-12 shadow-md py-16 w-full px-52">
+            <section className="bg-tan flex flex-col  gap-x-12 gap-y-5 shadow-md py-16 w-full px-52">
                 <div className="flex flex-col justify-start items-start">
                     <Button size={'sm'} variant={'default'}
                         onClick={() => router.back()}
-                        className="py-5"
+                        className="px-5 py-5"
                     >
                         <p className="flex flex-row justify-center items-center gap-x-2">
                             <ArrowLeftIcon className="text-white"/>
@@ -113,13 +110,16 @@ export default function EditRecipeComponent({id}: {id: number}) {
                     </Button>
                 </div>
                     <div className="flex flex-col w-full justify-center items-center">
-                        <form onSubmit={handleSubmit(onSubmit)}  className="flex flex-col gap-y-3 justify-center items-start max-w-[47%] w-[47%] ">
+                        {recipeData?.map((data: RecipeDTO) => (
+                        <form key={data.id} onSubmit={handleSubmit(onSubmit)}  className="flex flex-col gap-y-3 justify-center items-start max-w-[47%] w-[47%] ">
+                         
+                            
                             <div className="flex flex-row w-full gap-4">
                                 <div className="flex flex-col w-full gap-y-2 ">
                                     <label htmlFor="title" className="text-base font-medium">Title</label>
                                     <input 
-                                        type="text" 
-                                        defaultValue={getRecipeData?.title}
+                                        type="text"
+                                        defaultValue={data ? data.title : ''}
                                         {...register('title', {
                                             required: {
                                                 value: true,
@@ -152,7 +152,7 @@ export default function EditRecipeComponent({id}: {id: number}) {
                                     <label htmlFor="description" className="text-base font-medium">Description</label>
                                     <input 
                                         type="text"
-                                        defaultValue={getRecipeData?.description}
+                                        defaultValue={data ? data?.description : ''}
                                         {...register("description", {
                                             required: {
                                                 value: true,
@@ -184,7 +184,7 @@ export default function EditRecipeComponent({id}: {id: number}) {
                                     <textarea 
                                         cols={30}
                                         rows={4}
-                                        defaultValue={getRecipeData?.instruction}
+                                        defaultValue={data ? data?.instruction : ''}
                                         {...register("instruction", {
                                             required: {
                                                 value: false,
@@ -210,7 +210,7 @@ export default function EditRecipeComponent({id}: {id: number}) {
                                     <textarea 
                                         cols={30}
                                         rows={4}
-                                        defaultValue={getRecipeData?.ingredient}
+                                        defaultValue={data ? data.ingredient : ''}
                                         {...register("ingredient", {
                                             required: {
                                                 value: false,
@@ -235,8 +235,8 @@ export default function EditRecipeComponent({id}: {id: number}) {
                             <div className="flex flex-col w-full gap-y-2 mb-3">
                                 <label htmlFor="cooking_duration_time" className="text-base font-medium">Cooking Duration Time</label>
                                 <input 
-                                    type="text"  
-                                    defaultValue={getRecipeData?.cooking_duration_time}
+                                    type="text"
+                                    defaultValue={data ? data.cooking_time_duration : ''} 
                                     {...register("cooking_time_duration", {
                                         required: {
                                             value: true,
@@ -268,12 +268,11 @@ export default function EditRecipeComponent({id}: {id: number}) {
                                                 message: "Visibility field is required",
                                             }
                                         }}
+                                        defaultValue={data ? data.visibility : ''}
                                         name="visibility"
-                                        defaultValue={getRecipeData?.visibility}
                                         render={({ field: { onChange, onBlur, value } }) => (
-                                        
-                                        
-                                        <Select onValueChange={onChange} defaultValue={value}>
+
+                                        <Select onValueChange={onChange} defaultValue={value || data.visibility} >
                                             <SelectTrigger className="bg-white focus:outline-none px-3 py-2 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md">
                                                 <SelectValue placeholder="Public" className="!text-black"/>
                                             </SelectTrigger>
@@ -306,8 +305,9 @@ export default function EditRecipeComponent({id}: {id: number}) {
                                         }
 
                                     }}
+                                    defaultValue={data ? data.difficulty_level : ''}
                                     name="difficulty_level"
-                                    defaultValue={getRecipeData?.difficulty_level}
+                                   
                                     render={({ field: {onChange, onBlur, value} }) => (
                                         <Select
                                             onValueChange={onChange}
@@ -344,11 +344,6 @@ export default function EditRecipeComponent({id}: {id: number}) {
                                     <Controller
                                         control={control}
                                         name={"recipe_image"}
-                                        rules={{ required: {
-                                                value: true,
-                                                message: "Recipe Picture is required"
-                                        } }}  
-                                        defaultValue={getRecipeData?.recipe_image}  
                                         render={({ field: { value, onChange, ...field } }) => {
                                             return (
                                                 <input
@@ -358,7 +353,6 @@ export default function EditRecipeComponent({id}: {id: number}) {
                                                        onChange(file)
                                                     }}
                                                     type="file"
-                                                    defaultValue={getRecipe?.data?.recipe_image}
                                                     className=""
                                                 />
                                             )
@@ -368,13 +362,16 @@ export default function EditRecipeComponent({id}: {id: number}) {
                             <div className="mt-4 w-full">
                                 <button
                                 type="submit"
-                                disabled={editRecipeMutation.isPending}
-                                className={`${editRecipeMutation.isPending ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'} bg-black hover:opacity-90 w-full text-white text-lg py-2 hover:font-semibold rounded-md transition-colors duration-300 ease-in-out`}
+                                disabled={updateRecipeMutate.isPending}
+                                className={`${updateRecipeMutate.isPending ? 'cursor-not-allowed  opacity-65 font-semibold ' : 'cursor-pointer hover:opacity-90'} bg-black  w-full text-white text-base py-2 hover:font-semibold rounded-md transition-colors duration-300 ease-in-out`}
                             >
-                                <span>{editRecipeMutation.isPending ? 'Updating recipe...' : 'Update recipe'}</span>
+                                <span>{updateRecipeMutate.isPending ? 'Updating recipe...' : 'Update recipe'}</span>
                             </button>
                             </div>
+                   
+                            
                         </form>
+                        ))}
                     </div>
                 
             </section>

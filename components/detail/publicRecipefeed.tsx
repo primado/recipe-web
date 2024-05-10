@@ -16,6 +16,7 @@ import { useState } from "react"
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { useRouter } from "next/navigation"
+import { PlusIcon } from "lucide-react"
 
 
 
@@ -57,8 +58,13 @@ export default function PublicRecipeFeed() {
                         <p className="text-gray-500 font-semibold text-xl">Browse through various recipes</p>
                     </div>
                     <div className="">
-                        <Button  variant={'default'} className="text-xl" onClick={() => router.push("/create-recipe")}>
-                          Create Recipe
+                        <Button  variant={'default'} className="text-lg" onClick={() => router.push("/create-recipe")}>
+
+                            <div className="flex flex-row gap-x-2 justify-center items-center">
+                                <PlusIcon size={18} strokeWidth={3} className="font-semibold" />
+                               <span>Create Recipe</span>
+                            </div>
+                          
                         </Button>
                        
                     </div>
