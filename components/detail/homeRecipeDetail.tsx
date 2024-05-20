@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import Image from "next/image"
-import { formatDistanceToNow , formatISO } from "date-fns"
+import { formatDistanceToNow, parseISO } from "date-fns"
 import { space } from "postcss/lib/list"
 import { Button } from "../ui/button"
 import { useRouter } from "next/navigation"
@@ -16,6 +16,7 @@ type RecipeDTO = {
     ingredient: string,
     cooking_time_duration: string,
     visibility: string,
+    last_updated: string,
     difficulty_level: string,
     // recipe_image: string | null,
 }
@@ -38,18 +39,24 @@ export default function RecipeDetail({id}: {id: number}) {
 
    
 
-    const formatLastUpdated = (lastUpdated: string ) => {
-        const parsedDate = new Date(lastUpdated)
-        if (isNaN(parsedDate.getTime())) {
+    const formatLastUpdated = (lastUpdated?: string): string => {
+        if (!lastUpdated) {
+            return 'No update date available';
+        }
+        try {
+            const parsedDate = parseISO(lastUpdated);
+            return formatDistanceToNow(parsedDate, { addSuffix: true });
+        } catch (error) {
+            console.error("Invalid date format:", lastUpdated, error);
             return 'Invalid date';
         }
-        return formatDistanceToNow(new Date(parsedDate), {addSuffix: true},)
-    }
+    };
 
-    const recipeLastUpdated = formatLastUpdated(recipeData?.last_updated)
 
      // router
      const router = useRouter()
+
+    const recipeLastUpdated = formatLastUpdated(recipeData?.last_updated);
 
     return (
         <>
@@ -101,19 +108,25 @@ export default function RecipeDetail({id}: {id: number}) {
                                 </p>
                             </div>
                         </div>
-                        <div className="">
-                            <Image 
-                                src={data?.recipe_image || ImageIcon}
-                                alt={`Photo of ${data?.title} `}
-                                width={300}
-                                height={500}
-                                className="overflow-clip transition ease-in-out hover:translate-x-1 duration-300 hover:scale-105"  
-                            />
+                        
+                    </div>
+                    <div className="flex flex-row justify-between items-center">
+                        <div className="flex flex-row gap-10 text-base font-medium text-black w-[60%]">
+                                <div className="">{data?.ingredient}</div>
+                                <div className="">{data?.instruction}</div>
+                            </div>
+                            
+                            <div className="">
+                                <Image 
+                                    src={data?.recipe_image || ImageIcon}
+                                    alt={`Photo of ${data?.title} `}
+                                    width={300}
+                                    height={500}
+                                    className="overflow-clip transition ease-in-out hover:translate-x-1 duration-300 hover:scale-105"  
+                                />
                         </div>
                     </div>
-                    <div className="flex flex-row justify-center items-center">
-
-                    </div>
+                    
                 </div>
                 ))}
             </div>
