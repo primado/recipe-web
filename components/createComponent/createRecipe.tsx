@@ -16,7 +16,7 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 import { toast } from "sonner"
-import { Input } from "postcss"
+
 
 
 
@@ -96,7 +96,7 @@ export default function CreateRecipe() {
                      onClick={() => router.back()}
                      className="bg-black rounded-md w-[5rem] px-14 py-2 opacity-90 flex flex-row justify-center items-center">
                     <p className="text-white flex flex-row gap-x-2 items-center justify-center">
-                        <ArrowLeftIcon  className="font-semibold text-base text-white"/>
+                        <ArrowLeftIcon size={15} strokeWidth={3}  className="font-semibold text-base text-white"/>
                         Go back
                     </p>
                 </Button>
