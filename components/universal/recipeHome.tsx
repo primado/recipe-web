@@ -42,7 +42,7 @@ export default function RecipeHome() {
             })
             console.log("Data:", response.data)
             console.log("headers", response.headers)
-            return response.data.data
+            return response.data
         }
     })
 
