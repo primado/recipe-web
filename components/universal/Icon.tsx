@@ -22,8 +22,6 @@ type RefreshTokenType = {
 }
 
 
-
-
 export default function Icon() {
 
     const token = localStorage.getItem('accessToken') as string 
@@ -89,7 +87,7 @@ export default function Icon() {
 
 
 
-    const pictures = getProfilePic.data
+
 
 
     return (
@@ -97,7 +95,7 @@ export default function Icon() {
             <DropdownMenuTrigger asChild>
                 {/* <Button variant="outline"  className="focus:border-none focus-visible:ring-1 ring-offset-0 focus-visible:ring-gray-200"> */}
                 <button className="focus:outline-none ">
-                    {pictures && pictures.map((picture: any) => (
+                    {getProfilePic && getProfilePic?.data?.map((picture: any) => (
 
                     
                     <Avatar key={picture.id} className="cursor-pointer ">

@@ -25,7 +25,7 @@ type RecipeDTO = {
     cooking_time_duration: string,
     visibility: string,
     difficulty_level: string,
-    recipe_image: string,
+    // recipe_image: string,
 }
 
 const token = localStorage.getItem('accessToken')
@@ -83,7 +83,10 @@ export default function EditRecipeComponent({id}: {id: number}) {
                 closeButton: true
             })
             queryClient.invalidateQueries({queryKey: ['getUpdateRecipeData']})
-            window.location.reload()
+            setTimeout(() => {
+                router.push("/feed")
+            }, 2000)
+           
         }
     })
 
@@ -339,7 +342,7 @@ export default function EditRecipeComponent({id}: {id: number}) {
                                 </div>
                                     
                             </div>
-                            <div className="flex flex-col w-full gap-y-2">
+                            {/* <div className="flex flex-col w-full gap-y-2">
                                     <label htmlFor="recipe-image" className="text-base font-medium">Recipe Image</label>
                                     <Controller
                                         control={control}
@@ -358,7 +361,7 @@ export default function EditRecipeComponent({id}: {id: number}) {
                                             )
                                         }}
                                     />
-                            </div>
+                            </div> */}
                             <div className="mt-4 w-full">
                                 <button
                                 type="submit"

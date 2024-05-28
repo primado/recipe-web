@@ -72,7 +72,7 @@ export default function PublicRecipeFeed() {
 
                 <div className="grid grid-cols-4 justify-between place-content-center gap-6">
                     {recipeData && recipeData.map((data:RecipeType) => (
-                    <Link key={data.id}  href={`recipe-detail/${data.id}`}>
+                    <Link key={data.id}  href={`feed/${data.id}`}>
                     <Card  className="flex w-full flex-col bg-[#F5F5F5] h-full max-w-[350px] overflow-hidden shadow-xl duration-300 hover:text-brand">
                         <div className="w-full relative h-[250px]" >
                             <Image 
