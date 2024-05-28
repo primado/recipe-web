@@ -138,6 +138,7 @@ export default function PublicRecipeDetial({id}: {id: number}) {
                                 {userID === data?.user?.id && (
                                     <Button
                                         size={'lg'} variant={'destructive'}
+                                        onClick={() => router.push(`/delete-recipe/${data.id}`)}
                                         className="rounded-md  px-5 opacity-90 flex flex-row justify-center items-center"
                                     >
                                         <p className="text-white flex flex-row justify-center items-center gap-2">
