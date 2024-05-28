@@ -1,4 +1,4 @@
-
+'use client'
 import Image from "next/image"
 import {
     DropdownMenu,
@@ -20,8 +20,6 @@ import { useRouter } from "next/navigation"
 type RefreshTokenType = {
     refresh: string
 }
-
-
 
 
 export default function Icon() {
@@ -89,7 +87,7 @@ export default function Icon() {
 
 
 
-    const pictures = getProfilePic.data
+
 
 
     return (
@@ -97,7 +95,7 @@ export default function Icon() {
             <DropdownMenuTrigger asChild>
                 {/* <Button variant="outline"  className="focus:border-none focus-visible:ring-1 ring-offset-0 focus-visible:ring-gray-200"> */}
                 <button className="focus:outline-none ">
-                    {pictures && pictures.map((picture: any) => (
+                    {getProfilePic && getProfilePic?.data?.map((picture: any) => (
 
                     
                     <Avatar key={picture.id} className="cursor-pointer ">

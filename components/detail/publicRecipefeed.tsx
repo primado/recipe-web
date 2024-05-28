@@ -16,6 +16,7 @@ import { useState } from "react"
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { useRouter } from "next/navigation"
+import { PlusIcon } from "lucide-react"
 
 
 
@@ -57,8 +58,13 @@ export default function PublicRecipeFeed() {
                         <p className="text-gray-500 font-semibold text-xl">Browse through various recipes</p>
                     </div>
                     <div className="">
-                        <Button  variant={'default'} className="text-xl" onClick={() => router.push("/create-recipe")}>
-                          Create Recipe
+                        <Button  variant={'default'} className="text-lg" onClick={() => router.push("/create-recipe")}>
+
+                            <div className="flex flex-row gap-x-2 justify-center items-center">
+                                <PlusIcon size={18} strokeWidth={3} className="font-semibold" />
+                               <span>Create Recipe</span>
+                            </div>
+                          
                         </Button>
                        
                     </div>
@@ -66,7 +72,8 @@ export default function PublicRecipeFeed() {
 
                 <div className="grid grid-cols-4 justify-between place-content-center gap-6">
                     {recipeData && recipeData.map((data:RecipeType) => (
-                    <Card key={data.id}  className="flex w-full flex-col bg-[#F5F5F5] h-full max-w-[350px] overflow-hidden shadow-xl duration-300 hover:text-brand">
+                    <Link key={data.id}  href={`feed/${data.id}`}>
+                    <Card  className="flex w-full flex-col bg-[#F5F5F5] h-full max-w-[350px] overflow-hidden shadow-xl duration-300 hover:text-brand">
                         <div className="w-full relative h-[250px]" >
                             <Image 
                                 alt={data?.title}
@@ -84,6 +91,7 @@ export default function PublicRecipeFeed() {
                             </div>
                         </CardHeader>
                     </Card>
+                    </Link>
                     ))}
                 </div>
              
