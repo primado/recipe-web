@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import Image from "next/image"
-import { formatDistanceToNow, parseISO } from "date-fns"
+
 import { space } from "postcss/lib/list"
 import { Button } from "../ui/button"
 import { useRouter } from "next/navigation"
@@ -39,24 +39,10 @@ export default function RecipeDetail({id}: {id: number}) {
 
    
 
-    const formatLastUpdated = (lastUpdated?: string): string => {
-        if (!lastUpdated) {
-            return 'No update date available';
-        }
-        try {
-            const parsedDate = parseISO(lastUpdated);
-            return formatDistanceToNow(parsedDate, { addSuffix: true });
-        } catch (error) {
-            console.error("Invalid date format:", lastUpdated, error);
-            return 'Invalid date';
-        }
-    };
-
 
      // router
      const router = useRouter()
 
-    const recipeLastUpdated = formatLastUpdated(recipeData?.last_updated);
 
     return (
         <>
@@ -96,7 +82,7 @@ export default function RecipeDetail({id}: {id: number}) {
                        <div className="flex flex-col gap-y-5">
                             <div className="">
                                 <h2 className="text-black font-semibold text-2xl">{data?.user?.first_name} {data?.user?.last_name}</h2>
-                                <p className="italic text-gray-500 text-lg font-normal">Updated - {recipeLastUpdated}</p>
+                                <p className="italic text-gray-500 text-lg font-normal">Updated - {data?.last_updated}</p>
                             </div>
                             <div className="">
                                 <h4 className="text-black text-lg font-medium flex flex-row gap-x-1">

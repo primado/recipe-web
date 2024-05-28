@@ -102,7 +102,7 @@ export default function CreateRecipe() {
                 </Button>
                 <div className="flex flex-col w-full justify-center items-center">
                   
-                    <form onSubmit={handleSubmit(onSubmit)}  className="flex flex-col gap-y-3 justify-center items-start max-w-[47%] w-[47%] border border-red-500">
+                    <form onSubmit={handleSubmit(onSubmit)}  className="flex flex-col gap-y-3 justify-center items-start max-w-[47%] w-[47%]">
                         <div className="flex flex-row w-full gap-4">
                             <div className="flex flex-col w-full gap-y-2 ">
                                 <label htmlFor="title" className="text-base font-medium">Title</label>

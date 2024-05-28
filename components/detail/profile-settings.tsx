@@ -269,7 +269,7 @@ export default function Profile() {
                                 
                                     <div className="flex flex-row justify-start items-center gap-10 ">
                                         <div className="shadow-xl flex justify-center items-center rounded-full bg-gray-200 w-32 h-32 ">
-                                            {getPicture?.map((data: ProfilePicture) => (
+                                            { getPicture?.map((data: ProfilePicture) => (
                                             <Avatar key={data.id} className="cursor-pointer w-28 h-28 ">
                                                
                                                     <AvatarImage 
@@ -325,7 +325,7 @@ export default function Profile() {
                         </div>
                         <div className="">
                             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-full gap-6">
-                                {profile?.map((data: UserProfile) => (
+                                {profile && profile?.map((data: UserProfile) => (
                                 <div key={data.key} className="flex flex-col gap-y-3">
                                     <div  className="flex flex-row gap-10 ">
 
