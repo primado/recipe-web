@@ -66,7 +66,7 @@ export default function Icon() {
                 closeButton: true
             })
             router.push("/")
-            window.location.reload()
+            
         },
 
         onError: (error) => {
@@ -75,6 +75,7 @@ export default function Icon() {
                 duration: 5000,
                 closeButton: true
             })
+            console.log("Icon image error");
         }
     })
 
