@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation"
 
 
 type UserProfile = {
-    key: number,
+    id: number,
     first_name: string | undefined,
     last_name: string | undefined,
     username: string | undefined,
@@ -252,6 +252,18 @@ export default function Profile() {
         }
     }, [token])
     
+
+    const [charFName, setCharFName] = useState<string>('')
+    const [charLName, setCharLName] = useState<string>('')
+
+    useEffect(() => {
+        if (profile && profile.length > 0) {
+            const profileData = profile[0] 
+            console.log("profile data", profileData);
+            setCharFName(profileData?.first_name)
+            setCharLName(profileData?.last_name)
+        }
+    }, [profile])
     
 
     return (
@@ -277,11 +289,12 @@ export default function Profile() {
                                                         className="rounded-full " 
                                                     />
                                                 <AvatarFallback>
-                                                    <Image
+                                                    {/* <Image
                                                         src={fallbackAvatar}
                                                         alt="fallback avatar"
                                                         className="rounded-full"
-                                                   />
+                                                   /> */}
+                                                    <p className="rounded-full text-2xl font-semibold">{charFName.charAt(0)}{charLName.charAt(0)}</p>
                                                 </AvatarFallback>
                                             </Avatar>
                                             ))}
@@ -326,7 +339,7 @@ export default function Profile() {
                         <div className="">
                             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-full gap-6">
                                 {profile && profile?.map((data: UserProfile) => (
-                                <div key={data.key} className="flex flex-col gap-y-3">
+                                <div key={data.id} className="flex flex-col gap-y-3">
                                     <div  className="flex flex-row gap-10 ">
 
                                         <div  className="flex flex-col gap-3 ">

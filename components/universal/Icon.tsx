@@ -15,10 +15,25 @@ import { useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 
 
 type RefreshTokenType = {
     refresh: string
+}
+
+type ProfileDTO = {
+    id: number
+    username: string
+    first_name: string
+    last_name: string,
+    email: string,
+    bio: string,
+    profile_picture: string,
+    headline: string,
+    instagram: string,
+    facebook: string,
+    website: string 
 }
 
 
@@ -79,12 +94,22 @@ export default function Icon() {
                     'Authorization': `Bearer ${token}`
                 }
             })
-
             console.log('User Profile data', response.data);
             return response.data
         }
     })
 
+    const [charFName, setCharFName] = useState<string>('')
+    const [charLName, setCharLName] = useState<string>('')
+
+    useEffect(() => {
+        if (getProfilePic.data && getProfilePic.data?.length > 0) {
+            const profileData = getProfilePic?.data[0] as ProfileDTO
+            console.log("profile data", profileData);
+            setCharFName(profileData?.first_name)
+            setCharLName(profileData?.last_name)
+        }
+    }, [getProfilePic.data])
 
 
 
@@ -95,7 +120,7 @@ export default function Icon() {
             <DropdownMenuTrigger asChild>
                 {/* <Button variant="outline"  className="focus:border-none focus-visible:ring-1 ring-offset-0 focus-visible:ring-gray-200"> */}
                 <button className="focus:outline-none ">
-                    {getProfilePic && getProfilePic?.data?.map((picture: any) => (
+                    {getProfilePic && getProfilePic?.data?.map((picture: ProfileDTO) => (
 
                     
                     <Avatar key={picture.id} className="cursor-pointer ">
@@ -103,12 +128,15 @@ export default function Icon() {
                              src={picture?.profile_picture} 
                              className="rounded-full "
                         />
+
                         <AvatarFallback>
-                            <Image
+                            {/* <Image
                                 src={fallbackAvatar}
                                 alt="fallback avatar"
                                 className="rounded-full"
-                           />
+                           /> */}
+                           <p className="rounded-full font-semibold">{charFName.charAt(0)}{charLName.charAt(0)}</p>
+                           
                         </AvatarFallback>
                     </Avatar>
                     ))}
