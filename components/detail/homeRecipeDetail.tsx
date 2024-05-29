@@ -8,6 +8,7 @@ import { Button } from "../ui/button"
 import { useRouter } from "next/navigation"
 import { ArrowLeftIcon, Edit2Icon, ImageIcon, TimerIcon } from "lucide-react"
 
+
 type RecipeDTO = {
     id: number,
     title: string,
@@ -16,11 +17,15 @@ type RecipeDTO = {
     ingredient: string,
     cooking_time_duration: string,
     visibility: string,
-    last_updated: string,
     difficulty_level: string,
-    // recipe_image: string | null,
+    last_updated: string,
+    recipe_image: string | null,
+    user: {
+        id: number,
+        first_name: string,
+        last_name: string
+    }
 }
-
 
 export default function RecipeDetail({id}: {id: number}) {
 
@@ -36,8 +41,6 @@ export default function RecipeDetail({id}: {id: number}) {
             return response.data
         }
     })
-
-   
 
 
      // router
@@ -72,7 +75,7 @@ export default function RecipeDetail({id}: {id: number}) {
                     </Button>
                     ))} */}
                 </div>
-                {recipeData && recipeData?.map((data: any) => (
+                {recipeData && recipeData?.map((data: RecipeDTO | any) => (
                 <div key={data.id} className="flex flex-col gap-y-5">
                     <div className="flex flex-col gap-y-4 w-[70%]">
                         <h1 className="text-black break-words text-5xl font-bold">{data?.title}</h1>
@@ -87,7 +90,7 @@ export default function RecipeDetail({id}: {id: number}) {
                             <div className="">
                                 <h4 className="text-black text-lg font-medium flex flex-row gap-x-1">
                                     <TimerIcon className="text-red-500" />
-                                    <span>Total Time</span>
+                                    <span>Total Time -{''}</span>
                                 </h4>
                                 <p className="text-base font-medium">
                                     {data?.cooking_time_duration}
