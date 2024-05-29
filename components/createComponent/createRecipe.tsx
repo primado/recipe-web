@@ -6,6 +6,7 @@ import { Button } from "../ui/button"
 import { Controller, useForm } from "react-hook-form"
 import { ErrorMessage } from "@hookform/error-message"
 import axios from "axios"
+import Router from "next/router"
 import {
     Select,
     SelectContent,
@@ -16,6 +17,8 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 import { toast } from "sonner"
+import { useEffect } from "react"
+
 
 
 
@@ -28,7 +31,7 @@ type RecipeDTO = {
     cooking_time_duration: string,
     visibility: string,
     difficulty_level: string,
-    recipe_image: File | null,
+    recipe_image?: File | null,
 }
 
 
@@ -41,7 +44,7 @@ export default function CreateRecipe() {
 
     //  React Hook Form for form handling
 
-    const { register, control, setValue, handleSubmit, reset, formState: { errors } } = useForm<RecipeDTO>({
+    const { register, control, setValue, handleSubmit, watch, reset, formState: { errors, isDirty } } = useForm<RecipeDTO>({
         criteriaMode: 'all',
         defaultValues: {
             title: '',
@@ -54,6 +57,8 @@ export default function CreateRecipe() {
             recipe_image: null,
         }
     })
+
+    const watchAllFields = watch();
 
     // Tanstack React Query
 
@@ -81,11 +86,31 @@ export default function CreateRecipe() {
         }
     })
 
+    useEffect(() => {
+        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+            if (isDirty) {
+              const message = 'You have unsaved changes. Are you sure you want to leave?';
+              event.preventDefault();
+              event.returnValue = message;
+              return message;
+              
+            }
+        };
+   
+        window.addEventListener('beforeunload', handleBeforeUnload);
+     
+      
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+           
+        };
+
+    }, [isDirty])
+
     const onSubmit = async (data: RecipeDTO) => {
         console.log('Create Recipe form data =>', data);
         createRecipeMutation.mutateAsync(data)
     }
-
 
 
     return (
