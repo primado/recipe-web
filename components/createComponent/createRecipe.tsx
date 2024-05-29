@@ -93,16 +93,12 @@ export default function CreateRecipe() {
               event.preventDefault();
               event.returnValue = message;
               return message;
-              
             }
         };
-   
         window.addEventListener('beforeunload', handleBeforeUnload);
-     
-      
+    
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
-           
         };
 
     }, [isDirty])
