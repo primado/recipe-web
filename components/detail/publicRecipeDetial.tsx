@@ -178,11 +178,11 @@ export default function PublicRecipeDetial({id}: {id: number}) {
                          </div>
                          <div className="flex flex-row justify-between items-center">
                              <div className="flex flex-row gap-10 text-base font-medium text-black w-[60%]">
-                                    <div className="flex flex-col gap-3 w-[50%]">
+                                    <div className="flex flex-col gap-3 w-[50%] text-justify">
                                         <h2 className="text-black font-semibold text-2xl">Description</h2>
                                         {data?.instruction}
                                     </div>
-                                     <div className="flex flex-col gap-3 w-[50%]">
+                                     <div className="flex flex-col gap-3 w-[50%] text-justify">
                                         <h2 className="text-black font-semibold text-2xl">Ingredient</h2>
                                         {data?.ingredient}
                                     </div>
