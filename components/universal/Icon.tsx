@@ -1,5 +1,6 @@
 'use client'
 import Image from "next/image"
+import Link from "next/link"
 import {
     DropdownMenu,
     DropdownMenuTrigger,
@@ -10,12 +11,13 @@ import {
 import { DropdownMenuGroup, DropdownMenuItem } from "@radix-ui/react-dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import fallbackAvatar from "../../public/assets/fallback-avatar.png"
-import { LogOut, Settings, User } from "lucide-react"
+import { LogOut, Settings, User, UserCheck2Icon, UserCheckIcon, UserCircle2Icon } from "lucide-react"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+
 
 
 type RefreshTokenType = {
@@ -144,20 +146,59 @@ export default function Icon() {
                 </button>
                 {/* </Button> */}
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[11rem]">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator className="bg-hover-1" />
-                <DropdownMenuGroup className="flex flex-col gap-y-2 ">
-                    <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-2 ml-2 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md ">
-                        <User className="h-4 w-4 ml-2" />
+            <DropdownMenuContent className="w-[15rem] !p-0">
+                <Link href="/profile">
+                <DropdownMenuGroup className="hover:bg-hover-1 hover:bg-opacity-40 px-5 py-4">
+                    {getProfilePic && getProfilePic?.data?.map((data: ProfileDTO) => (
+                        <DropdownMenuItem key={data.id}  className="flex flex-row justify-start items-center gap-3 cursor-pointer hover:outline-none ">
+
+                            <button className="focus:outline-none ">
+                                <Avatar  className="cursor-pointer ">
+                                    <AvatarImage 
+                                         src={data?.profile_picture} 
+                                         className="rounded-full"
+                                    />
+                                    <AvatarFallback>
+                                        {/* <Image
+                                            src={fallbackAvatar}
+                                            alt="fallback avatar"
+                                            className="rounded-full"
+                                       /> */}
+                                       <p className="rounded-full font-semibold">{charFName.charAt(0)}{charLName.charAt(0)}</p>
+                                    </AvatarFallback>
+                                </Avatar>
+                           
+                            </button>
+                            <div className="flex flex-col gap-0">
+                                <p className="text-lg font-semibold ">{data?.first_name} {data?.last_name}</p>
+                                <p className="text-base font-medium">@{data?.username}</p>
+                            </div>
+
+                        </DropdownMenuItem>
+                    ))}
+                </DropdownMenuGroup>
+                </Link>
+     
+                <DropdownMenuSeparator className="bg-hover-1 " />
+                <DropdownMenuGroup className="flex flex-col gap-y-1 font-semibold ">
+                    {/* <DropdownMenuItem className="flex flex-row items-center gap-x-1 py-3 px-5  cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40 ">
+                        <User className="h-4 w-4 " />
                         <button onClick={() => router.push('/#')}><span>Profile</span></button>
+                    </DropdownMenuItem> */}
+                    <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-3 px-5 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40">
+                        <UserCircle2Icon size={20} strokeWidth={2}/>
+                        <button onClick={() => router.push("/profile-settings")}><span>Profile Settings</span></button>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-2 ml-2 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md">
-                        <Settings className=" h-4 w-4 ml-2" />
-                        <button onClick={() => router.push("/profile-settings")}><span>Settings</span></button>
+                    <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-3 px-5 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40">
+                        <Settings size={20} strokeWidth={2} />
+                        <button onClick={() => router.push("/profile-settings")}><span>Account</span></button>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-2 ml-2 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md">
-                        <LogOut className=" h-4 w-4 ml-2" />
+                </DropdownMenuGroup>
+
+                <DropdownMenuSeparator className="bg-hover-1 " />
+                <DropdownMenuGroup>
+                    <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-3 px-5 font-semibold text-red-700 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40">
+                        <LogOut size={20} strokeWidth={2}/>
                         <button onClick={logoutHandler}><span>Logout</span></button>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
