@@ -17,6 +17,7 @@ import axios from "axios"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import { api_base_url } from "./API_BASE_URL"
 
 
 
@@ -48,12 +49,11 @@ export default function Icon() {
     const logout = useMutation({
         mutationKey: ['logout'],
         mutationFn: async (newData: RefreshTokenType) => {
-            const response = await axios.post('http://localhost:8000/api/auth/logout/', newData, {
+            const response = await axios.post(`${api_base_url}` + 'api/auth/logout/', newData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 }
-            
             })
             return response.data
 
@@ -68,7 +68,6 @@ export default function Icon() {
                 closeButton: true
             })
             router.push("/")
-            
         },
 
         onError: (error) => {
@@ -91,7 +90,7 @@ export default function Icon() {
     const getProfilePic = useQuery({
         queryKey: ['profile-pic'],
         queryFn: async () => {
-            const response = await axios.get('http://localhost:8000/api/auth/user-profile', {
+            const response = await axios.get(`${api_base_url}`+ 'api/auth/user-profile', {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`

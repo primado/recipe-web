@@ -28,7 +28,19 @@ export default function RootLayout({
           
               {children}
             
-            <Toaster />
+            <Toaster 
+               toastOptions={{
+                unstyled: false,
+                classNames: {
+                  error: 'bg-red-600',
+                  success: 'text-green-600',
+                  warning: 'text-yellow-600',
+                  info: 'bg-blue-600',
+                  title: "text-black",
+                  closeButton: "text-black"
+                },
+              }}
+            />
           </TanstackQueryProvider>
 
          

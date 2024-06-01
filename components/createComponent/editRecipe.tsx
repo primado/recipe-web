@@ -14,6 +14,7 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"
+import { api_base_url } from "../universal/API_BASE_URL"
 
 
 type RecipeDTO = {
@@ -43,7 +44,7 @@ export default function EditRecipeComponent({id}: {id: number}) {
     const {data: recipeData} = useQuery({
         queryKey: ['getUpdateRecipeData', id],
         queryFn: async () => {
-            const response = await axios.get(`http://localhost:8000/api/recipe/${id}`, {
+            const response = await axios.get(`${api_base_url}/api/recipe/${id}`, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -67,7 +68,7 @@ export default function EditRecipeComponent({id}: {id: number}) {
     const updateRecipeMutate = useMutation({
         mutationKey: ['updateRecipe', id],
         mutationFn: async (newEditRecipeData: RecipeDTO) => {
-            const response = await axios.put(`http://localhost:8000/api/recipe/${id}`, newEditRecipeData, {
+            const response = await axios.put(`${api_base_url}api/recipe/${id}`, newEditRecipeData, {
                 headers: {
                     'Content-Type': 'multipart/form-data', 
                     'Authorization': `Bearer ${token}`
@@ -84,6 +85,7 @@ export default function EditRecipeComponent({id}: {id: number}) {
             })
             queryClient.invalidateQueries({queryKey: ['getUpdateRecipeData']})
             setTimeout(() => {
+                router.refresh()
                 router.push("/feed")
             }, 2000)
            

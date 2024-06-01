@@ -12,6 +12,7 @@ import { Controller, useForm } from "react-hook-form"
 import { ArrowLeftIcon, Router, SignalZero, Trash } from "lucide-react"
 import { ErrorMessage } from "@hookform/error-message"
 import { useRouter } from "next/navigation"
+import { api_base_url } from "../universal/API_BASE_URL"
 
 
 type UserProfile = {
@@ -63,7 +64,7 @@ export default function Profile() {
     const {data: profile, isError, error, isSuccess: isUserProfileSuccess, isPending: isUserProfilPending} = useQuery({
         queryKey: ['profile'],
         queryFn: async () => {
-            const response = await axios.get('http://localhost:8000/api/auth/user-profile', {
+            const response = await axios.get(`${api_base_url}` + 'api/auth/user-profile', {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -78,7 +79,7 @@ export default function Profile() {
     const updateUserProfile = useMutation({
         mutationKey: ['updateProfile'],
         mutationFn: async (newProfileData: UserProfile) => {
-            const response = await axios.patch('http://localhost:8000/api/auth/profile-update', newProfileData, {
+            const response = await axios.patch(`${api_base_url}` + 'api/auth/profile-update', newProfileData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -87,7 +88,7 @@ export default function Profile() {
             return response.data.data
         },
         onSuccess: (data) => {
-            toast.success('Successfully updated user profile', {
+            toast.success('User profile updated successfully', {
                 position: 'top-center',
                 duration: 4000,
                 closeButton: true 
@@ -97,7 +98,7 @@ export default function Profile() {
 
         },
         onError: (error) => {
-            toast.error('An occured while updating profile', {
+            toast.error('An occured while updating profile, try again.', {
                 position: 'top-center',
                 duration: 4000,
                 closeButton: true 
@@ -115,7 +116,7 @@ export default function Profile() {
     const {data: getPicture} = useQuery({
         queryKey: ['myPicture'],
         queryFn: async () => {
-            const response = await axios.get('http://localhost:8000/api/auth/profile-picture', {
+            const response = await axios.get(`${api_base_url}` + 'api/auth/profile-picture', {
                 headers: {
                     'Content-Type': 'applications/json',
                     'Authorization': `Bearer ${token}`
@@ -130,7 +131,7 @@ export default function Profile() {
     const deleteProfilePciture = useMutation({
         mutationKey: ['deleteMyPic'],
         mutationFn: async () => {
-            const response = await axios.delete('http://localhost:8000/api/auth/profile-picture', {
+            const response = await axios.delete(`${api_base_url}` + 'api/auth/profile-picture', {
                 headers: {
                     'Content-Type': 'application/json;',
                     'Authorization': `Bearer ${token}`
@@ -169,7 +170,7 @@ export default function Profile() {
         const formData = new FormData();
         formData.append('profile_picture', file);
         console.log(file);
-        const response = await axios.put('http://localhost:8000/api/auth/profile-picture', formData, {
+        const response = await axios.put(`${api_base_url}` + 'api/auth/profile-picture', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             'Authorization': `Bearer ${token}`
@@ -628,7 +629,7 @@ export default function Profile() {
                                         </div>
                                         <div className="">
                                             <Button variant={'default'} size={'lg'} type="submit">
-                                                {isUserProfilPending ? 'Submitting' : 'Submit'}
+                                                {updateUserProfile.isPending ? 'Submitting...' : 'Submit'}
                                             </Button>
                                         </div>
                                                 

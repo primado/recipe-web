@@ -6,7 +6,7 @@ import { Button } from "../ui/button"
 import { Controller, useForm } from "react-hook-form"
 import { ErrorMessage } from "@hookform/error-message"
 import axios from "axios"
-import Router from "next/router"
+import Router from "next/navigation"
 import {
     Select,
     SelectContent,
@@ -18,6 +18,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 import { toast } from "sonner"
 import { useEffect } from "react"
+import { api_base_url } from "../universal/API_BASE_URL"
 
 
 
@@ -31,7 +32,7 @@ type RecipeDTO = {
     cooking_time_duration: string,
     visibility: string,
     difficulty_level: string,
-    recipe_image?: File | null,
+    recipe_image: File | null,
 }
 
 
@@ -65,7 +66,7 @@ export default function CreateRecipe() {
     const createRecipeMutation = useMutation({
         mutationKey: ['createRecipe'],
         mutationFn: async (newCreateRecipeData: RecipeDTO) => {
-            const response = await axios.post('http://localhost:8000/api/recipe', newCreateRecipeData, {
+            const response = await axios.post(`${api_base_url}` + 'api/recipe', newCreateRecipeData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${token}`
@@ -82,7 +83,10 @@ export default function CreateRecipe() {
             })
             reset()
             queryClient.invalidateQueries({queryKey: ['publicRecipes']})
-            window.location.reload()
+            setTimeout(() => {
+                router.refresh()
+                router.push("/feed")
+            }, 2000)
         }
     })
 
@@ -348,7 +352,7 @@ export default function CreateRecipe() {
                                     control={control}
                                     name={"recipe_image"}
                                     rules={{ required: {
-                                            value: true,
+                                            value: false,
                                             message: "Recipe Picture is required"
                                     } }}    
                                     render={({ field: { value, onChange, ...field } }) => {
@@ -371,7 +375,7 @@ export default function CreateRecipe() {
                             <button
                             type="submit"
                             disabled={createRecipeMutation.isPending}
-                            className={`${createRecipeMutation.isPending ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'} bg-black hover:opacity-90 w-full text-white text-xl py-2 hover:font-semibold rounded-md transition-colors duration-300 ease-in-out`}
+                            className={`${createRecipeMutation.isPending ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:opacity-90'} bg-black  w-full text-white text-xl py-2 hover:font-semibold rounded-md transition-colors duration-300 ease-in-out`}
                         >
                             <span>{createRecipeMutation.isPending ? 'Creating recipe...' : 'Create recipe'}</span>
                         </button>

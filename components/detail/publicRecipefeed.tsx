@@ -17,6 +17,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { useRouter } from "next/navigation"
 import { PlusIcon } from "lucide-react"
+import { api_base_url } from "../universal/API_BASE_URL"
 
 
 
@@ -33,7 +34,7 @@ export default function PublicRecipeFeed() {
     const publicRecipe = useQuery({
         queryKey: ['publicRecipes'],
         queryFn: async () => {
-            const response = await axios.get('http://localhost:8000/api/public-recipe', {
+            const response = await axios.get(`${api_base_url}` + 'api/public-recipe', {
                 headers: {
                     'content-type': 'application/json',
                     'Authorization': `Bearer ${token}`

@@ -30,7 +30,10 @@ type RecipeDTO = {
 
 const token = localStorage.getItem('accessToken')
 
+
 export default function PublicRecipeDetial({id}: {id: number}) {
+
+
 
     const router = useRouter()
 
