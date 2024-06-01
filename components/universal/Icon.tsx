@@ -186,20 +186,29 @@ export default function Icon() {
                         <button onClick={() => router.push('/#')}><span>Profile</span></button>
                     </DropdownMenuItem> */}
                     <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-3 px-5 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40">
-                        <UserCircle2Icon size={20} strokeWidth={2}/>
-                        <button onClick={() => router.push("/profile-settings")}><span>Profile Settings</span></button>
+                        
+                        <button onClick={() => router.push("/profile-settings")} className="flex flex-row gap-x-2">
+                            <UserCircle2Icon size={23} strokeWidth={2}/>
+                            <span>Profile Settings</span>
+                        </button>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-3 px-5 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40">
-                        <Settings size={20} strokeWidth={2} />
-                        <button onClick={() => router.push("/profile-settings")}><span>Account</span></button>
+                        
+                        <button onClick={() => router.push("/profile-settings")} className="flex flex-row gap-x-2">
+                            <Settings size={23} strokeWidth={2} />
+                            <span>Account</span>
+                        </button>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
 
                 <DropdownMenuSeparator className="bg-hover-1 " />
                 <DropdownMenuGroup>
                     <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-3 px-5 font-semibold text-red-700 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40">
-                        <LogOut size={20} strokeWidth={2}/>
-                        <button onClick={logoutHandler}><span>Logout</span></button>
+                        
+                        <button onClick={logoutHandler} className="flex flex-row gap-x-2">
+                            <LogOut size={23} strokeWidth={2}/>
+                            <span>Logout</span>
+                        </button>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
             

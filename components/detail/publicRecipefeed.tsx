@@ -61,7 +61,7 @@ export default function PublicRecipeFeed() {
                         <Button  variant={'default'} className="text-lg" onClick={() => router.push("/create-recipe")}>
 
                             <div className="flex flex-row gap-x-2 justify-center items-center">
-                                <PlusIcon size={18} strokeWidth={3} className="font-semibold" />
+                                <PlusIcon size={23} strokeWidth={2} className="font-semibold" />
                                <span>Create Recipe</span>
                             </div>
                           

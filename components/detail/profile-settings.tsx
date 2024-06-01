@@ -9,7 +9,7 @@ import fallbackAvatar from "../../public/assets/fallback-avatar.png"
 import Image from "next/image"
 import { Button } from "../ui/button"
 import { Controller, useForm } from "react-hook-form"
-import { Router, SignalZero } from "lucide-react"
+import { ArrowLeftIcon, Router, SignalZero, Trash } from "lucide-react"
 import { ErrorMessage } from "@hookform/error-message"
 import { useRouter } from "next/navigation"
 
@@ -268,10 +268,23 @@ export default function Profile() {
 
     return (
         <>
-     
+            <div className="flex px-52">
+                <Button 
+                    size={'lg'} variant={'default'} 
+                    onClick={() => router.back()}
+                    className="bg-black rounded-md w-[5rem] px-14 py-2 opacity-90 flex flex-row justify-center items-center">
+                    <p className="text-white flex flex-row gap-x-2 items-center justify-center">
+                     <ArrowLeftIcon size={23} strokeWidth={2} />
+                     Go back
+                     </p>
+                </Button>
+            </div>
 
             <div className="flex flex-col justify-center items-center gap-10 ">
+               
+              
                 <div className="flex flex-col justify-start items-start gap-10 max-w-[50%]  ">
+                  
                     <div className="">
                         <h1 className="text-2xl font-bold">Profile Settings</h1>
                     </div>
@@ -280,6 +293,8 @@ export default function Profile() {
                             <div className="">
                                 
                                     <div className="flex flex-row justify-start items-center gap-10 ">
+                                     
+
                                         <div className="shadow-xl flex justify-center items-center rounded-full bg-gray-200 w-32 h-32 ">
                                             { getPicture?.map((data: ProfilePicture) => (
                                             <Avatar key={data.id} className="cursor-pointer w-28 h-28 ">
@@ -327,7 +342,10 @@ export default function Profile() {
                                             <Button onClick={handleButtonClick}  type="button" size={'sm'}  className="">
                                                 Change Picture 
                                             </Button> 
-                                                <Button onClick={ async () => deleteProfilePciture.mutateAsync()} variant={'destructive'} size={'sm'} type="button">
+                                                <Button onClick={ async () => deleteProfilePciture.mutateAsync()} variant={'destructive'} size={'sm'} type="button" 
+                                                    className="flex flex-row gap-x-2"
+                                                >
+                                                    <Trash size={23} strokeWidth={2}/>
                                                     {deleteProfilePciture.isPending ? 'Removing...' : 'Remove Picture'}
                                                 </Button>
                                             </div>
