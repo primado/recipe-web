@@ -13,6 +13,7 @@ import Image from "next/image"
 import default_img from "../../public/assets/recipe-img1.jpg"
 import { useState } from "react"
 import Link from "next/link"
+import { api_base_url } from "./API_BASE_URL"
 
 
 
@@ -35,7 +36,7 @@ export default function RecipeHome() {
     const {data: recipeData, isSuccess, isError} = useQuery({
         queryKey: ['home-recipes'],
         queryFn: async () => {
-            const response = await axios.get("http://localhost:8000/api/feed/", {
+            const response = await axios.get(`${api_base_url}`+ "api/feed/", {
                 headers: {
                     'Content-Type': 'application/json'
                 }

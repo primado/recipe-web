@@ -1,11 +1,12 @@
 'use client'
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Button } from "../ui/button"
 import { useRouter } from "next/navigation"
 import { ArrowLeftIcon } from "lucide-react"
 import axios from "axios"
 import { toast } from "sonner"
 import { useForm } from "react-hook-form"
+import { api_base_url } from "../universal/API_BASE_URL"
 
 
 
@@ -14,6 +15,7 @@ const token = localStorage.getItem('accessToken')
 export default function DeleteRecipe({id}: {id: number}) {
 
     const router = useRouter()
+    const queryClient = useQueryClient()
 
     const { handleSubmit } = useForm()
 
@@ -21,7 +23,7 @@ export default function DeleteRecipe({id}: {id: number}) {
     const getRecipe = useQuery({
         queryKey: ['getRecipeDel', id],
         queryFn: async () => {
-            const response = await axios.get(`http://localhost:8000/api/recipe/${id}`, {
+            const response = await axios.get(`${api_base_url}api/recipe/${id}`, {
                 headers: {
                     'content-type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -35,7 +37,7 @@ export default function DeleteRecipe({id}: {id: number}) {
     const deleteRecipe = useMutation({
         mutationKey: ['deleteRecipe', id],
         mutationFn: async () => {
-            const response = await axios.delete(`http://localhost:8000/api/recipe/${id}`, {
+            const response = await axios.delete(`${api_base_url}api/recipe/${id}`, {
                 headers: {
                     'content-type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -49,7 +51,9 @@ export default function DeleteRecipe({id}: {id: number}) {
                 closeButton: true,
                 position: 'top-center'
             })
+            queryClient.invalidateQueries({queryKey: ['getUpdateRecipeData']})
             setTimeout(() => {
+                router.refresh()
                 router.push("/feed")
             }, 1000);
         },
@@ -85,10 +89,11 @@ export default function DeleteRecipe({id}: {id: number}) {
                         <div className="flex flex-row gap-5">
                             <Button
                                 size={'lg'} variant={'destructive'}
+                                disabled={deleteRecipe.isPending}
                                 onClick={() => deleteRecipe.mutateAsync()}
-                                className="rounded-md w-[5rem] px-14 py-2 opacity-90 flex flex-row justify-center items-center"
+                                className={`${deleteRecipe.isPending ? 'bg-opacity-50' : ''} rounded-md w-[5rem] px-14 py-2 opacity-90 flex flex-row justify-center items-center`}
                             >
-                                Delete
+                               {deleteRecipe.isPending ? 'Deleting' : ' Delete'}
                             </Button>
                             <Button
                                 size={'lg'} variant={'outline'}

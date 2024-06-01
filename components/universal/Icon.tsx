@@ -17,6 +17,7 @@ import axios from "axios"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import { api_base_url } from "./API_BASE_URL"
 
 
 
@@ -48,12 +49,11 @@ export default function Icon() {
     const logout = useMutation({
         mutationKey: ['logout'],
         mutationFn: async (newData: RefreshTokenType) => {
-            const response = await axios.post('http://localhost:8000/api/auth/logout/', newData, {
+            const response = await axios.post(`${api_base_url}` + 'api/auth/logout/', newData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 }
-            
             })
             return response.data
 
@@ -68,7 +68,6 @@ export default function Icon() {
                 closeButton: true
             })
             router.push("/")
-            
         },
 
         onError: (error) => {
@@ -91,7 +90,7 @@ export default function Icon() {
     const getProfilePic = useQuery({
         queryKey: ['profile-pic'],
         queryFn: async () => {
-            const response = await axios.get('http://localhost:8000/api/auth/user-profile', {
+            const response = await axios.get(`${api_base_url}`+ 'api/auth/user-profile', {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -126,11 +125,8 @@ export default function Icon() {
                     {getProfilePic && getProfilePic?.data?.map((picture: ProfileDTO) => (
 
                     
-                    <Avatar key={picture.id} className="cursor-pointer ">
-                        <AvatarImage 
-                             src={picture?.profile_picture} 
-                             className="rounded-full "
-                        />
+                    <Avatar key={picture.id} className="cursor-pointer w-[2.5rem] h-[2.5rem]">
+                        <AvatarImage src={picture?.profile_picture} className="rounded-full "/>
 
                         <AvatarFallback>
                             {/* <Image
@@ -146,17 +142,17 @@ export default function Icon() {
                 </button>
                 {/* </Button> */}
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[15rem] !p-0">
+            <DropdownMenuContent className="w-[17rem] !p-0">
                 <Link href="/profile">
                 <DropdownMenuGroup className="hover:bg-hover-1 hover:bg-opacity-40 px-5 py-4">
                     {getProfilePic && getProfilePic?.data?.map((data: ProfileDTO) => (
                         <DropdownMenuItem key={data.id}  className="flex flex-row justify-start items-center gap-3 cursor-pointer hover:outline-none ">
 
                             <button className="focus:outline-none ">
-                                <Avatar  className="cursor-pointer ">
+                                <Avatar  className="cursor-pointer w-[3.3rem] h-[3.3rem]">
                                     <AvatarImage 
                                          src={data?.profile_picture} 
-                                         className="rounded-full"
+                                         className="rounded-full "
                                     />
                                     <AvatarFallback>
                                         {/* <Image
@@ -186,20 +182,29 @@ export default function Icon() {
                         <button onClick={() => router.push('/#')}><span>Profile</span></button>
                     </DropdownMenuItem> */}
                     <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-3 px-5 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40">
-                        <UserCircle2Icon size={20} strokeWidth={2}/>
-                        <button onClick={() => router.push("/profile-settings")}><span>Profile Settings</span></button>
+                        
+                        <button onClick={() => router.push("/profile-settings")} className="flex flex-row gap-x-2">
+                            <UserCircle2Icon size={23} strokeWidth={2}/>
+                            <span>Profile Settings</span>
+                        </button>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-3 px-5 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40">
-                        <Settings size={20} strokeWidth={2} />
-                        <button onClick={() => router.push("/profile-settings")}><span>Account</span></button>
+                        
+                        <button onClick={() => router.push("/profile-settings")} className="flex flex-row gap-x-2">
+                            <Settings size={23} strokeWidth={2} />
+                            <span>Account</span>
+                        </button>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
 
                 <DropdownMenuSeparator className="bg-hover-1 " />
                 <DropdownMenuGroup>
                     <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-3 px-5 font-semibold text-red-700 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40">
-                        <LogOut size={20} strokeWidth={2}/>
-                        <button onClick={logoutHandler}><span>Logout</span></button>
+                        
+                        <button onClick={logoutHandler} className="flex flex-row gap-x-2">
+                            <LogOut size={23} strokeWidth={2}/>
+                            <span>Logout</span>
+                        </button>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
             

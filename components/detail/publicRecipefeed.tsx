@@ -17,6 +17,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { useRouter } from "next/navigation"
 import { PlusIcon } from "lucide-react"
+import { api_base_url } from "../universal/API_BASE_URL"
 
 
 
@@ -33,7 +34,7 @@ export default function PublicRecipeFeed() {
     const publicRecipe = useQuery({
         queryKey: ['publicRecipes'],
         queryFn: async () => {
-            const response = await axios.get('http://localhost:8000/api/public-recipe', {
+            const response = await axios.get(`${api_base_url}` + 'api/public-recipe', {
                 headers: {
                     'content-type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -61,7 +62,7 @@ export default function PublicRecipeFeed() {
                         <Button  variant={'default'} className="text-lg" onClick={() => router.push("/create-recipe")}>
 
                             <div className="flex flex-row gap-x-2 justify-center items-center">
-                                <PlusIcon size={18} strokeWidth={3} className="font-semibold" />
+                                <PlusIcon size={23} strokeWidth={2} className="font-semibold" />
                                <span>Create Recipe</span>
                             </div>
                           

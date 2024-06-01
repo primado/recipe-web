@@ -9,9 +9,10 @@ import fallbackAvatar from "../../public/assets/fallback-avatar.png"
 import Image from "next/image"
 import { Button } from "../ui/button"
 import { Controller, useForm } from "react-hook-form"
-import { Router, SignalZero } from "lucide-react"
+import { ArrowLeftIcon, Router, SignalZero, Trash } from "lucide-react"
 import { ErrorMessage } from "@hookform/error-message"
 import { useRouter } from "next/navigation"
+import { api_base_url } from "../universal/API_BASE_URL"
 
 
 type UserProfile = {
@@ -63,7 +64,7 @@ export default function Profile() {
     const {data: profile, isError, error, isSuccess: isUserProfileSuccess, isPending: isUserProfilPending} = useQuery({
         queryKey: ['profile'],
         queryFn: async () => {
-            const response = await axios.get('http://localhost:8000/api/auth/user-profile', {
+            const response = await axios.get(`${api_base_url}` + 'api/auth/user-profile', {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -78,7 +79,7 @@ export default function Profile() {
     const updateUserProfile = useMutation({
         mutationKey: ['updateProfile'],
         mutationFn: async (newProfileData: UserProfile) => {
-            const response = await axios.patch('http://localhost:8000/api/auth/profile-update', newProfileData, {
+            const response = await axios.patch(`${api_base_url}` + 'api/auth/profile-update', newProfileData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -87,7 +88,7 @@ export default function Profile() {
             return response.data.data
         },
         onSuccess: (data) => {
-            toast.success('Successfully updated user profile', {
+            toast.success('User profile updated successfully', {
                 position: 'top-center',
                 duration: 4000,
                 closeButton: true 
@@ -97,7 +98,7 @@ export default function Profile() {
 
         },
         onError: (error) => {
-            toast.error('An occured while updating profile', {
+            toast.error('An occured while updating profile, try again.', {
                 position: 'top-center',
                 duration: 4000,
                 closeButton: true 
@@ -115,7 +116,7 @@ export default function Profile() {
     const {data: getPicture} = useQuery({
         queryKey: ['myPicture'],
         queryFn: async () => {
-            const response = await axios.get('http://localhost:8000/api/auth/profile-picture', {
+            const response = await axios.get(`${api_base_url}` + 'api/auth/profile-picture', {
                 headers: {
                     'Content-Type': 'applications/json',
                     'Authorization': `Bearer ${token}`
@@ -130,7 +131,7 @@ export default function Profile() {
     const deleteProfilePciture = useMutation({
         mutationKey: ['deleteMyPic'],
         mutationFn: async () => {
-            const response = await axios.delete('http://localhost:8000/api/auth/profile-picture', {
+            const response = await axios.delete(`${api_base_url}` + 'api/auth/profile-picture', {
                 headers: {
                     'Content-Type': 'application/json;',
                     'Authorization': `Bearer ${token}`
@@ -169,7 +170,7 @@ export default function Profile() {
         const formData = new FormData();
         formData.append('profile_picture', file);
         console.log(file);
-        const response = await axios.put('http://localhost:8000/api/auth/profile-picture', formData, {
+        const response = await axios.put(`${api_base_url}` + 'api/auth/profile-picture', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             'Authorization': `Bearer ${token}`
@@ -268,10 +269,23 @@ export default function Profile() {
 
     return (
         <>
-     
+            <div className="flex px-52">
+                <Button 
+                    size={'lg'} variant={'default'} 
+                    onClick={() => router.back()}
+                    className="bg-black rounded-md w-[5rem] px-14 py-2 opacity-90 flex flex-row justify-center items-center">
+                    <p className="text-white flex flex-row gap-x-2 items-center justify-center">
+                     <ArrowLeftIcon size={23} strokeWidth={2} />
+                     Go back
+                     </p>
+                </Button>
+            </div>
 
             <div className="flex flex-col justify-center items-center gap-10 ">
+               
+              
                 <div className="flex flex-col justify-start items-start gap-10 max-w-[50%]  ">
+                  
                     <div className="">
                         <h1 className="text-2xl font-bold">Profile Settings</h1>
                     </div>
@@ -280,6 +294,8 @@ export default function Profile() {
                             <div className="">
                                 
                                     <div className="flex flex-row justify-start items-center gap-10 ">
+                                     
+
                                         <div className="shadow-xl flex justify-center items-center rounded-full bg-gray-200 w-32 h-32 ">
                                             { getPicture?.map((data: ProfilePicture) => (
                                             <Avatar key={data.id} className="cursor-pointer w-28 h-28 ">
@@ -327,7 +343,10 @@ export default function Profile() {
                                             <Button onClick={handleButtonClick}  type="button" size={'sm'}  className="">
                                                 Change Picture 
                                             </Button> 
-                                                <Button onClick={ async () => deleteProfilePciture.mutateAsync()} variant={'destructive'} size={'sm'} type="button">
+                                                <Button onClick={ async () => deleteProfilePciture.mutateAsync()} variant={'destructive'} size={'sm'} type="button" 
+                                                    className="flex flex-row gap-x-2"
+                                                >
+                                                    <Trash size={23} strokeWidth={2}/>
                                                     {deleteProfilePciture.isPending ? 'Removing...' : 'Remove Picture'}
                                                 </Button>
                                             </div>
@@ -610,7 +629,7 @@ export default function Profile() {
                                         </div>
                                         <div className="">
                                             <Button variant={'default'} size={'lg'} type="submit">
-                                                {isUserProfilPending ? 'Submitting' : 'Submit'}
+                                                {updateUserProfile.isPending ? 'Submitting...' : 'Submit'}
                                             </Button>
                                         </div>
                                                 

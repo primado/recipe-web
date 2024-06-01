@@ -30,7 +30,10 @@ type RecipeDTO = {
 
 const token = localStorage.getItem('accessToken')
 
+
 export default function PublicRecipeDetial({id}: {id: number}) {
+
+
 
     const router = useRouter()
 
@@ -113,7 +116,7 @@ export default function PublicRecipeDetial({id}: {id: number}) {
                               onClick={() => router.back()}
                               className="bg-black rounded-md w-[5rem] px-14 py-2 opacity-90 flex flex-row justify-center items-center">
                              <p className="text-white flex flex-row gap-x-2 items-center justify-center">
-                                 <ArrowLeftIcon  className="font-semibold text-base text-white"/>
+                                 <ArrowLeftIcon size={23} strokeWidth={2} />
                                  Go back
                              </p>
                         </Button>
@@ -127,7 +130,7 @@ export default function PublicRecipeDetial({id}: {id: number}) {
                                         className="bg-black rounded-md  px-5 opacity-90 flex flex-row justify-center items-center"
                                     >
                                         <p className="text-white flex flex-row justify-center items-center gap-2">
-                                            <Edit2Icon size={18} strokeWidth={3} />
+                                            <Edit2Icon size={23} strokeWidth={2} />
                                             <span>Edit Recipe</span>
                                         </p>
                                     </Button>
@@ -142,7 +145,7 @@ export default function PublicRecipeDetial({id}: {id: number}) {
                                         className="rounded-md  px-5 opacity-90 flex flex-row justify-center items-center"
                                     >
                                         <p className="text-white flex flex-row justify-center items-center gap-2">
-                                            <Trash size={18} strokeWidth={3} />
+                                            <Trash size={23} strokeWidth={2} />
                                             <span>Delete Recipe</span>
                                         </p>
                                     </Button>
@@ -166,7 +169,7 @@ export default function PublicRecipeDetial({id}: {id: number}) {
                                  </div>
                                  <div className="flex flex-row gap-3 justify-start items-center">
                                     <h4 className="text-black text-lg font-medium flex flex-row gap-x-1">
-                                        <TimerIcon className="text-red-500" />
+                                        <TimerIcon size={23} strokeWidth={2} className="text-red-500"/>
                                         <span>Total Time -</span>
                                     </h4>
                                     <p className="text-lg font-medium">
@@ -176,7 +179,7 @@ export default function PublicRecipeDetial({id}: {id: number}) {
                              </div>
                              
                          </div>
-                         <div className="flex flex-row justify-between items-center">
+                         <div className="flex flex-row justify-between items-start">
                              <div className="flex flex-row gap-10 text-base font-medium text-black w-[60%]">
                                     <div className="flex flex-col gap-3 w-[50%] text-justify">
                                         <h2 className="text-black font-semibold text-2xl">Description</h2>

@@ -7,6 +7,7 @@ import { space } from "postcss/lib/list"
 import { Button } from "../ui/button"
 import { useRouter } from "next/navigation"
 import { ArrowLeftIcon, Edit2Icon, ImageIcon, TimerIcon } from "lucide-react"
+import { api_base_url } from "../universal/API_BASE_URL"
 
 
 type RecipeDTO = {
@@ -32,7 +33,7 @@ export default function RecipeDetail({id}: {id: number}) {
     const {data: recipeData} = useQuery({
         queryKey: ['getRecipe', id],
         queryFn: async () => {
-            const response = await axios.get(`http://localhost:8000/api/feed/${id}`, {
+            const response = await axios.get(`${api_base_url}api/feed/${id}`, {
                 headers: {
                     "Content-Type": "application/json"
                 }
