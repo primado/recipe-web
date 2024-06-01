@@ -166,7 +166,7 @@ export default function PublicRecipeDetial({id}: {id: number}) {
                                  </div>
                                  <div className="flex flex-row gap-3 justify-start items-center">
                                     <h4 className="text-black text-lg font-medium flex flex-row gap-x-1">
-                                        <TimerIcon size={23} strokeWidth={2} />
+                                        <TimerIcon size={23} strokeWidth={2} className="text-red-500"/>
                                         <span>Total Time -</span>
                                     </h4>
                                     <p className="text-lg font-medium">
@@ -176,7 +176,7 @@ export default function PublicRecipeDetial({id}: {id: number}) {
                              </div>
                              
                          </div>
-                         <div className="flex flex-row justify-between items-center">
+                         <div className="flex flex-row justify-between items-start">
                              <div className="flex flex-row gap-10 text-base font-medium text-black w-[60%]">
                                     <div className="flex flex-col gap-3 w-[50%] text-justify">
                                         <h2 className="text-black font-semibold text-2xl">Description</h2>
