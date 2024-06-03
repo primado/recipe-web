@@ -6,7 +6,7 @@ import axios from "axios"
 import { toast } from "sonner"
 import Link from "next/link"
 import { redirect, useRouter } from "next/navigation"
-
+import "./../../app/globals.css"
 
 interface LoginTYpe {
     username: string,
@@ -36,24 +36,30 @@ export default function Login() {
 
         onSuccess: (data) => {
             toast.success("Logged in successfully", {
-                position: "top-center",
-                duration: 3000,
-                closeButton: true,
+                style: {
+                    background: "#ecfdf3",
+                    color: "#30a257"
+                }
             })
-            localStorage.setItem('accessToken', data?.access)
-            localStorage.setItem('refreshToken', data?.refresh)
+            
+            sessionStorage.setItem('accessToken', data?.access) 
+            sessionStorage.setItem('refreshToken', data?.refresh)
             router.push('/feed')
-
         },
 
         onError: () => {
+            // toast.error("Invalid username or password", {
+            //     position: "top-center",
+            //     duration: 4000,
+            //     closeButton: true,
+            // })
             toast.error("Invalid username or password", {
-                position: "top-center",
-                duration: 4000,
-                closeButton: true,
+                style: {
+                    background: "#fff0f0",
+                    color: "#ec3e3e"
+                }
             })
         }
-
     })
 
     const onSubmit = async (data: LoginTYpe) => {
@@ -64,7 +70,6 @@ export default function Login() {
 
     return (
         <>
-
             <div className="bg-light-gray min-h-screen flex justify-center items-center">
                 <div className="flex flex-col justify-center items-center">
                     <div className="bg-white shadow-md rounded-md sm-425:!w-screen sm-425:min-h-screen sm-425:pt-12">
@@ -142,5 +147,4 @@ export default function Login() {
             </div>
         </>
     )
-    
 };

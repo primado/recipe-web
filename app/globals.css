@@ -74,3 +74,10 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+.toast-error {
+  background-color: "#ze60000";
+  color: "#fff0f0";
+
+}

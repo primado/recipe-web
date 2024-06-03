@@ -19,13 +19,17 @@ import { useEffect } from "react"
 
 export default function Navbar() {
 
-    const token = localStorage.getItem('accessToken') as string
-    const refresh = localStorage.getItem('refreshToken')
+    // const token = localStorage.getItem('accessToken') as string
+    // const refresh = localStorage.getItem('refreshToken') as string
+    const token: string | null = sessionStorage.getItem('accessToken') 
+    const refresh: string | null = sessionStorage.getItem('refreshToken') 
 
     useEffect(() => {
         if (!refresh) {
-            localStorage.removeItem('accessToken')
-            localStorage.removeItem('refreshToken')
+            // localStorage.removeItem('accessToken')
+            // localStorage.removeItem('refreshToken')
+            sessionStorage.removeItem('accessToken')
+            sessionStorage.removeItem('refreshToken')
         }
     })
 
