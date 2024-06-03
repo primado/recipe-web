@@ -42,8 +42,12 @@ type ProfileDTO = {
 
 export default function Icon() {
 
-    const token = localStorage.getItem('accessToken') as string 
-    const refresh = localStorage.getItem('refreshToken') as string 
+    // const token = localStorage.getItem('accessToken') as string 
+    // const refresh = localStorage.getItem('refreshToken') as string 
+    
+    const token = sessionStorage.getItem('accessToken') as string 
+    const refresh = sessionStorage.getItem('refreshToken') as string 
+
     const router = useRouter()
 
     const logout = useMutation({
@@ -60,8 +64,12 @@ export default function Icon() {
         },
 
         onSuccess: (data) => {
-            localStorage.removeItem('accessToken')
-            localStorage.removeItem('refreshToken')
+            // localStorage.removeItem('accessToken')
+            // localStorage.removeItem('refreshToken')
+
+            sessionStorage.removeItem('accessToken')
+            sessionStorage.removeItem('refreshToken')
+
             toast.success(data.detail, {
                 position: 'top-center',
                 duration: 2000,
@@ -127,15 +135,8 @@ export default function Icon() {
                     
                     <Avatar key={picture.id} className="cursor-pointer w-[2.5rem] h-[2.5rem]">
                         <AvatarImage src={picture?.profile_picture} className="rounded-full "/>
-
                         <AvatarFallback>
-                            {/* <Image
-                                src={fallbackAvatar}
-                                alt="fallback avatar"
-                                className="rounded-full"
-                           /> */}
                            <p className="rounded-full font-semibold">{charFName.charAt(0)}{charLName.charAt(0)}</p>
-                           
                         </AvatarFallback>
                     </Avatar>
                     ))}
@@ -155,11 +156,6 @@ export default function Icon() {
                                          className="rounded-full "
                                     />
                                     <AvatarFallback>
-                                        {/* <Image
-                                            src={fallbackAvatar}
-                                            alt="fallback avatar"
-                                            className="rounded-full"
-                                       /> */}
                                        <p className="rounded-full font-semibold">{charFName.charAt(0)}{charLName.charAt(0)}</p>
                                     </AvatarFallback>
                                 </Avatar>
@@ -175,11 +171,13 @@ export default function Icon() {
                 </DropdownMenuGroup>
                 </Link>
      
-                <DropdownMenuSeparator className="bg-hover-1 " />
+                <DropdownMenuSeparator className="bg-hover-1 h-[0.1rem]" />
+
                 <DropdownMenuGroup className="flex flex-col gap-y-1 font-semibold ">
                     {/* <DropdownMenuItem className="flex flex-row items-center gap-x-1 py-3 px-5  cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40 ">
                         <User className="h-4 w-4 " />
-                        <button onClick={() => router.push('/#')}><span>Profile</span></button>
+                        <button onClick={() => router.push('/#')}>
+                        <span>Profile</span></button>
                     </DropdownMenuItem> */}
                     <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-3 px-5 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40">
                         
@@ -197,7 +195,7 @@ export default function Icon() {
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
 
-                <DropdownMenuSeparator className="bg-hover-1 " />
+                <DropdownMenuSeparator className="bg-hover-1 h-[0.1rem]" />
                 <DropdownMenuGroup>
                     <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-3 px-5 font-semibold text-red-700 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40">
                         

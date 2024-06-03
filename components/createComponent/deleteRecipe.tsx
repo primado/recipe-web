@@ -10,7 +10,8 @@ import { api_base_url } from "../universal/API_BASE_URL"
 
 
 
-const token = localStorage.getItem('accessToken')
+// const token: string | null = localStorage.getItem('accessToken')
+const token: string | null = sessionStorage.getItem('accessToken')
 
 export default function DeleteRecipe({id}: {id: number}) {
 
@@ -47,9 +48,10 @@ export default function DeleteRecipe({id}: {id: number}) {
         },
         onSuccess: () => {
             toast.success('Recipe deleted successfully.', {
-                duration: 3000,
-                closeButton: true,
-                position: 'top-center'
+                style: {
+                    background: "#ecfdf3",
+                    color: "#30a257"
+                }
             })
             queryClient.invalidateQueries({queryKey: ['getUpdateRecipeData']})
             setTimeout(() => {
@@ -58,10 +60,16 @@ export default function DeleteRecipe({id}: {id: number}) {
             }, 1000);
         },
         onError: (error) => {
-            toast.error('Oops an error occured, try again.', {
-                duration: 3000,
-                closeButton: true,
-                position: 'top-center'
+            // toast.error('Oops an error occured, try again.', {
+            //     duration: 3000,
+            //     closeButton: true,
+            //     position: 'top-center'
+            // })
+            toast.error("Oops an error occured, try again.", {
+                style: {
+                    background: "#fff0f0",
+                    color: "#ec3e3e"
+                }
             })
             console.log("Delete Recipe Error msg", error.message, error.cause);
         }

@@ -42,9 +42,12 @@ type ChangePicture = {
 }
 
 
+const token: string | null = sessionStorage.getItem('accessToken')
+
 export default function Profile() {
 
-    const token: string | null = localStorage.getItem('accessToken')
+    // const token: string | null = localStorage.getItem('accessToken')
+
 
     const { register, handleSubmit, setValue, control, formState: {errors} } = useForm<UserProfile>({
         criteriaMode: 'all',
@@ -89,19 +92,26 @@ export default function Profile() {
         },
         onSuccess: (data) => {
             toast.success('User profile updated successfully', {
-                position: 'top-center',
-                duration: 4000,
-                closeButton: true 
+                style: {
+                    background: "#ecfdf3",
+                    color: "#30a257"
+                }
             })
             window.location.reload()
             queryClient.invalidateQueries({queryKey: ['profile']})
 
         },
         onError: (error) => {
-            toast.error('An occured while updating profile, try again.', {
-                position: 'top-center',
-                duration: 4000,
-                closeButton: true 
+            // toast.error('An occured while updating profile, try again.', {
+            //     position: 'top-center',
+            //     duration: 4000,
+            //     closeButton: true 
+            // })
+            toast.error("An occured while updating profile, try again.", {
+                style: {
+                    background: "#fff0f0",
+                    color: "#ec3e3e"
+                }
             })
             console.log(error.cause, error.message)
         }
@@ -142,19 +152,26 @@ export default function Profile() {
         },
         onSuccess: () => {
             toast.success('Deleted profile picture pucessfully', {
-                position: 'top-center',
-                duration: 4000,
-                closeButton: true 
+                style: {
+                    background: "#ecfdf3",
+                    color: "#30a257"
+                }
             })
             queryClient.invalidateQueries({queryKey: ['myPicture']})
             
         },
         onError: (error) => {
             console.log(error.cause, error.message)
-            toast.error('An error occured, please try again.', {
-                position: 'top-center',
-                duration: 4000,
-                closeButton: true
+            // toast.error('An error occured, please try again.', {
+            //     position: 'top-center',
+            //     duration: 4000,
+            //     closeButton: true
+            // })
+            toast.error("An error occured, please try again.", {
+                style: {
+                    background: "#fff0f0",
+                    color: "#ec3e3e"
+                }
             })
         }
     })
@@ -188,9 +205,10 @@ export default function Profile() {
         mutationFn: uploadFile,
         onSuccess: () => {
             toast.success('Profile Picture Updated Successfully', {
-                position: 'top-center',
-                duration: 4000,
-                closeButton: true 
+                style: {
+                    background: "#ecfdf3",
+                    color: "#30a257"
+                }
             })
             setIsFileSelect(false)
             setTimeout(() => {
@@ -200,10 +218,16 @@ export default function Profile() {
         },
         onError: (error) => {
             console.log(error.cause, error.message)
-            toast.error('An error occured, please try again.', {
-                position: 'top-center',
-                duration: 4000,
-                closeButton: true
+            // toast.error('An error occured, please try again.', {
+            //     position: 'top-center',
+            //     duration: 4000,
+            //     closeButton: true
+            // })
+            toast.error("Oops an error occured, try again.", {
+                style: {
+                    background: "#fff0f0",
+                    color: "#ec3e3e"
+                }
             })
         }
     });
@@ -249,9 +273,9 @@ export default function Profile() {
 
     useEffect(() => {
         if(!token) {
-            window.location.href = '/login'
+            router.push('/login')
         }
-    }, [token])
+    }, [router])
     
 
     const [charFName, setCharFName] = useState<string>('')
