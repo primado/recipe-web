@@ -40,9 +40,10 @@ export default function Login() {
 
         onSuccess: (data) => {
             toast.success("Account created successfully", {
-                position: "top-center",
-                duration: 4000,
-                closeButton: true,
+                style: {
+                    background: "#ecfdf3",
+                    color: "#30a257"
+                }
             })
             // localStorage.setItem('accessToken', data?.access)
             // localStorage.setItem('refreshToken', data?.refresh)
@@ -52,16 +53,28 @@ export default function Login() {
 
         onError: (error) => {
             if (error.message.includes('400')) {
-                toast.error('A user with that username already exists.', {
-                    position: 'top-center',
-                    duration: 4000,
-                    closeButton: true
+                // toast.error('A user with that username already exists.', {
+                //     position: 'top-center',
+                //     duration: 4000,
+                //     closeButton: true
+                // })
+                toast.error("A user with that username already exists.", {
+                    style: {
+                        background: "#fff0f0",
+                        color: "#ec3e3e"
+                    }
                 })
             } else {
-                toast.error('An error occurred, please try again', {
-                    position: 'top-center',
-                    duration: 4000,
-                    closeButton: true
+                // toast.error('An error occurred, please try again.', {
+                //     position: 'top-center',
+                //     duration: 4000,
+                //     closeButton: true
+                // })
+                toast.error("An error occurred, please try again.", {
+                    style: {
+                        background: "#fff0f0",
+                        color: "#ec3e3e"
+                    }
                 })
             }
         }

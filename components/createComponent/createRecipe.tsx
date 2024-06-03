@@ -78,9 +78,10 @@ export default function CreateRecipe() {
         },
         onSuccess: () => {
             toast.success("Recipe created successfully", {
-                position: 'top-center',
-                duration: 3000,
-                closeButton: true
+                style: {
+                    background: "#ecfdf3",
+                    color: "#30a257"
+                }
             })
             reset()
             queryClient.invalidateQueries({queryKey: ['publicRecipes']})
@@ -88,6 +89,15 @@ export default function CreateRecipe() {
                 router.refresh()
                 router.push("/feed")
             }, 2000)
+        },
+        onError: (error) => {
+            toast.error("Oops an error occured, please try again", {
+                style: {
+                    background: "#fff0f0",
+                    color: "#ec3e3e"
+                }
+            }),
+            console.log(error.cause, error.message)
         }
     })
 
