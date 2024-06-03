@@ -46,8 +46,10 @@ export default function Login() {
                 duration: 4000,
                 closeButton: true,
             })
-            localStorage.setItem('accessToken', data?.access)
-            localStorage.setItem('refreshToken', data?.refresh)
+            // localStorage.setItem('accessToken', data?.access)
+            // localStorage.setItem('refreshToken', data?.refresh)
+            sessionStorage.setItem('accessToken', data?.access)
+            sessionStorage.setItem('refreshToken', data?.refresh)
         },
 
         onError: (error) => {
@@ -67,10 +69,7 @@ export default function Login() {
         }
     })    
 
-
-
     const onSubmit = async (data: RegisterType) => {
-       
         createAccount.mutateAsync(data)
     }
 
@@ -204,9 +203,6 @@ export default function Login() {
             </div>
         </>
     )
-    
 };
-function usetState(): [any, any] {
-    throw new Error("Function not implemented.")
-}
+
 

@@ -40,10 +40,11 @@ export default function Login() {
                 duration: 3000,
                 closeButton: true,
             })
-            localStorage.setItem('accessToken', data?.access)
-            localStorage.setItem('refreshToken', data?.refresh)
+            // localStorage.setItem('accessToken', data?.access)
+            // localStorage.setItem('refreshToken', data?.refresh)
+            sessionStorage.setItem('accessToken', data?.access) 
+            sessionStorage.setItem('refreshToken', data?.refresh)
             router.push('/feed')
-
         },
 
         onError: () => {
@@ -53,7 +54,6 @@ export default function Login() {
                 closeButton: true,
             })
         }
-
     })
 
     const onSubmit = async (data: LoginTYpe) => {
@@ -64,7 +64,6 @@ export default function Login() {
 
     return (
         <>
-
             <div className="bg-light-gray min-h-screen flex justify-center items-center">
                 <div className="flex flex-col justify-center items-center">
                     <div className="bg-white shadow-md rounded-md sm-425:!w-screen sm-425:min-h-screen sm-425:pt-12">
@@ -142,5 +141,4 @@ export default function Login() {
             </div>
         </>
     )
-    
 };

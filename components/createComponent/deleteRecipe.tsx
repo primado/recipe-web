@@ -10,7 +10,8 @@ import { api_base_url } from "../universal/API_BASE_URL"
 
 
 
-const token = localStorage.getItem('accessToken')
+// const token: string | null = localStorage.getItem('accessToken')
+const token: string | null = sessionStorage.getItem('accessToken')
 
 export default function DeleteRecipe({id}: {id: number}) {
 

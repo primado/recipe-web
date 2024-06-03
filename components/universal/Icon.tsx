@@ -42,8 +42,12 @@ type ProfileDTO = {
 
 export default function Icon() {
 
-    const token = localStorage.getItem('accessToken') as string 
-    const refresh = localStorage.getItem('refreshToken') as string 
+    // const token = localStorage.getItem('accessToken') as string 
+    // const refresh = localStorage.getItem('refreshToken') as string 
+    
+    const token = sessionStorage.getItem('accessToken') as string 
+    const refresh = sessionStorage.getItem('refreshToken') as string 
+
     const router = useRouter()
 
     const logout = useMutation({
@@ -60,8 +64,12 @@ export default function Icon() {
         },
 
         onSuccess: (data) => {
-            localStorage.removeItem('accessToken')
-            localStorage.removeItem('refreshToken')
+            // localStorage.removeItem('accessToken')
+            // localStorage.removeItem('refreshToken')
+
+            sessionStorage.removeItem('accessToken')
+            sessionStorage.removeItem('refreshToken')
+            
             toast.success(data.detail, {
                 position: 'top-center',
                 duration: 2000,

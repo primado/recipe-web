@@ -28,7 +28,8 @@ type RecipeDTO = {
     }
 }
 
-const token = localStorage.getItem('accessToken')
+// const token = localStorage.getItem('accessToken')
+const token: string | null = sessionStorage.getItem('accessToken')
 
 
 export default function PublicRecipeDetial({id}: {id: number}) {

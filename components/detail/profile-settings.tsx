@@ -42,9 +42,12 @@ type ChangePicture = {
 }
 
 
+const token: string | null = sessionStorage.getItem('accessToken')
+
 export default function Profile() {
 
-    const token: string | null = localStorage.getItem('accessToken')
+    // const token: string | null = localStorage.getItem('accessToken')
+
 
     const { register, handleSubmit, setValue, control, formState: {errors} } = useForm<UserProfile>({
         criteriaMode: 'all',
