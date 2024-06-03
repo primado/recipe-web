@@ -37,7 +37,7 @@ export default function RootLayout({
                   warning: 'text-yellow-600',
                   info: 'bg-blue-600',
                   title: "text-black",
-                  closeButton: "text-black"
+                  closeButton: "bg-lime-400"
                 },
               }}
             />

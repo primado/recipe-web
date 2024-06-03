@@ -49,13 +49,10 @@ export default function PublicRecipeDetial({id}: {id: number}) {
         return response.data
     }
 
-
     const currentUser = useQuery({
         queryKey: ['currentUser'],
         queryFn: fetchCurrentUser,
     })
-
-
     
     const recipeData = useQuery({
         queryKey: ['retrieveRecipe', id],
@@ -88,13 +85,8 @@ export default function PublicRecipeDetial({id}: {id: number}) {
             console.log("Recipe Data", recipeDataJson);
     
             setLDatad(recipeDataJson?.last_updated)
-           
         }
     }, [currentUser, recipeData.data])
-
-
-
-
 
 
     const formattedLastUpdate = lDated
@@ -160,15 +152,15 @@ export default function PublicRecipeDetial({id}: {id: number}) {
                          <div key={data.id} className="flex flex-col gap-y-5">
                          <div className="flex flex-col gap-y-4 w-[70%]">
                              <h1 className="text-black break-words text-5xl font-bold">{data?.title}</h1>
-                             <p className="text-black text-xl font-medium">{data?.description}</p>
+                             <p className="text-black text-xl font-medium text-justify">{data?.description}</p>
                          </div>
                          <div className="flex flex-row justify-between items-stretch">
                             <div className="flex flex-col gap-y-5">
                                  <div className="">
                                      <h2 className="text-black font-semibold text-2xl">{data?.user?.first_name} {data?.user?.last_name}</h2>
-                                     <p className="italic text-gray-500 text-lg font-normal"> Last updated - {formattedLastUpdate}</p>
+                                     <p className="italic text-gray-500  text-lg font-normal"> Last updated - {formattedLastUpdate}</p>
                                  </div>
-                                 <div className="flex flex-row gap-3 justify-start items-center">
+                                 <div className="flex flex-row gap-3 justify-start items-center ">
                                     <h4 className="text-black text-lg font-medium flex flex-row gap-x-1">
                                         <TimerIcon size={23} strokeWidth={2} className="text-red-500"/>
                                         <span>Total Time -</span>
@@ -183,12 +175,12 @@ export default function PublicRecipeDetial({id}: {id: number}) {
                          <div className="flex flex-row justify-between items-start">
                              <div className="flex flex-row gap-10 text-base font-medium text-black w-[60%]">
                                     <div className="flex flex-col gap-3 w-[50%] text-justify">
-                                        <h2 className="text-black font-semibold text-2xl">Description</h2>
-                                        {data?.instruction}
+                                        <h2 className="text-black font-semibold text-lg">Description</h2>
+                                        <p className="text-base">{data?.instruction}</p>
                                     </div>
                                      <div className="flex flex-col gap-3 w-[50%] text-justify">
-                                        <h2 className="text-black font-semibold text-2xl">Ingredient</h2>
-                                        {data?.ingredient}
+                                        <h2 className="text-black font-semibold text-lg">Ingredient</h2>
+                                        <p className="text-base">{data?.ingredient}</p>
                                     </div>
                                  </div>
                                  

@@ -34,8 +34,6 @@ export default function Login() {
                     'Content-Type': 'application/json'
                 }
             })
-
-      
             console.log("User data:", response?.data);
             return response.data
         },
