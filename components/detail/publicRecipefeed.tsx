@@ -4,15 +4,21 @@ import { Button } from "../ui/button"
 import Image from "next/image"
 import {
     Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
     CardHeader,
     CardTitle,
   } from "@/components/ui/card"
 import default_img from "../../public/assets/recipe-img1.jpg"
 import Link from "next/link"
+import { useState } from "react"
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment } from 'react';
 import { useRouter } from "next/navigation"
 import { PlusIcon } from "lucide-react"
 import { api_base_url } from "../universal/API_BASE_URL"
-import { Oval } from "react-loader-spinner"
+
 
 
 // const token = localStorage.getItem('accessToken')
@@ -48,30 +54,15 @@ export default function PublicRecipeFeed() {
     return (
         <>
             <div className="flex flex-col gap-10 ">
-                {publicRecipe.isLoading && (
-                    <div className="flex gap-3 text-lg font-medium justify-center items-center">
-                        <Oval
-                            visible={true}
-                            height="20"
-                            width="20"
-                            color="#4fa94d"
-                            ariaLabel="oval-loading"
-                            wrapperStyle={{}}
-                            wrapperClass=""
-                        />
-                        Loading...
-                    </div>
-                )}
                 <div className="flex flex-row justify-between item-center">
-                    
                     <div className="">
                         <h1 className="text-black font-bold text-3xl">Recipes</h1>
                         <p className="text-gray-500 font-semibold text-xl">Browse through various recipes</p>
                     </div>
                     <div className="">
-                        <Button size={'sm'}  variant={'default'} className="text-base py-5" onClick={() => router.push("/create-recipe")}>
+                        <Button  variant={'default'} className="text-lg" onClick={() => router.push("/create-recipe")}>
 
-                            <div className="flex flex-row gap-x-1 justify-center items-center">
+                            <div className="flex flex-row gap-x-2 justify-center items-center">
                                 <PlusIcon size={23} strokeWidth={2} className="font-semibold" />
                                <span>Create Recipe</span>
                             </div>
@@ -80,7 +71,7 @@ export default function PublicRecipeFeed() {
                        
                     </div>
                 </div>
-           
+
                 <div className="grid grid-cols-4 justify-between place-content-center gap-6">
                     {recipeData && recipeData.map((data:RecipeType) => (
                     <Link key={data.id}  href={`feed/${data.id}`}>
