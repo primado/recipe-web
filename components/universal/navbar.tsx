@@ -1,33 +1,18 @@
-
 "use client"
 import Link from "next/link"
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
-import fallbackAvatar from "./../../public/assets/fallback-avatar.png"
-import Image from "next/image"
-import {
-    DropdownMenu,
-    DropdownMenuTrigger,
-    DropdownMenuContent,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-} from "../ui/dropdown-menu"
-import {Button} from "../ui/button"
-import { DropdownMenuGroup, DropdownMenuItem } from "@radix-ui/react-dropdown-menu"
-import { LogOut, Settings, User } from "lucide-react"
+import { usePathname } from "next/navigation"
 import Icon from "./Icon"
 import { useEffect } from "react"
 
 export default function Navbar() {
 
-    // const token = localStorage.getItem('accessToken') as string
-    // const refresh = localStorage.getItem('refreshToken') as string
     const token: string | null = sessionStorage.getItem('accessToken') 
     const refresh: string | null = sessionStorage.getItem('refreshToken') 
 
+    const pathname = usePathname()
+
     useEffect(() => {
         if (!refresh) {
-            // localStorage.removeItem('accessToken')
-            // localStorage.removeItem('refreshToken')
             sessionStorage.removeItem('accessToken')
             sessionStorage.removeItem('refreshToken')
         }
@@ -45,10 +30,10 @@ export default function Navbar() {
                     <div className="flex flex-row gap-x-10 text-davy-gray text-lg font-semibold">
                         {token && (
                             <>
-                                <Link href="/feed" className="hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md p-2 hover:text-emerald-600 hover:transition-all hover:duration-300">
+                                <Link href="/feed" className={` ${pathname === '/feed' ? 'text-emerald-600 ' : ''} hover:bg-hover-1  hover:bg-opacity-40 hover:text-emerald-600  hover:rounded-md p-2  hover:transition-all hover:duration-300`}>
                                     <p>Feed</p>
                                 </Link>
-                                <Link href="#" className="hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md p-2 hover:text-emerald-600 hover:transition-all hover:duration-300">
+                                <Link href="/collections" className={` ${pathname === '/collections' ? 'text-emerald-600 ' : ''} hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md p-2 hover:text-emerald-600 hover:transition-all hover:duration-300`}>
                                     <p>Collections</p>
                                 </Link>
                             </>

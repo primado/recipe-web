@@ -6,7 +6,7 @@ import axios from "axios"
 import { toast } from "sonner"
 import Link from "next/link"
 import { redirect, useRouter } from "next/navigation"
-import "./../../app/globals.css"
+import "../../../app/globals.css"
 
 interface LoginTYpe {
     username: string,
@@ -69,7 +69,7 @@ export default function Login() {
 
 
     return (
-        <>
+        <main>
             <div className="bg-light-gray min-h-screen flex justify-center items-center">
                 <div className="flex flex-col justify-center items-center">
                     <div className="bg-white shadow-md rounded-md sm-425:!w-screen sm-425:min-h-screen sm-425:pt-12">
@@ -145,6 +145,6 @@ export default function Login() {
                     </div>
                 </div>
             </div>
-        </>
+        </main>
     )
 };

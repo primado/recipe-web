@@ -12,7 +12,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Recipe Management System",
-  description: "A Recipe Management System",
+  description: "A Recipe Management System to share your favorite recipes.",
 };
 
 export default function RootLayout({
@@ -25,26 +25,13 @@ export default function RootLayout({
       <body className={inter.className}>
 
           <TanstackQueryProvider>
-          
-              {children}
-            
-            {/* <Toaster 
-               toastOptions={{
-                unstyled: false,
-                classNames: {
-                  success: 'text-[#30a257]   bg-[#ecfdf3] ',
-                  warning: 'text-yellow-600',
-                  info: 'bg-blue-600',
-                  title: "text-[#30a257]",
-                  closeButton: "bg-white"
-                }, 
-              }}
-            /> */}
-            <Toaster 
+          <Toaster 
               position="bottom-right"
               closeButton={true}
               duration={3000}
             />
+              {children}
+          
           </TanstackQueryProvider>
 
          

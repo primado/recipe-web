@@ -14,6 +14,7 @@ import default_img from "../../public/assets/recipe-img1.jpg"
 import { useState } from "react"
 import Link from "next/link"
 import { api_base_url } from "./API_BASE_URL"
+import { Oval } from "react-loader-spinner"
 
 
 
@@ -33,7 +34,7 @@ interface Recipe {
 
 export default function RecipeHome() {
 
-    const {data: recipeData, isSuccess, isError} = useQuery({
+    const {data: recipeData, isSuccess, isError, isLoading} = useQuery({
         queryKey: ['home-recipes'],
         queryFn: async () => {
             const response = await axios.get(`${api_base_url}`+ "api/feed/", {
@@ -51,10 +52,12 @@ export default function RecipeHome() {
     return (
 
         <section className="bg-[#F8F8F8] w-full py-16 flex flex-col justify-center items-center gap-y-10 px-60">
+           
             <div className="flex flex-col justify-center items-center">
                 <p className="text-[#6ca97e] text-base uppercase font-semibold">Recipes</p>
                 <h2 className="text-davy-gray text-3xl font-medium">Pupolar Recipes</h2>
             </div>
+          
             <div className="grid grid-cols-4 justify-between place-content-center gap-6">
                 {recipeData && recipeData.map((data:Recipe) => (
                 <Link key={data.id} href={`home-detail/${data.id}`} >

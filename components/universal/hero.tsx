@@ -23,6 +23,8 @@ export default function Hero() {
 
     const router = useRouter()
 
+    const token = sessionStorage.getItem('accessToken')
+
     return (
         <>
             <div className="bg-hero flex flex-row justify-between items-center  py-10  px-60 ">
@@ -32,6 +34,7 @@ export default function Hero() {
                             <h1 className="text-5xl font-medium break-words max-w-xl leading-[1.2]">A recipe hub built to find your favorite recipes.</h1>
                             <p className=" max-w-md">Browse through various recipes and save to collections that delight you.</p>
                         </div>
+                        {!token && (
                         <div className="flex flex-row gap-x-4 items-center">
                             <Button onClick={() => router.push('/register')} className="bg-dark-green w-[10rem] h-14 text-white hover:bg-primary-none hover:bg-opacity-90">
                                 <span className="text-lg">Get Started</span>
@@ -39,6 +42,7 @@ export default function Hero() {
                             </Button>
                             <p className="text-dark-green font-medium text-base">Sign up to get started</p>
                         </div>
+                        )}
 
                     </div>
                     <div className="">

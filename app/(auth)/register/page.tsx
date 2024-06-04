@@ -87,7 +87,7 @@ export default function Login() {
 
 
     return (
-        <>
+        <main>
 
             <div className="bg-light-gray min-h-screen flex justify-center items-center">
                 <div className="flex flex-col justify-center items-center">
@@ -212,7 +212,7 @@ export default function Login() {
                     </div>
                 </div>
             </div>
-        </>
+        </main>
     )
 };
 
