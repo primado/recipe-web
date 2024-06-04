@@ -123,10 +123,10 @@ export default function PublicRecipeDetial({id}: {id: number}) {
                     )}
                     <div className="flex flex-row justify-between items-center">
                         <Button 
-                              size={'lg'} variant={'default'} 
+                              size={'sm'}  variant={'default'} 
                               onClick={() => router.back()}
-                              className="bg-black rounded-md w-[5rem] px-14 py-2 opacity-90 flex flex-row justify-center items-center">
-                             <p className="text-white flex flex-row gap-x-2 items-center justify-center">
+                              className="text-base py-5">
+                             <p className="flex flex-row gap-x-1 justify-center items-center">
                                  <ArrowLeftIcon size={23} strokeWidth={2} />
                                  Go back
                              </p>
@@ -137,26 +137,24 @@ export default function PublicRecipeDetial({id}: {id: number}) {
                                 <div  key={data.id} className="flex flex-row justify-center gap-5">
                                 {userID === data?.user?.id && (
                                     <Button
-                                        size={'lg'} variant={'default'} 
+                                        size={'sm'} variant={'default'} 
                                         onClick={() => router.push(`/edit-recipe/${data.id}`)}
-                                        className="bg-black rounded-md  px-5 opacity-90 flex flex-row justify-center items-center"
+                                        className="text-base py-5"
                                     >
-                                        <p className="text-white flex flex-row justify-center items-center gap-2">
+                                        <p className="flex flex-row gap-x-1 justify-center items-center">
                                             <Edit2Icon size={23} strokeWidth={2} />
                                             <span>Edit Recipe</span>
                                         </p>
                                     </Button>
-
-                                    
                                 )} 
 
                                 {userID === data?.user?.id && (
                                     <Button
-                                        size={'lg'} variant={'destructive'}
+                                        size={'sm'} variant={'destructive'}
                                         onClick={() => router.push(`/delete-recipe/${data.id}`)}
-                                        className="rounded-md  px-5 opacity-90 flex flex-row justify-center items-center"
+                                        className="text-base py-5"
                                     >
-                                        <p className="text-white flex flex-row justify-center items-center gap-2">
+                                        <p className="flex flex-row gap-x-1 justify-center items-center">
                                             <Trash size={23} strokeWidth={2} />
                                             <span>Delete Recipe</span>
                                         </p>

@@ -75,9 +75,9 @@ export default function PublicRecipeFeed() {
                         <p className="text-gray-500 font-semibold text-xl">Browse through various recipes</p>
                     </div>
                     <div className="">
-                        <Button  variant={'default'} className="text-lg" onClick={() => router.push("/create-recipe")}>
+                        <Button size={'sm'}  variant={'default'} className="text-base py-5" onClick={() => router.push("/create-recipe")}>
 
-                            <div className="flex flex-row gap-x-2 justify-center items-center">
+                            <div className="flex flex-row gap-x-1 justify-center items-center">
                                 <PlusIcon size={23} strokeWidth={2} className="font-semibold" />
                                <span>Create Recipe</span>
                             </div>
