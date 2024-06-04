@@ -81,10 +81,10 @@ export default function DeleteRecipe({id}: {id: number}) {
         <div className="px-52 py-16 bg-tan w-full min-h-screen ">
             <div className="flex flex-row justify-between items-center">
                 <Button 
-                    size={'lg'} variant={'default'} 
+                    size={'sm'} variant={'default'} 
                     onClick={() => router.back()}
-                    className="bg-black rounded-md w-[5rem] px-14 py-2 opacity-90 flex flex-row justify-center items-center">
-                    <p className="text-white flex flex-row gap-x-2 items-center justify-center">
+                    className="text-base py-5">
+                    <p className="flex flex-row gap-x-1 justify-center items-center">
                         <ArrowLeftIcon  className="font-semibold text-base text-white"/>
                         Go back
                     </p>
@@ -93,7 +93,7 @@ export default function DeleteRecipe({id}: {id: number}) {
             {getRecipe && getRecipe?.data?.map((data: any) => (
                 <div key={data?.id} className="flex flex-col justify-center items-center gap-10">
                    
-                        <p className="text-black font-medium text-xl">Are you sure you want to delete <b>{data?.title}</b>?</p>
+                        <p className="text-black font-medium text-xl">Are you sure you want to delete <b>&quot;{data?.title}&quot;</b>?</p>
                         <div className="flex flex-row gap-5">
                             <Button
                                 size={'lg'} variant={'destructive'}

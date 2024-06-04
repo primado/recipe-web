@@ -76,6 +76,9 @@ export default function Icon() {
                 closeButton: true
             })
             router.push("/")
+            setTimeout(() => {
+                router.refresh()
+            }, 1000)
         },
 
         onError: (error) => {
@@ -135,8 +138,8 @@ export default function Icon() {
                     
                     <Avatar key={picture.id} className="cursor-pointer w-[2.5rem] h-[2.5rem]">
                         <AvatarImage src={picture?.profile_picture} className="rounded-full "/>
-                        <AvatarFallback>
-                           <p className="rounded-full font-semibold">{charFName.charAt(0)}{charLName.charAt(0)}</p>
+                        <AvatarFallback className="rounded-full  font-semibold">
+                            {charFName.charAt(0).toUpperCase()}{charLName.charAt(0).toUpperCase()}
                         </AvatarFallback>
                     </Avatar>
                     ))}
@@ -155,8 +158,8 @@ export default function Icon() {
                                          src={data?.profile_picture} 
                                          className="rounded-full "
                                     />
-                                    <AvatarFallback>
-                                       <p className="rounded-full font-semibold">{charFName.charAt(0)}{charLName.charAt(0)}</p>
+                                    <AvatarFallback className="rounded-full  font-semibold">
+                                      {charFName.charAt(0).toUpperCase()}{charLName.charAt(0).toUpperCase()}
                                     </AvatarFallback>
                                 </Avatar>
                            
