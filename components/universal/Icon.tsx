@@ -76,6 +76,9 @@ export default function Icon() {
                 closeButton: true
             })
             router.push("/")
+            setTimeout(() => {
+                router.refresh()
+            }, 1000)
         },
 
         onError: (error) => {
