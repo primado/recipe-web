@@ -52,20 +52,7 @@ export default function RecipeHome() {
     return (
 
         <section className="bg-[#F8F8F8] w-full py-16 flex flex-col justify-center items-center gap-y-10 px-60">
-            <div className="flex gap-3 text-lg font-medium justify-center items-center">
-                {isLoading && (
-                    <Oval
-                        visible={true}
-                        height="20"
-                        width="20"
-                        color="#4fa94d"
-                        ariaLabel="oval-loading"
-                        wrapperStyle={{}}
-                        wrapperClass=""
-                    />
-                )}
-                Loading...
-            </div>
+           
             <div className="flex flex-col justify-center items-center">
                 <p className="text-[#6ca97e] text-base uppercase font-semibold">Recipes</p>
                 <h2 className="text-davy-gray text-3xl font-medium">Pupolar Recipes</h2>

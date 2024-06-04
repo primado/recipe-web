@@ -1,4 +1,5 @@
 
+import Navbar from "@/components/universal/navbar";
 import type { Metadata } from "next";
 
 
@@ -14,6 +15,7 @@ export default function RootLayout({
   }>) {
     return (
         <div className=""> 
+          <Navbar />
             {children}
         </div>
     );
