@@ -18,7 +18,7 @@ import { Fragment } from 'react';
 import { useRouter } from "next/navigation"
 import { PlusIcon } from "lucide-react"
 import { api_base_url } from "../universal/API_BASE_URL"
-
+import { Oval } from "react-loader-spinner"
 
 
 // const token = localStorage.getItem('accessToken')
@@ -54,7 +54,22 @@ export default function PublicRecipeFeed() {
     return (
         <>
             <div className="flex flex-col gap-10 ">
+                {publicRecipe.isLoading && (
+                    <div className="flex gap-3 text-lg font-medium justify-center items-center">
+                        <Oval
+                            visible={true}
+                            height="20"
+                            width="20"
+                            color="#4fa94d"
+                            ariaLabel="oval-loading"
+                            wrapperStyle={{}}
+                            wrapperClass=""
+                        />
+                        Loading...
+                    </div>
+                )}
                 <div className="flex flex-row justify-between item-center">
+                    
                     <div className="">
                         <h1 className="text-black font-bold text-3xl">Recipes</h1>
                         <p className="text-gray-500 font-semibold text-xl">Browse through various recipes</p>
@@ -71,7 +86,7 @@ export default function PublicRecipeFeed() {
                        
                     </div>
                 </div>
-
+           
                 <div className="grid grid-cols-4 justify-between place-content-center gap-6">
                     {recipeData && recipeData.map((data:RecipeType) => (
                     <Link key={data.id}  href={`feed/${data.id}`}>

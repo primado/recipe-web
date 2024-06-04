@@ -8,6 +8,7 @@ import { Button } from "../ui/button"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import { Oval } from "react-loader-spinner"
 
 
 type RecipeDTO = {
@@ -102,7 +103,24 @@ export default function PublicRecipeDetial({id}: {id: number}) {
 
         <>
             <section className="px-52 py-16 bg-tan w-full min-h-screen ">
+               
                 <div className="flex flex-col gap-12">
+                    {recipeData.isLoading && (
+                    <div className="flex gap-3 text-lg font-medium justify-center items-center">
+                      
+                        <Oval
+                            visible={true}
+                            height="20"
+                            width="20"
+                            color="#4fa94d"
+                            ariaLabel="oval-loading"
+                            wrapperStyle={{}}
+                            wrapperClass=""
+                        />
+                        
+                        Loading...
+                    </div>
+                    )}
                     <div className="flex flex-row justify-between items-center">
                         <Button 
                               size={'lg'} variant={'default'} 
@@ -113,6 +131,7 @@ export default function PublicRecipeDetial({id}: {id: number}) {
                                  Go back
                              </p>
                         </Button>
+                        
                 
                             { recipeData && recipeData?.data?.map((data: RecipeDTO) => (
                                 <div  key={data.id} className="flex flex-row justify-center gap-5">
