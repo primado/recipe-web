@@ -4,17 +4,11 @@ import { Button } from "../ui/button"
 import Image from "next/image"
 import {
     Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
   } from "@/components/ui/card"
 import default_img from "../../public/assets/recipe-img1.jpg"
 import Link from "next/link"
-import { useState } from "react"
-import { Dialog, Transition } from '@headlessui/react';
-import { Fragment } from 'react';
 import { useRouter } from "next/navigation"
 import { PlusIcon } from "lucide-react"
 import { api_base_url } from "../universal/API_BASE_URL"
