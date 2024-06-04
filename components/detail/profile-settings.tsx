@@ -482,8 +482,7 @@ export default function Profile() {
                                             <input 
                                                 type="text" 
                                                 defaultValue={data?.email || ''}
-                                                disabled
-                                                className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand hover:cursor-not-allowed"
+                                                className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand"
                                                 {...register('email', {
                                                     required: {
                                                         value: true,
