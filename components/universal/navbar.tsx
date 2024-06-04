@@ -48,7 +48,7 @@ export default function Navbar() {
                                 <Link href="/feed" className="hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md p-2 hover:text-emerald-600 hover:transition-all hover:duration-300">
                                     <p>Feed</p>
                                 </Link>
-                                <Link href="#" className="hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md p-2 hover:text-emerald-600 hover:transition-all hover:duration-300">
+                                <Link href="/collections" className="hover:bg-hover-1 hover:bg-opacity-40 hover:rounded-md p-2 hover:text-emerald-600 hover:transition-all hover:duration-300">
                                     <p>Collections</p>
                                 </Link>
                             </>
