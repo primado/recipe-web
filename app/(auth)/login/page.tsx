@@ -6,7 +6,7 @@ import axios from "axios"
 import { toast } from "sonner"
 import Link from "next/link"
 import { redirect, useRouter } from "next/navigation"
-import "./../../app/globals.css"
+import "../../../app/globals.css"
 
 interface LoginTYpe {
     username: string,
