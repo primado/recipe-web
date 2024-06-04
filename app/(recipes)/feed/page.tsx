@@ -10,7 +10,7 @@ export default function Dashboard() {
 
 
     useEffect(() => {
-        const token = localStorage.getItem('accessToken')
+        const token = sessionStorage.getItem('accessToken')
          if (!token) {
              redirect("/")
          }
