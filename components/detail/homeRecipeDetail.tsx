@@ -57,10 +57,10 @@ export default function RecipeDetail({id}: {id: number}) {
                           size={'lg'} variant={'default'} 
                           onClick={() => router.back()}
                           className="bg-black rounded-md w-[5rem] px-14 py-2 opacity-90 flex flex-row justify-center items-center">
-                         <p className="text-white flex flex-row gap-x-2 items-center justify-center">
+                        <p className="text-white flex flex-row gap-x-2 items-center justify-center">
                              <ArrowLeftIcon  className="font-semibold text-base text-white"/>
                              Go back
-                         </p>
+                        </p>
                     </Button>
                     {/* {recipeData && recipeData?.map((data: RecipeDTO) => (
                     <Button

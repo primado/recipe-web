@@ -1,5 +1,5 @@
 
-import DeleteRecipe from "@/components/createComponent/deleteRecipe";
+import DeleteRecipe from "@/components/recipeCRUD/deleteRecipe";
 import Navbar from "@/components/universal/navbar";
 
 

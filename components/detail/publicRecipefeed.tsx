@@ -48,20 +48,7 @@ export default function PublicRecipeFeed() {
     return (
         <>
             <div className="flex flex-col gap-10 ">
-                {publicRecipe.isLoading && (
-                    <div className="flex gap-3 text-lg font-medium justify-center items-center">
-                        <Oval
-                            visible={true}
-                            height="20"
-                            width="20"
-                            color="#4fa94d"
-                            ariaLabel="oval-loading"
-                            wrapperStyle={{}}
-                            wrapperClass=""
-                        />
-                        Loading...
-                    </div>
-                )}
+               
                 <div className="flex flex-row justify-between item-center">
                     
                     <div className="">
