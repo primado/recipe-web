@@ -1,5 +1,5 @@
 'use client'
-import { Info, PlusIcon } from "lucide-react";
+import { Folder, Info, PlusIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { useForm, Controller } from "react-hook-form";
 import {
@@ -23,13 +23,15 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"  
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { api_base_url } from "../universal/API_BASE_URL"
 import { toast } from "sonner";
+import Link from "next/link";
 const token: string | null = sessionStorage.getItem("accessToken")
 
 type CollectionDTO = {
+    id: number;
     name: string;
     description: string;
     visibility: 'public' | 'private';
@@ -83,10 +85,25 @@ export default function CollectionsHome() {
     }
 
     
+    // List Collections
+    const getCollections = useQuery({
+        queryKey: ['getCollections'],
+        queryFn: async () => {
+            const response = await axios.get(`${api_base_url}` + 'api/public-collections', {
+                headers: {
+                    'Content-Length': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            return response.data
+        }
+    })
+
+    
 
     return (
-        <section>
-            <div className="flex flex-row justify-between">
+        <section className="flex flex-col gap-10 ">
+            <div className="flex flex-row justify-between items-center">
                 <div className="flex flex-col gap-1">
                     <h1 className="text-xl font-semibold">Recipe Collections</h1>
                     <p className="text-gray-500 font-medium text-lg">Browse through your favorite recipe collections</p>
@@ -213,6 +230,21 @@ export default function CollectionsHome() {
                         </DialogContent>
                     </Dialog>
                 </div>
+            </div>
+
+            <div className="grid grid-cols-5 place-content-center items-center gap-5">
+                {getCollections && getCollections?.data?.map((data: CollectionDTO) => (
+                <Link  key={data.id}  href={''} className="cursor-pointer">
+                    <div className="flex flex-row gap-3 justify-center items-center bg-white py-4 px-2 rounded-md shadow-md">
+                        <div className="">
+                            <Folder size={23} strokeWidth={3} />
+                        </div>
+                        <div className="">
+                            <p>{data.name.substring(0, 15) + '...'}</p>
+                        </div>
+                    </div> 
+                </Link> 
+                ))}                  
             </div>
         </section>
     )
