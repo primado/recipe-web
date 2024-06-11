@@ -1,4 +1,4 @@
-import EditRecipeComponent from "@/components/createComponent/editRecipe";
+import EditRecipeComponent from "@/components/recipeCRUD/editRecipe";
 import Navbar from "@/components/universal/navbar";
 
 
