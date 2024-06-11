@@ -1,5 +1,5 @@
 'use client'
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 import { ArrowLeftIcon, Edit2Icon, ImageIcon, TimerIcon, Trash } from "lucide-react"
 import Image from "next/image"
@@ -9,6 +9,15 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { Oval } from "react-loader-spinner"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+  } from "@/components/ui/dialog"
+import { toast } from "sonner"
 
 
 type RecipeDTO = {
@@ -31,12 +40,12 @@ type RecipeDTO = {
 
 // const token = localStorage.getItem('accessToken')
 const token: string | null = sessionStorage.getItem('accessToken')
-
+import { api_base_url } from "../universal/API_BASE_URL"
 
 export default function PublicRecipeDetial({id}: {id: number}) {
 
 
-
+    const queryClient = useQueryClient()
     const router = useRouter()
 
     const fetchCurrentUser = async () => {
@@ -68,6 +77,49 @@ export default function PublicRecipeDetial({id}: {id: number}) {
             return response.data
         }
     })
+
+
+    // Delete Recipe Data  Mutation
+    const deleteRecipe = useMutation({
+        mutationKey: ['deleteRecipe', id],
+        mutationFn: async () => {
+            const response = await axios.delete(`${api_base_url}api/recipe/${id}`, {
+                headers: {
+                    'content-type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            })
+            return response.data
+        },
+        onSuccess: () => {
+            toast.success('Recipe deleted successfully.', {
+                style: {
+                    background: "#ecfdf3",
+                    color: "#30a257"
+                }
+            })
+            queryClient.invalidateQueries({queryKey: ['getUpdateRecipeData']})
+            setTimeout(() => {
+                router.refresh()
+                router.push("/feed")
+            }, 1000);
+        },
+        onError: (error) => {
+            // toast.error('Oops an error occured, try again.', {
+            //     duration: 3000,
+            //     closeButton: true,
+            //     position: 'top-center'
+            // })
+            toast.error("Oops an error occured, try again.", {
+                style: {
+                    background: "#fff0f0",
+                    color: "#ec3e3e"
+                }
+            })
+            console.log("Delete Recipe Error msg", error.message, error.cause);
+        }
+    })
+
 
     const [userID, setUserID] = useState<Number>(0)
     const [lDated, setLDatad] = useState<string>('')
@@ -148,18 +200,46 @@ export default function PublicRecipeDetial({id}: {id: number}) {
                                     </Button>
                                 )} 
 
-                                {userID === data?.user?.id && (
-                                    <Button
-                                        size={'sm'} variant={'destructive'}
-                                        onClick={() => router.push(`/delete-recipe/${data.id}`)}
-                                        className="text-base py-5"
-                                    >
-                                        <p className="flex flex-row gap-x-1 justify-center items-center">
-                                            <Trash size={23} strokeWidth={2} />
-                                            <span>Delete Recipe</span>
-                                        </p>
-                                    </Button>
-                                )}
+                                {userID === data?.user?.id && recipeData && recipeData?.data?.map((data: RecipeDTO) => (
+                                    <Dialog key={data.id}>
+                                        <DialogTrigger>
+                                            <Button
+                                                size={'sm'} variant={'destructive'}
+                                                // onClick={() => router.push(`/delete-recipe/${data.id}`)}
+                                                className="text-base py-5"
+                                            >
+                                                <p className="flex flex-row gap-x-1 justify-center items-center">
+                                                    <Trash size={23} strokeWidth={2} />
+                                                    <span>Delete Recipe</span>
+                                                </p>
+                                            </Button>
+                                        </DialogTrigger>
+                                        <DialogContent>
+                                            <DialogDescription className="text-black font-medium text-lg">
+                                                Are you sure you want to delete <b>&quot;{data?.title}&quot;</b>? 
+                                            </DialogDescription>
+                                            <div className="flex flex-row justify-center items-center gap-x-10">
+                                                <Button
+                                                    size={'lg'} variant={'destructive'}
+                                                    disabled={deleteRecipe.isPending}
+                                                    onClick={() => deleteRecipe.mutateAsync()}
+                                                    className={`${deleteRecipe.isPending ? 'bg-opacity-50' : ''} rounded-md w-[5rem] px-14 py-2 opacity-90 flex flex-row justify-center items-center`}
+                                                >
+                                                    {deleteRecipe.isPending ? 'Deleting' : ' Delete'}
+                                                </Button>
+                                                <Button
+                                                    size={'lg'} variant={'outline'}
+                                                    onClick={() => router.back()}
+                                                    className="rounded-md w-[5rem] px-14 py-2 opacity-90 flex flex-row justify-center items-center"
+                                                >
+                                                    Cancel
+                                                </Button>
+                                            </div>
+                                        </DialogContent>
+                                    </Dialog>
+
+                                ))}
+                            
                                 </div>
                             ))}
 
