@@ -1,5 +1,5 @@
 'use client'
-import { Folder, Info, PlusIcon } from "lucide-react";
+import { EllipsisVertical, Folder, Info, Move, Pencil, PlusIcon, Share } from "lucide-react";
 import { Button } from "../ui/button";
 import { useForm, Controller } from "react-hook-form";
 import {
@@ -23,35 +23,61 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"  
-import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+  
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { api_base_url } from "../universal/API_BASE_URL"
 import { toast } from "sonner";
 import Link from "next/link";
+import { ErrorMessage } from "@hookform/error-message";
+import { useEffect, useState } from "react";
+
+
+
+
+
 const token: string | null = sessionStorage.getItem("accessToken")
 
-type CollectionDTO = {
-    id: number;
+interface CollectionDTO  {
+    id?: number;
     name: string;
     description: string;
     visibility: 'public' | 'private';
+    user: {
+        id?: number;
+        first_name: string;
+        last_name: string;
+
+    }
 }
 
 export default function CollectionsHome() {
 
-    const { register, handleSubmit, control, reset, } = useForm<CollectionDTO>({
+    const { register, handleSubmit, control, reset, formState: { errors } } = useForm<CollectionDTO>({
         criteriaMode: 'all',
         defaultValues: {
             'name': '',
             'description': '',
             'visibility': 'public'
         }
-    })
+    });
+
+
+
+    const queryClient = useQueryClient()
 
     const createCollection = useMutation({
         mutationKey: ['createCollection'],
         mutationFn: async (collectionData: CollectionDTO) => {
-            const response = await axios.post(`${api_base_url}` + 'api/create-collection', collectionData, {
+            const response = await axios.post(`${api_base_url}` + 'api/collections', collectionData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -67,6 +93,7 @@ export default function CollectionsHome() {
                     color: "#30a257"
                 }
             })
+            queryClient.invalidateQueries({ queryKey: ['getCollections'] })
             reset()
         },
         onError: (error) => {
@@ -86,7 +113,7 @@ export default function CollectionsHome() {
 
     
     // List Collections
-    const getCollections = useQuery({
+    const listCollections = useQuery({
         queryKey: ['getCollections'],
         queryFn: async () => {
             const response = await axios.get(`${api_base_url}` + 'api/public-collections', {
@@ -95,11 +122,19 @@ export default function CollectionsHome() {
                     'Authorization': `Bearer ${token}`
                 }
             })
+            console.log("List Collections =>", response.data);
             return response.data
         }
+
     })
 
-    
+
+
+
+
+  
+
+
 
     return (
         <section className="flex flex-col gap-10 ">
@@ -109,7 +144,7 @@ export default function CollectionsHome() {
                     <p className="text-gray-500 font-medium text-lg">Browse through your favorite recipe collections</p>
                 </div>
                 <div className="">
-                    <Dialog>
+                    <Dialog >
                         <DialogTrigger>
                             <Button
                                 size={'sm'}
@@ -123,7 +158,7 @@ export default function CollectionsHome() {
 
                             </Button>
                         </DialogTrigger>
-                        <DialogContent>
+                        <DialogContent className="p-6">
                             <DialogTitle>Create a Collection</DialogTitle>
                             <DialogDescription>Create a Collection to add your favorite recipes.</DialogDescription>
                             <form onSubmit={handleSubmit(onSubmit)} action="#" className="flex flex-col gap-y-6">
@@ -131,7 +166,7 @@ export default function CollectionsHome() {
                                     <label htmlFor="name" className="flex flex-row gap-x-2 items-center text-base font-medium">Name
                                     <TooltipProvider>
                                       <Tooltip>
-                                        <TooltipTrigger>
+                                        <TooltipTrigger >
                                             <Info size={13} strokeWidth={2} />
                                         </TooltipTrigger>
                                         <TooltipContent>
@@ -156,12 +191,22 @@ export default function CollectionsHome() {
                                         placeholder="Name"
                                         className="bg-white focus:outline-none px-3 py-2 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md"
                                     />
+                                    <ErrorMessage
+                                    errors={errors}
+                                    name="name"
+                                    render={({ messages }) =>
+                                      messages &&
+                                      Object.entries(messages).map(([type, message]) => (
+                                        <p key={type} className="text-red-500 font-medium">{message}</p>
+                                      ))
+                                    }
+                                />
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     <label htmlFor="name" className="flex flex-row gap-x-2 items-center text-base font-medium">Description
                                         <TooltipProvider>
                                             <Tooltip>
-                                                <TooltipTrigger>
+                                                <TooltipTrigger >
                                                     <Info size={13} strokeWidth={2} />
                                                 </TooltipTrigger>
                                                 <TooltipContent>
@@ -185,6 +230,16 @@ export default function CollectionsHome() {
                                         placeholder="Description"
                                         className="bg-white focus:outline-none px-3 py-2 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md"
                                     />
+                                    <ErrorMessage
+                                    errors={errors}
+                                    name="description"
+                                    render={({ messages }) =>
+                                      messages &&
+                                      Object.entries(messages).map(([type, message]) => (
+                                        <p key={type} className="text-red-500 font-medium">{message}</p>
+                                      ))
+                                    }
+                                />
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     <label htmlFor="visibility" className="flex flex-row gap-x-2 items-center text-base font-medium">Visibility</label>
@@ -212,6 +267,16 @@ export default function CollectionsHome() {
                                     </Select>
                                     )}
                                     />
+                                    <ErrorMessage
+                                    errors={errors}
+                                    name="visibility"
+                                    render={({ messages }) =>
+                                      messages &&
+                                      Object.entries(messages).map(([type, message]) => (
+                                        <p key={type} className="text-red-500 font-medium">{message}</p>
+                                      ))
+                                    }
+                                />
                                 </div>
 
                                 <div className="flex flex-row ">
@@ -232,16 +297,40 @@ export default function CollectionsHome() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-5 place-content-center items-center gap-5">
-                {getCollections && getCollections?.data?.map((data: CollectionDTO) => (
-                <Link  key={data.id}  href={''} className="cursor-pointer">
-                    <div className="flex flex-row gap-3 justify-center items-center bg-white py-4 px-2 rounded-md shadow-md">
+            {/* Vertical Menu  */}
+
+            <div className="grid grid-cols-5 place-content-center items-center gap-x-16 gap-y-5">
+                {listCollections && listCollections?.data?.map((data: CollectionDTO) => (
+                <Link  key={data.id}  href={`edit-collection/${data.id}`} className="cursor-pointer">
+                    <div className="w-[14rem] flex flex-row gap-x-2 justify-center items-center bg-white py-2 px-2 rounded-md shadow-md">
                         <div className="">
                             <Folder size={23} strokeWidth={3} />
                         </div>
-                        <div className="">
-                            <p>{data.name.substring(0, 15) + '...'}</p>
+                        <div className="max-w-[80%]">
+                            <p>{data?.name.substring(0, 14) + '...'}</p>
                         </div>
+                        <div className="">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger className="hover:bg-yellow-600/25 p-1 rounded-md focus:ring-yellow-600 focus:border-0 focus:outline-yellow-500 focus:outline-4 ">
+                                    <EllipsisVertical size={20} strokeWidth={3} />
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="p-1">
+                                    <DropdownMenuItem >
+                                        <Link href={'#'} className="flex flex-row gap-x-3 w-full">
+                                            <Move size={20} strokeWidth={2} />
+                                            <span>Open</span>
+                                        </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem >
+                                        <Link href={'#'} className="flex flex-row gap-x-3">
+                                            <Share size={20} strokeWidth={2} />
+                                            <span>Share</span>
+                                        </Link>
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
+                       
                     </div> 
                 </Link> 
                 ))}                  
