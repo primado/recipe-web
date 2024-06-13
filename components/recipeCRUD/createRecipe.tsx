@@ -83,10 +83,11 @@ export default function CreateRecipe() {
                 }
             })
             reset()
-            queryClient.invalidateQueries({queryKey: ['publicRecipes']})
+            
             setTimeout(() => {
                 router.refresh()
                 router.push("/feed")
+                queryClient.invalidateQueries({queryKey: ['publicRecipes']})
             }, 2000)
         },
         onError: (error) => {
@@ -386,7 +387,7 @@ export default function CreateRecipe() {
                             <button
                             type="submit"
                             disabled={createRecipeMutation.isPending}
-                            className={`${createRecipeMutation.isPending ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:opacity-90'} bg-black  w-full text-white text-xl py-2 hover:font-semibold rounded-md transition-colors duration-300 ease-in-out`}
+                            className={`${createRecipeMutation.isPending ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:opacity-90 hover:font-semibold'} bg-black  w-full text-white text-xl py-2  rounded-md transition-colors duration-300 ease-in-out`}
                         >
                             <span>{createRecipeMutation.isPending ? 'Creating recipe...' : 'Create recipe'}</span>
                         </button>
