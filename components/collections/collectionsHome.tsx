@@ -1,11 +1,13 @@
 'use client'
-import { EllipsisVertical, Folder, Info, Move, Pencil, PlusIcon, Share } from "lucide-react";
+import { Copy, EllipsisVertical, Folder, Info, Move, Pencil, PlusIcon, Share } from "lucide-react";
 import { Button } from "../ui/button";
 import { useForm, Controller } from "react-hook-form";
 import {
     Dialog,
+    DialogClose,
     DialogContent,
     DialogDescription,
+    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -38,7 +40,8 @@ import { api_base_url } from "../universal/API_BASE_URL"
 import { toast } from "sonner";
 import Link from "next/link";
 import { ErrorMessage } from "@hookform/error-message";
-import { useEffect, useState } from "react";
+import { useEffect, useState, MouseEvent } from "react";
+import { useRouter } from "next/navigation";
 
 
 
@@ -71,7 +74,7 @@ export default function CollectionsHome() {
     });
 
 
-
+    const router = useRouter()
     const queryClient = useQueryClient()
 
     const createCollection = useMutation({
@@ -129,13 +132,37 @@ export default function CollectionsHome() {
     })
 
 
+    const [showModal, setShowModal] = useState(false);
+
+    const openShareDialog = (event: any) => {
+        event.preventDefault(); // Prevent default link behavior
+        setShowModal(true);
+    };
 
 
+    // Handle Copy Btn
+    const [copySuccess, setCopySuccess] = useState<string>('')
 
+    const handleCopy = (event: MouseEvent<HTMLButtonElement>, link: string) => {
+        event.preventDefault();
+        navigator.clipboard.writeText(link)
+        .then(() => {
+            setCopySuccess('Link copied');
+            setTimeout(() => toast.success("Link copied successfully", {
+                style: {
+                    background: "#ecfdf3",
+                    color: "#30a257"
+                }
+            }), 1000);
+        })
+        .catch(error => {
+            console.error('Failed to copy', error);
+            setCopySuccess("Failed to copy link");
+            setTimeout(() => setCopySuccess(''), 2000)
+        })
+    }
   
-
-
-
+  
     return (
         <section className="flex flex-col gap-10 ">
             <div className="flex flex-row justify-between items-center">
@@ -299,40 +326,84 @@ export default function CollectionsHome() {
 
             {/* Vertical Menu  */}
 
-            <div className="grid grid-cols-5 place-content-center items-center gap-x-16 gap-y-5">
+            <div className="grid grid-cols-4 place-content-center items-center gap-x-3 gap-y-5">
                 {listCollections && listCollections?.data?.map((data: CollectionDTO) => (
-                <Link  key={data.id}  href={`collection-detail/${data.id}`} className="cursor-pointer">
-                    <div className="w-[14rem] flex flex-row gap-x-2 justify-center items-center bg-white py-2 px-2 rounded-md shadow-md">
-                        <div className="">
-                            <Folder size={23} strokeWidth={3} />
-                        </div>
-                        <div className="max-w-[80%]">
-                            <p>{data?.name.substring(0, 14) + '...'}</p>
-                        </div>
+                <div key={data.id}  className="">
+                    <div className="w-[14rem] max-h-[6rem] flex flex-row gap-x-2 justify-center items-center bg-white py-2 px-2 rounded-md shadow-md">
+                        <Link href={`collection-detail/${data.id}`} className="flex flex-row gap-x-2 justify-start items-center" >
+                            <div className="">
+                                <Folder size={23} strokeWidth={3} />
+                            </div>
+                            <div className="max-w-[80%] text-base">
+                                <p>{data?.name.substring(0, 12) + '...'}</p>
+                            </div>
+                        </Link>
                         <div className="">
                             <DropdownMenu>
                                 <DropdownMenuTrigger className="hover:bg-yellow-600/25 p-1 rounded-md focus:ring-yellow-600 focus:border-0 focus:outline-yellow-500 focus:outline-4 ">
                                     <EllipsisVertical size={20} strokeWidth={3} />
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="p-1 w-[10rem] flex flex-col gap-y-2">
-                                    <DropdownMenuItem >
-                                        <Link href={`collection-detail/${data.id}`} className="flex flex-row gap-x-3 w-full">
+                                    <DropdownMenuItem asChild className="w-full">
+                                        <Link href={`collection-detail/${data.id}`}  className="flex flex-row gap-x-3 w-full">
                                             <Move size={20} strokeWidth={2} />
                                             <span>Open</span>
                                         </Link>
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem >
-                                        <Link href={'#'} className="flex flex-row gap-x-3">
-                                            <Share size={20} strokeWidth={2} />
-                                            <span>Share</span>
-                                        </Link>
+                                    <DropdownMenuItem asChild>
+                                        <Dialog>
+                                            <DialogTrigger asChild className="w-full">
+                                                <button
+                                                    className="flex flex-row gap-x-3"
+                                                >
+                                                    <Share size={20} strokeWidth={2} />
+                                                    <span>Share</span>
+                                                </button>
+                                            </DialogTrigger>
+                                            <DialogContent className="max-w-[28rem] flex flex-col justify-start items-start">
+                                                <DialogHeader>
+                                                    <DialogTitle className="">Share Collection</DialogTitle>
+                                                </DialogHeader>
+                                                <div className="flex flex-row gap-x-3 !w-full">
+                                                    <input type="text"
+                                                        defaultValue={`${api_base_url}` + `collection-detail/${data?.id}`}
+                                                        className="bg-white focus:outline-none px-3 w-full py-2 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md"
+                                                    />
+                                                    <Button 
+                                                        className="px-3"
+                                                        size={'sm'}
+                                                        type="submit"
+                                                        onClick={(event) => handleCopy(event, `${api_base_url}` + `collection-detail/${data?.id}`)}
+                                                    >
+                                                        <span className="sr-only">Copy link</span>
+                                                        <TooltipProvider>
+                                                            <Tooltip>
+                                                                <TooltipTrigger >
+                                                                    <Copy color="#fff" size={20} strokeWidth={3} />
+                                                                </TooltipTrigger>
+                                                                <TooltipContent>
+                                                                    <p className="!text-sm">Copy link</p>
+                                                                </TooltipContent>
+                                                            </Tooltip>
+                                                        </TooltipProvider>
+                                                    </Button>
+                                                </div>
+                                                <DialogFooter className="">
+                                                    <DialogClose>
+                                                        <Button size={'sm'} variant={'default'} >
+                                                            <span>Close</span>
+                                                        </Button>
+                                                    </DialogClose>
+                                                </DialogFooter>
+                                            </DialogContent>
+                                        </Dialog>
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         </div>
                        
                     </div> 
-                </Link> 
+                </div>
                 ))}                  
             </div>
         </section>
