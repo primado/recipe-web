@@ -13,6 +13,7 @@ import {
     Dialog,
     DialogContent,
     DialogDescription,
+    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -41,6 +42,7 @@ type RecipeDTO = {
 // const token = localStorage.getItem('accessToken')
 const token: string | null = sessionStorage.getItem('accessToken')
 import { api_base_url } from "../universal/API_BASE_URL"
+import { DialogClose } from "@radix-ui/react-dialog"
 
 export default function PublicRecipeDetial({id}: {id: number}) {
 
@@ -200,26 +202,31 @@ export default function PublicRecipeDetial({id}: {id: number}) {
                                             </Button>
                                         </DialogTrigger>
                                         <DialogContent>
-                                            <DialogDescription className="text-black font-medium text-lg">
-                                                Are you sure you want to delete <b>&quot;{data?.title}&quot;</b>? 
-                                            </DialogDescription>
-                                            <div className="flex flex-row justify-center items-center gap-x-10">
-                                                <Button
-                                                    size={'lg'} variant={'destructive'}
-                                                    disabled={deleteRecipe.isPending}
-                                                    onClick={() => deleteRecipe.mutateAsync()}
-                                                    className={`${deleteRecipe.isPending ? 'bg-opacity-50' : ''} rounded-md w-[5rem] px-14 py-2 opacity-90 flex flex-row justify-center items-center`}
-                                                >
-                                                    {deleteRecipe.isPending ? 'Deleting' : ' Delete'}
-                                                </Button>
-                                                <Button
-                                                    size={'lg'} variant={'outline'}
-                                                    onClick={() => router.back()}
-                                                    className="rounded-md w-[5rem] px-14 py-2 opacity-90 flex flex-row justify-center items-center"
-                                                >
-                                                    Cancel
-                                                </Button>
-                                            </div>
+                                            <DialogHeader>
+                                                <DialogDescription className="text-black font-medium text-lg">
+                                                    Are you sure you want to delete <b>&quot;{data?.title}&quot;</b>? 
+                                                </DialogDescription>
+                                            </DialogHeader>
+                                            <DialogFooter>
+                                                <div className="flex flex-row justify-end items-end gap-x-5">
+                                                    <Button
+                                                        size={'lg'} variant={'destructive'}
+                                                        disabled={deleteRecipe.isPending}
+                                                        onClick={() => deleteRecipe.mutateAsync()}
+                                                        className={`${deleteRecipe.isPending ? 'bg-opacity-50' : ''} rounded-md w-[5rem] px-14 py-2 opacity-90 flex flex-row justify-center items-center`}
+                                                    >
+                                                        {deleteRecipe.isPending ? 'Deleting' : ' Delete'}
+                                                    </Button>
+                                                    <DialogClose asChild>
+                                                        <Button
+                                                            size={'lg'} variant={'outline'}
+                                                            className="rounded-md w-[5rem] px-14 py-2 opacity-90 flex flex-row justify-center items-center"
+                                                        >
+                                                            Cancel
+                                                        </Button>
+                                                    </DialogClose>
+                                                </div>
+                                            </DialogFooter>
                                         </DialogContent>
                                     </Dialog>
 

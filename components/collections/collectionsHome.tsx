@@ -301,7 +301,7 @@ export default function CollectionsHome() {
 
             <div className="grid grid-cols-5 place-content-center items-center gap-x-16 gap-y-5">
                 {listCollections && listCollections?.data?.map((data: CollectionDTO) => (
-                <Link  key={data.id}  href={`edit-collection/${data.id}`} className="cursor-pointer">
+                <Link  key={data.id}  href={`collection-detail/${data.id}`} className="cursor-pointer">
                     <div className="w-[14rem] flex flex-row gap-x-2 justify-center items-center bg-white py-2 px-2 rounded-md shadow-md">
                         <div className="">
                             <Folder size={23} strokeWidth={3} />
@@ -314,9 +314,9 @@ export default function CollectionsHome() {
                                 <DropdownMenuTrigger className="hover:bg-yellow-600/25 p-1 rounded-md focus:ring-yellow-600 focus:border-0 focus:outline-yellow-500 focus:outline-4 ">
                                     <EllipsisVertical size={20} strokeWidth={3} />
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent className="p-1">
+                                <DropdownMenuContent className="p-1 w-[10rem] flex flex-col gap-y-2">
                                     <DropdownMenuItem >
-                                        <Link href={'#'} className="flex flex-row gap-x-3 w-full">
+                                        <Link href={`collection-detail/${data.id}`} className="flex flex-row gap-x-3 w-full">
                                             <Move size={20} strokeWidth={2} />
                                             <span>Open</span>
                                         </Link>
