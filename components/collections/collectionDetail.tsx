@@ -9,6 +9,8 @@ import axios from "axios"
 import { api_base_url } from "../universal/API_BASE_URL"
 import { useForm, Controller } from "react-hook-form"
 import { useEffect, useState } from "react"
+import Image from "next/image"
+import default_img from "../../public/assets/recipe-img1.jpg"
 import {
     Dialog,
     DialogContent,
@@ -33,7 +35,18 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
+
 import { ErrorMessage } from "@hookform/error-message";
+import Link from "next/link"
+import CollectionRecipes from "./collectionsRecipes"
 
 
 
@@ -52,6 +65,11 @@ type  CollectionDTO = {
         first_name: string;
         last_name: string;
 
+    },
+    collection_recipes: {
+        id: number;
+        title: string;
+        recipe_image: string | null;
     }
 }
 
@@ -83,11 +101,6 @@ export default function CollectionDetail({id}: {id: number}) {
 
     const { register,  handleSubmit, control, reset, formState: { errors }, setValue} = useForm<CollectionDTO>({
         criteriaMode: 'all',
-        // defaultValues: {
-        //     'name': '',
-        //     'description': '',
-        //     'visibility': 'public'
-        // }
         defaultValues: {
             name: collectionData?.name || '',
             description: collectionData?.description || '',
@@ -95,14 +108,25 @@ export default function CollectionDetail({id}: {id: number}) {
         }
     })
 
-    // useEffect(() => {
-    //     if (collectionData) {
-    //         setValue('name', collectionData.name);
-    //         setValue('description', collectionData.description);
-    //         setValue('visibility', collectionData.visibility);
-    //     }
-    // }, [collectionData, setValue]);
-    
+
+    // List all Recipes in Collection
+    const getCollectionRecipes = useQuery({
+        queryKey: ['getCollectionRecipes', id],
+        queryFn: async () => {
+            const response = await axios.get(`${api_base_url}` + `api/collection-recipes/${id}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            console.log("List Recipes in Collections =>", response.data);
+            return response.data
+        }
+    })
+
+    const {data: collectionRecipesData} = getCollectionRecipes
+
+   
     const updateCollection = useMutation({
         mutationKey: ['updateCollection', id],
         mutationFn: async (newCollectionData: CollectionDTO) => {
@@ -213,7 +237,7 @@ export default function CollectionDetail({id}: {id: number}) {
 
     return (
         <>
-            <section>
+            <section className="flex flex-col gap-y-5">
                        
                 <div className="flex flex-row justify-between items-center">
                     <Button 
@@ -433,7 +457,7 @@ export default function CollectionDetail({id}: {id: number}) {
                  
                 </div>
                 <div className="">
-                    
+                
                 </div>
             </section>
 
