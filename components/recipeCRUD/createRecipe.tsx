@@ -36,7 +36,7 @@ type RecipeDTO = {
 
 
 // const token: string | null = localStorage.getItem("accessToken")
-const token: string | null = sessionStorage.getItem("accessToken")
+const token = typeof window !== 'undefined' ? sessionStorage.getItem("accessToken") : null
 
 export default function CreateRecipe() {
 
