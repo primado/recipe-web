@@ -430,7 +430,7 @@ export default function CollectionDetail({id}: {id: number}) {
                 </div>
         
 
-                {isLoading ? (
+                {/* {isLoading ? (
                   <div>Loading...</div>
                 ) : error ? (
                   <div>Error: {error.message}</div>
@@ -463,7 +463,47 @@ export default function CollectionDetail({id}: {id: number}) {
                     </div>
                   </div>
                 ) : (
-                  <div>No recipes found</div>
+                  <div className="text-black text-xl text-center">No recipes found</div>
+                )} */}
+
+                {isLoading ? (
+                  <div>Loading...</div>
+                ) : error ? (
+                  <div>Error: {error.message}</div>
+                ) : collectionData && collectionData.length > 0 ? (
+                  <div className="">
+                    {collectionData[0].collection_recipes && collectionData[0].collection_recipes.length > 0 ? (
+                      <div className="grid grid-cols-4 justify-between place-content-center gap-6">
+                        {collectionData[0].collection_recipes.map((data: CollectionRecipe) => (
+                          <Link key={data.recipe.id} href={`/feed/${data.recipe.id}`}>
+                            <Card className="flex w-full flex-col bg-[#F5F5F5] h-full max-w-[350px] overflow-hidden shadow-xl duration-300 hover:text-brand">
+                              <div className="w-full relative h-[250px]">
+                                <Image
+                                  alt={data.recipe.title}
+                                  fill={true}
+                                  sizes="(max-width: 1024px) 100%"
+                                  priority={true}
+                                  src={data.recipe.recipe_image}
+                                  className="overflow-clip transition ease-in-out hover:translate-y-1 duration-300 hover:scale-105"
+                                />
+                              </div>
+                              <CardHeader className="p-5">
+                                <div className="flex flex-col gap-y-2">
+                                  <CardTitle className="font-semibold text-lg">
+                                    {data.recipe.title}
+                                  </CardTitle>
+                                </div>
+                              </CardHeader>
+                            </Card>
+                          </Link>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-black text-xl text-center">No recipes found in this collection</div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="text-black text-xl text-center">No collection data found</div>
                 )}
             </section>
 
