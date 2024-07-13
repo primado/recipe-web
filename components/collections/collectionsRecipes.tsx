@@ -30,7 +30,7 @@ export default function CollectionRecipes({recipeID}: {recipeID: number}) {
     const getRecipeData = useQuery({
         queryKey: ['getRecipesInCollection', recipeID],
         queryFn: async () => {
-            const response = await axios.get(`${api_base_url}` + `api/recipe/${recipeID}`, {
+            const response = await axios.get(`${api_base_url}` + `api/collection-recipes/{recipe}`, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
