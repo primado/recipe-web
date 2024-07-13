@@ -6,8 +6,8 @@ import { useEffect } from "react"
 
 export default function Navbar() {
 
-    const token: string | null = sessionStorage.getItem('accessToken') 
-    const refresh: string | null = sessionStorage.getItem('refreshToken') 
+    const token = typeof window !== 'undefined' ? sessionStorage.getItem('accessToken') : null
+    const refresh = typeof window !== 'undefined' ? sessionStorage.getItem('refreshToken') : null
 
     const pathname = usePathname()
 

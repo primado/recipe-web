@@ -148,17 +148,22 @@ export default function CollectionsHome() {
         navigator.clipboard.writeText(link)
         .then(() => {
             setCopySuccess('Link copied');
-            setTimeout(() => toast.success("Link copied successfully", {
+            setTimeout(() => toast.success('Link copied', {
                 style: {
                     background: "#ecfdf3",
                     color: "#30a257"
                 }
-            }), 1000);
+            }), 2000);
         })
         .catch(error => {
             console.error('Failed to copy', error);
             setCopySuccess("Failed to copy link");
-            setTimeout(() => setCopySuccess(''), 2000)
+            setTimeout(() => toast.error('Failed to copy link', {
+                style: {
+                    background: "#fff0f0",
+                    color: "#ec3e3e"
+                },
+            }), 2000)
         })
     }
   
@@ -343,18 +348,18 @@ export default function CollectionsHome() {
                                 <DropdownMenuTrigger className="hover:bg-yellow-600/25 p-1 rounded-md focus:ring-yellow-600 focus:border-0 focus:outline-yellow-500 focus:outline-4 ">
                                     <EllipsisVertical size={20} strokeWidth={3} />
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent className="p-1 w-[10rem] flex flex-col gap-y-2">
-                                    <DropdownMenuItem asChild className="w-full">
+                                <DropdownMenuContent className="p-1 w-[10rem] flex flex-col justify-center items-center gap-y-2">
+                                    <DropdownMenuItem asChild className="w-full hover:bg-gray-300">
                                         <Link href={`collection-detail/${data.id}`}  className="flex flex-row gap-x-3 w-full">
                                             <Move size={20} strokeWidth={2} />
                                             <span>Open</span>
                                         </Link>
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem asChild>
+                                    <DropdownMenuItem asChild className="w-full hover:bg-gray-300">
                                         <Dialog>
-                                            <DialogTrigger asChild className="w-full">
+                                            <DialogTrigger asChild className="w-full hover:bg-[#f1f5f9] p-1 opacity-80">
                                                 <button
-                                                    className="flex flex-row gap-x-3"
+                                                    className="flex flex-row gap-x-3 w-full "
                                                 >
                                                     <Share size={20} strokeWidth={2} />
                                                     <span>Share</span>

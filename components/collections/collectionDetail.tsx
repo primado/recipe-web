@@ -2,13 +2,15 @@
 
 import { ArrowLeftIcon, Edit2Icon, Info, Trash } from "lucide-react"
 import { Button } from "../ui/button"
-import { useRouter } from "next/navigation"
+import { useRouter, redirect } from "next/navigation"
 import { toast } from "sonner"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 import { api_base_url } from "../universal/API_BASE_URL"
 import { useForm, Controller } from "react-hook-form"
 import { useEffect, useState } from "react"
+import Image from "next/image"
+import default_img from "../../public/assets/recipe-img1.jpg"
 import {
     Dialog,
     DialogContent,
@@ -33,8 +35,19 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { ErrorMessage } from "@hookform/error-message";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
 
+import { ErrorMessage } from "@hookform/error-message";
+import Link from "next/link"
+import CollectionRecipes from "./collectionsRecipes"
+import { CollectionRecipe } from "./commonInterface"
 
 
 
@@ -51,7 +64,17 @@ type  CollectionDTO = {
         id?: number;
         first_name: string;
         last_name: string;
-
+    },
+    collection_recipes: {
+        recipe: {
+            id: string,
+            user: object,
+            title: string,
+            description: string,
+            ingredient: string,
+            visibility: string,
+            recipe_image: string
+        }
     }
 }
 
@@ -68,7 +91,7 @@ export default function CollectionDetail({id}: {id: number}) {
     const getCollection = useQuery({
         queryKey: ['getCollection', id],
         queryFn: async () => {
-            const response = await axios.get(`${api_base_url}` + `api/collections/${id}`, {
+            const response = await axios.get(`${api_base_url}` + `api/collection-recipes/${id}`, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -79,15 +102,13 @@ export default function CollectionDetail({id}: {id: number}) {
         }
     })
 
-    const {data: collectionData} = getCollection;
+    const {data: collectionData, isLoading, error} = getCollection;
+    console.log("Collection Data:", collectionData);
+    console.log("Collection Recipes:", collectionData?.collection_recipes);
+
 
     const { register,  handleSubmit, control, reset, formState: { errors }, setValue} = useForm<CollectionDTO>({
         criteriaMode: 'all',
-        // defaultValues: {
-        //     'name': '',
-        //     'description': '',
-        //     'visibility': 'public'
-        // }
         defaultValues: {
             name: collectionData?.name || '',
             description: collectionData?.description || '',
@@ -95,14 +116,27 @@ export default function CollectionDetail({id}: {id: number}) {
         }
     })
 
-    // useEffect(() => {
-    //     if (collectionData) {
-    //         setValue('name', collectionData.name);
-    //         setValue('description', collectionData.description);
-    //         setValue('visibility', collectionData.visibility);
-    //     }
-    // }, [collectionData, setValue]);
+
+    // List all Recipes in Collection
+    const getCollectionRecipes = useQuery({
+        queryKey: ['getCollectionRecipes'],
+        queryFn: async () => {
+            const response = await axios.get(`${api_base_url}` + `api/public-collections`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            console.log("List Recipes in Collections =>", response.data);
+           
+            return response.data
+        }
+    })
+
+    const {data: collectionRecipesData} = getCollectionRecipes
     
+
+   
     const updateCollection = useMutation({
         mutationKey: ['updateCollection', id],
         mutationFn: async (newCollectionData: CollectionDTO) => {
@@ -213,7 +247,7 @@ export default function CollectionDetail({id}: {id: number}) {
 
     return (
         <>
-            <section>
+            <section className="flex flex-col gap-y-5">
                        
                 <div className="flex flex-row justify-between items-center">
                     <Button 
@@ -432,12 +466,70 @@ export default function CollectionDetail({id}: {id: number}) {
                        )}
                  
                 </div>
-                <div className="">
-                    
-                </div>
+                {/* <div className="">
+                    <div className="grid grid-cols-4 justify-between place-content-center gap-6">
+                        {collectionData[0].collection_recipes?.map((data: CollectionRecipe) => (
+                        <Link key={data.recipe.id}  href={`feed/${data.recipe?.id}`}>
+                        <Card  className="flex w-full flex-col bg-[#F5F5F5] h-full max-w-[350px] overflow-hidden shadow-xl duration-300 hover:text-brand">
+                            <div className="w-full relative h-[250px]" >
+                                <Image 
+                                    alt={data.recipe?.title}
+                                    fill
+                                    priority={true}
+                                    src={data.recipe?.recipe_image}
+                                    className="overflow-clip transition ease-in-out hover:translate-y-1 duration-300 hover:scale-105"  
+                                />
+                            </div>
+                            <CardHeader className="p-5">
+                                <div className="flex flex-col gap-y-2">
+                                    <CardTitle className="font-semibold text-lg">
+                                        {data.recipe?.title}
+                                    </CardTitle>
+                                </div>
+                            </CardHeader>
+                        </Card>
+                        </Link>
+                        ))}
+                    </div> 
+                </div> */}
+
+                {isLoading ? (
+                  <div>Loading...</div>
+                ) : error ? (
+                  <div>Error: {error.message}</div>
+                ) : collectionData && collectionData.length > 0 ? (
+                  <div className="">
+                    <div className="grid grid-cols-4 justify-between place-content-center gap-6">
+                      {collectionData[0].collection_recipes?.map((data: CollectionRecipe) => (
+                        <Link key={data.recipe.id} href={`/feed/${data.recipe.id}`}>
+                          <Card className="flex w-full flex-col bg-[#F5F5F5] h-full max-w-[350px] overflow-hidden shadow-xl duration-300 hover:text-brand">
+                            <div className="w-full relative h-[250px]">
+                              <Image
+                                alt={data.recipe.title}
+                                fill={true}
+                                sizes="(max-width: 1024px) 100%"
+                                priority={true}
+                                src={data.recipe.recipe_image}
+                                className="overflow-clip transition ease-in-out hover:translate-y-1 duration-300 hover:scale-105"
+                              />
+                            </div>
+                            <CardHeader className="p-5">
+                              <div className="flex flex-col gap-y-2">
+                                <CardTitle className="font-semibold text-lg">
+                                  {data.recipe.title}
+                                </CardTitle>
+                              </div>
+                            </CardHeader>
+                          </Card>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div>No recipes found</div>
+                )}
             </section>
 
         </>
     )
-    
 };
