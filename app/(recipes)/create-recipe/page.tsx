@@ -1,5 +1,5 @@
 'use client'
-import CreateRecipe from "@/components/createComponent/createRecipe"
+import CreateRecipe from "@/components/recipeCRUD/createRecipe"
 import Navbar from "@/components/universal/navbar"
 import { redirect } from "next/navigation"
 import { useEffect, useLayoutEffect } from "react"

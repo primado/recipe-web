@@ -41,9 +41,14 @@ export default function Login() {
                     color: "#30a257"
                 }
             })
+
+            const accessToken = data?.access
+            const refreshToken = data?.refresh
+            if (accessToken && refreshToken) {
+                sessionStorage.setItem('accessToken', accessToken) 
+                sessionStorage.setItem('refreshToken', refreshToken)
+            }
             
-            sessionStorage.setItem('accessToken', data?.access) 
-            sessionStorage.setItem('refreshToken', data?.refresh)
             router.push('/feed')
         },
 

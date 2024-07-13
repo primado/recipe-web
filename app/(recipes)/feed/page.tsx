@@ -20,7 +20,7 @@ export default function Dashboard() {
     return (
         <>
             <Navbar />
-            <section className="bg-tan w-full px-52 py-20">
+            <section className="bg-tan w-full min-h-screen px-52 py-20">
                 <PublicRecipeFeed />
             </section>
 

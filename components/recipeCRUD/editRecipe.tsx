@@ -90,9 +90,7 @@ export default function EditRecipeComponent({id}: {id: number}) {
                 router.refresh()
                 router.push("/feed")
             }, 2000)
-           
         },
-
         onError: (error) => {
             toast.error("Oops an error occured, please try again", {
                 style: {
