@@ -40,3 +40,14 @@ export interface CollectionRecipe {
     collection: number;
     is_bookmarked: boolean;
 }
+
+export interface CollectionDTO {
+    id: number;
+    name: string;
+    description: string;
+    user: User;
+    visibility: string;
+    collection_recipes: CollectionRecipe[];
+    created_at: string;
+    last_updated: string;
+}

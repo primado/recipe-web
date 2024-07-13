@@ -22,7 +22,7 @@ type RecipeType = {
     recipe_image: string,
 }
 
-const token: string | null = sessionStorage.getItem("accessToken")
+const token = typeof window !== 'undefined' ? sessionStorage.getItem("accessToken") : null
 
 export default function CollectionRecipes({recipeID}: {recipeID: number}) {
 

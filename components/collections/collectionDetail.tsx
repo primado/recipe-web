@@ -47,36 +47,15 @@ import {
 import { ErrorMessage } from "@hookform/error-message";
 import Link from "next/link"
 import CollectionRecipes from "./collectionsRecipes"
-import { CollectionRecipe } from "./commonInterface"
+import { CollectionRecipe, CollectionDTO } from "./commonInterface"
 
 
 
 
 
-const token: string | null = sessionStorage.getItem("accessToken")
+const token = typeof window !== 'undefined' ? sessionStorage.getItem("accessToken") : null
 
-type  CollectionDTO = {
-    id?: number;
-    name: string;
-    description: string;
-    visibility: 'public' | 'private';
-    user: {
-        id?: number;
-        first_name: string;
-        last_name: string;
-    },
-    collection_recipes: {
-        recipe: {
-            id: string,
-            user: object,
-            title: string,
-            description: string,
-            ingredient: string,
-            visibility: string,
-            recipe_image: string
-        }
-    }
-}
+
 
 
 export default function CollectionDetail({id}: {id: number}) {
@@ -103,39 +82,21 @@ export default function CollectionDetail({id}: {id: number}) {
     })
 
     const {data: collectionData, isLoading, error} = getCollection;
+    const collectionDataBtn = collectionData?.[0];
+
     console.log("Collection Data:", collectionData);
-    console.log("Collection Recipes:", collectionData?.collection_recipes);
+    // console.log("Collection Recipes:", collectionData?.collection_recipes);
 
 
     const { register,  handleSubmit, control, reset, formState: { errors }, setValue} = useForm<CollectionDTO>({
         criteriaMode: 'all',
         defaultValues: {
-            name: collectionData?.name || '',
-            description: collectionData?.description || '',
-            visibility: collectionData?.visibility || 'public'
+            name: collectionDataBtn?.name || '',
+            description: collectionDataBtn?.description || '',
+            visibility: collectionDataBtn?.visibility || 'public'
         }
     })
-
-
-    // List all Recipes in Collection
-    const getCollectionRecipes = useQuery({
-        queryKey: ['getCollectionRecipes'],
-        queryFn: async () => {
-            const response = await axios.get(`${api_base_url}` + `api/public-collections`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            console.log("List Recipes in Collections =>", response.data);
-           
-            return response.data
-        }
-    })
-
-    const {data: collectionRecipesData} = getCollectionRecipes
     
-
    
     const updateCollection = useMutation({
         mutationKey: ['updateCollection', id],
@@ -204,7 +165,8 @@ export default function CollectionDetail({id}: {id: number}) {
 
     }, [currentUser])
 
-    
+    console.log("User ID", userID);
+    console.log("User ID in collectionData", collectionData?.user?.id);
 
     // Delete Collection
 
@@ -261,9 +223,9 @@ export default function CollectionDetail({id}: {id: number}) {
                     </Button>
                     
             
-                        {collectionData &&  (
+                        {collectionDataBtn && (
                             <div  className="flex flex-row justify-center gap-5">
-                            {userID === collectionData?.user?.id && (
+                            {userID && collectionDataBtn.user && userID === collectionDataBtn.user.id && (
                                 <Dialog>
                                     <DialogTrigger>
                                         <Button
@@ -378,7 +340,7 @@ export default function CollectionDetail({id}: {id: number}) {
                                                  render={({ field: { onChange, onBlur, value } }) => (
                                             <Select 
                                                 onValueChange={onChange} 
-                                                defaultValue={collectionData?.visibility}
+                                                defaultValue={collectionDataBtn?.visibility}
                                             >
                                               <SelectTrigger className="w-[180px] focus:ring-yellow-600 focus:border-0">
                                                 <SelectValue placeholder="Public" />
@@ -420,7 +382,7 @@ export default function CollectionDetail({id}: {id: number}) {
                             )}
 
 
-                            {userID === collectionData?.user?.id && (
+                            {userID === collectionDataBtn?.user?.id && (
                                 <Dialog >
                                     <DialogTrigger>
                                         <Button
@@ -436,7 +398,7 @@ export default function CollectionDetail({id}: {id: number}) {
                                     </DialogTrigger>
                                     <DialogContent>
                                         <DialogDescription className="text-black font-medium text-lg">
-                                            Are you sure you want to delete <b>&quot;{collectionData?.name}&quot;</b>? 
+                                            Are you sure you want to delete <b>&quot;{collectionDataBtn?.name}&quot;</b>? 
                                         </DialogDescription>
                                         <DialogFooter>
                                             <div className="flex flex-row justify-end items-end gap-x-5">
@@ -466,32 +428,7 @@ export default function CollectionDetail({id}: {id: number}) {
                        )}
                  
                 </div>
-                {/* <div className="">
-                    <div className="grid grid-cols-4 justify-between place-content-center gap-6">
-                        {collectionData[0].collection_recipes?.map((data: CollectionRecipe) => (
-                        <Link key={data.recipe.id}  href={`feed/${data.recipe?.id}`}>
-                        <Card  className="flex w-full flex-col bg-[#F5F5F5] h-full max-w-[350px] overflow-hidden shadow-xl duration-300 hover:text-brand">
-                            <div className="w-full relative h-[250px]" >
-                                <Image 
-                                    alt={data.recipe?.title}
-                                    fill
-                                    priority={true}
-                                    src={data.recipe?.recipe_image}
-                                    className="overflow-clip transition ease-in-out hover:translate-y-1 duration-300 hover:scale-105"  
-                                />
-                            </div>
-                            <CardHeader className="p-5">
-                                <div className="flex flex-col gap-y-2">
-                                    <CardTitle className="font-semibold text-lg">
-                                        {data.recipe?.title}
-                                    </CardTitle>
-                                </div>
-                            </CardHeader>
-                        </Card>
-                        </Link>
-                        ))}
-                    </div> 
-                </div> */}
+        
 
                 {isLoading ? (
                   <div>Loading...</div>
