@@ -45,8 +45,6 @@ import { useRouter } from "next/navigation";
 
 
 
-
-
 const token: string | null = sessionStorage.getItem("accessToken")
 
 interface CollectionDTO  {
@@ -371,14 +369,14 @@ export default function CollectionsHome() {
                                                 </DialogHeader>
                                                 <div className="flex flex-row gap-x-3 !w-full">
                                                     <input type="text"
-                                                        defaultValue={`${api_base_url}` + `collection-detail/${data?.id}`}
+                                                        defaultValue={`https://localhost:3000/` + `collection-detail/${data?.id}`}
                                                         className="bg-white focus:outline-none px-3 w-full py-2 font-medium text-base border border-slate-700 focus:ring-2 focus:ring-yellow-600 focus:border-0 rounded-md"
                                                     />
                                                     <Button 
                                                         className="px-3"
                                                         size={'sm'}
                                                         type="submit"
-                                                        onClick={(event) => handleCopy(event, `${api_base_url}` + `collection-detail/${data?.id}`)}
+                                                        onClick={(event) => handleCopy(event, `localhost:3000/` + `collection-detail/${data?.id}`)}
                                                     >
                                                         <span className="sr-only">Copy link</span>
                                                         <TooltipProvider>

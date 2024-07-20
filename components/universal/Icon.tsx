@@ -126,8 +126,6 @@ export default function Icon() {
 
 
 
-
-
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -191,7 +189,7 @@ export default function Icon() {
                     </DropdownMenuItem>
                     <DropdownMenuItem className="flex flex-row items-center gap-x-2 py-3 px-5 cursor-pointer hover:outline-none hover:bg-hover-1 hover:bg-opacity-40">
                         
-                        <button onClick={() => router.push("/profile-settings")} className="flex flex-row gap-x-2">
+                        <button onClick={() => router.push("")} className="flex flex-row gap-x-2">
                             <Settings size={23} strokeWidth={2} />
                             <span>Account</span>
                         </button>
