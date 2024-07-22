@@ -11,7 +11,7 @@ export default function TanstackQueryProvider({ children }: {children: React.Rea
     return (
         <QueryClientProvider client={queryClient}>
             { children }
-            <ReactQueryDevtools initialIsOpen={false} />
+            {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         </QueryClientProvider>
     )
 }
