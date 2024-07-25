@@ -1,6 +1,6 @@
 # Side Project - Recipe Management System
 
-I decided to build this project to learn and improve my API and authentication in frontend appliaction using Nextjs. So that I can be able to integrate REST APIs in React Applications
+I decided to build this project to learn and improve my API integration and authentication in frontend applications using Nextjs. So that I can be able to integrate REST APIs in React Applications
 
 ## Table of contents
 
