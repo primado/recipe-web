@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useRef, MouseEventHandler, useEffect, useLayoutEffect } from "react"
+import React, { useState, useRef, useEffect,} from "react"
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import Link from "next/link"
@@ -48,8 +48,7 @@ export default function Profile() {
 
     // const token: string | null = localStorage.getItem('accessToken')
 
-
-    const { register, handleSubmit, setValue, control, formState: {errors} } = useForm<UserProfile>({
+    const { register, handleSubmit, getValues, setValue, control, formState: {errors} } = useForm<UserProfile>({
         criteriaMode: 'all',
     })
 
@@ -78,6 +77,7 @@ export default function Profile() {
         },
         
     })
+
 
     const updateUserProfile = useMutation({
         mutationKey: ['updateProfile'],
@@ -344,7 +344,6 @@ export default function Profile() {
                                                 <input 
                                                     type="file" 
                                                     name="file"
-                                                   
                                                     onChange={handleFileChange}
                                                     accept="image/png, image/jpg"
                                                     style={{ display: "none" }}
@@ -482,7 +481,7 @@ export default function Profile() {
                                             <input 
                                                 type="text" 
                                                 defaultValue={data?.email || ''}
-                                                disabled
+                                                // disabled
                                                 className="text-base font-medium focus:outline-none ring-2 ring-gray-400 p-3 rounded-md focus:ring-2 focus:ring-brand hover:cursor-not-allowed"
                                                 {...register('email', {
                                                     required: {
